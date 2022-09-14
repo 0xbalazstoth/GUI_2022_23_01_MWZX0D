@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Grid x:Name="gameGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <WindowsFormsHost x:Name="FormHost" Grid.Row="0"></WindowsFormsHost>
     </Grid>
 </Window>

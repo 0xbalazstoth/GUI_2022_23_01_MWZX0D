@@ -4,7 +4,23 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+	<UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="SFML.Audio">
+      <HintPath>DLLs\SFML.Audio.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.Graphics">
+      <HintPath>DLLs\SFML.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.System">
+      <HintPath>DLLs\SFML.System.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.Window">
+      <HintPath>DLLs\SFML.Window.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>
