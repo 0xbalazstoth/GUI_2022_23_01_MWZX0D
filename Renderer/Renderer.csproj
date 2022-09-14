@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SFML.Graphics">
+      <HintPath>..\Gunner\DLLs\SFML.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.System">
+      <HintPath>..\Gunner\DLLs\SFML.System.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
