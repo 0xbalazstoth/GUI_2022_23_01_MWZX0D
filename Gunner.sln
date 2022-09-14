@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{8425E92E-45C8-4FEE-8174-8B8E2636D83D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameControl", "GameControl\GameControl.csproj", "{7EEE7822-70E5-41BA-958F-A3046FEFB88D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8425E92E-45C8-4FEE-8174-8B8E2636D83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8425E92E-45C8-4FEE-8174-8B8E2636D83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8425E92E-45C8-4FEE-8174-8B8E2636D83D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EEE7822-70E5-41BA-958F-A3046FEFB88D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EEE7822-70E5-41BA-958F-A3046FEFB88D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EEE7822-70E5-41BA-958F-A3046FEFB88D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EEE7822-70E5-41BA-958F-A3046FEFB88D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
