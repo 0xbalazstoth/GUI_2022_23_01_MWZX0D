@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Color = SFML.Graphics.Color;
+using Keyboard = SFML.Window.Keyboard;
 using MessageBox = System.Windows.MessageBox;
 using View = SFML.Graphics.View;
 
@@ -58,6 +59,13 @@ namespace Gunner
         private void GameLoop()
         {
             window.DispatchEvents();
+
+            // Update
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A))
+            {
+                circle.Position = new Vector2f(circle.Position.X - 1, circle.Position.Y);
+            }
+
             window.SetActive(true);
             window.Size = new Vector2u((uint)sfmlSurface.Size.Width, (uint)sfmlSurface.Size.Height);
             window.SetView(new View(new FloatRect(0, 0, sfmlSurface.Size.Width, sfmlSurface.Size.Height)));
@@ -71,6 +79,7 @@ namespace Gunner
                 circle.Position = new Vector2f(50, 100);
             }
 
+            // Draw
             window.Draw(circle);
 
             window.Display();
