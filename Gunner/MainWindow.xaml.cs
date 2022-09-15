@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Color = SFML.Graphics.Color;
 using MessageBox = System.Windows.MessageBox;
+using View = SFML.Graphics.View;
 
 namespace Gunner
 {
@@ -27,51 +28,52 @@ namespace Gunner
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+        private SFMLSurface sfmlSurface;
         private RenderWindow window;
-        private DispatcherTimer _timer;
+
+        private TimeSpan lastRenderTime;
         private CircleShape circle;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            circle = new CircleShape(20);
-            circle.FillColor = Color.Red;
-            circle.Position = new Vector2f(1, 1);
+            sfmlSurface = new SFMLSurface();
+            SfmlSurfaceHost.Child = sfmlSurface;
+            window = new RenderWindow(sfmlSurface.Handle);
 
-            var surf = new DrawingSurface();
-            this.FormHost.Child = surf;
-            SetDoubleBuffered(surf);
-
-            var context = new ContextSettings { DepthBits = 24 };
-            this.window = new RenderWindow(surf.Handle, context);
-
-            this._timer = new DispatcherTimer { Interval = new TimeSpan(0, 0, 0, 0, 1000 / 60) };
-            this._timer.Tick += Timer_Tick;
-            this._timer.Start();
+            System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void CompositionTarget_Rendering(object? sender, EventArgs e)
+        {
+            System.Windows.Media.RenderingEventArgs args = (System.Windows.Media.RenderingEventArgs)e;
+            if (args.RenderingTime != lastRenderTime)
+            {
+                GameLoop();
+                lastRenderTime = args.RenderingTime;
+            }
+        }
+
+        private void GameLoop()
         {
             window.DispatchEvents();
-            window.Clear(Color.Green);
-            window.Draw(this.circle);
+            window.SetActive(true);
+            window.Size = new Vector2u((uint)sfmlSurface.Size.Width, (uint)sfmlSurface.Size.Height);
+            window.SetView(new View(new FloatRect(0, 0, sfmlSurface.Size.Width, sfmlSurface.Size.Height)));
+
+            window.Clear(Color.Blue);
+
+            if (circle == null)
+            {
+                circle = new CircleShape(50);
+                circle.FillColor = Color.Red;
+                circle.Position = new Vector2f(50, 100);
+            }
+
+            window.Draw(circle);
+
             window.Display();
-        }
-
-        private void SetDoubleBuffered(DrawingSurface surf)
-        {
-            System.Reflection.PropertyInfo aProp =
-                typeof(System.Windows.Forms.Control).GetProperty(
-                "DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            aProp.SetValue(surf, true, null);
-        }
-
-        public class DrawingSurface : System.Windows.Forms.Control
-        {
-            protected override void OnPaint(PaintEventArgs e) {}
-            protected override void OnPaintBackground(PaintEventArgs pevent){}
         }
     }
 }
