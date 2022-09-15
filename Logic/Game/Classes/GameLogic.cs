@@ -1,5 +1,8 @@
-﻿using Model;
+﻿using Logic.Game.Entities;
+using Logic.Game.Interfaces;
+using Model;
 using Model.Game;
+using Model.Game.Classes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -9,26 +12,32 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Game
+namespace Logic.Game.Classes
 {
-    public class GameLogic : IGameLogic
+    public class GameLogic : IGameLogic 
     {
+        // Minden logic használhat más logicot interfacen keresztül!
+
         private IGameModel gameModel;
+        private ITilemapLogic tilemapLogic;
+        private PlayerLogic playerLogic; // INTERFÉSZ
         private Clock deltaTimeClock;
         private float deltaTime;
 
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, PlayerLogic playerLogic)
         {
             this.gameModel = gameModel;
+            this.tilemapLogic = tilemapLogic;
+            this.playerLogic = playerLogic;
             deltaTimeClock = new Clock();
 
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            gameModel.Map = new Map();
+            gameModel.Map = new TilemapModel();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)

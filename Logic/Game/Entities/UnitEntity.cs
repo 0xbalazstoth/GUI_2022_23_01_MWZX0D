@@ -1,4 +1,5 @@
 ﻿using Model.Game;
+using Model.Game.Classes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -45,7 +46,7 @@ namespace Logic.Game.Entities
             Origin = new(Texture.Size.X / 2f, Texture.Size.Y / 2f);
         }
 
-        public void UpdateTilePosition(Map tilemap)
+        public void UpdateTilePosition(TilemapModel tilemap)
         {
             var x = Position.X + Origin.X;
             var y = Position.Y + Origin.Y;

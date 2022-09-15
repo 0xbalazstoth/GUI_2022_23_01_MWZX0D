@@ -11,6 +11,8 @@ namespace Logic.Game
 {
     public class TilemapLoader
     {
+        // Repository
+
         private readonly Texture tilesetTexture;
         private List<Vertex[]> vertices;
         private List<int[]> mapLayers;

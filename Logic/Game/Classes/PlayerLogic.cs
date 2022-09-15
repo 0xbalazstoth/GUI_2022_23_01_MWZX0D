@@ -1,4 +1,8 @@
-﻿using Model.Game;
+﻿using Logic.Game.Classes;
+using Logic.Game.Entities;
+using Logic.Game.Interfaces;
+using Model.Game;
+using Model.Game.Classes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -7,24 +11,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Game.Entities
+namespace Logic.Game.Classes
 {
-    public class Player : UnitEntity
+    public class PlayerLogic : UnitEntity
     {
         private Vector2f previousPosition;
         private uint mapHeight;
         private uint mapWidth;
         private Vector2f movementDirection;
 
+        private IGameModel gameModel;
+        private ITilemapLogic tilemapLogic;
+
         public int MaxHP { get; set; }
         public int CurrentHP { get; set; }
         public string Name { get; set; }
 
-        public Player(uint mapHeight, uint mapWidth)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
-
-            this.mapHeight = mapHeight;
-            this.mapWidth = mapWidth;
+            this.gameModel = gameModel;
+            this.mapHeight = gameModel.Map.GetMapHeight;
+            this.mapWidth = gameModel.Map.GetMapWidth;
+            this.tilemapLogic = tilemapLogic;
 
             Speed = 180f;
         }
@@ -88,38 +96,38 @@ namespace Logic.Game.Entities
             }
         }
 
-        public void HandleMapCollision(Map tilemap)
+        public void HandleMapCollision(TilemapModel tilemapModel)
         {
-            //if (TilePosition.X < 1 || TilePosition.X > tilemap.Size.X - 1 || TilePosition.Y < 1 || TilePosition.Y > tilemap.Size.Y - 1)
-            //{
-            //    Console.WriteLine(tilemap.ToString());
-            //    Position = previousPosition;
-            //    return;
-            //}
+            if (TilePosition.X < 1 || TilePosition.X > tilemapModel.Size.X - 1 || TilePosition.Y < 1 || TilePosition.Y > tilemapModel.Size.Y - 1)
+            {
+                Console.WriteLine(tilemapModel.ToString());
+                Position = previousPosition;
+                return;
+            }
 
-            //// Next positions
-            //for (int y = -1; y < 1; y++)
-            //{
-            //    for (int x = -1; x < 1; x++)
-            //    {
-            //        var currentTilePosition = TilePosition + new Vector2i(x, y);
-            //        var currentTileID = tilemap.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
-            //        if (tilemap.CollidableIDs.Contains(currentTileID) == false)
-            //        {
-            //            continue;
-            //        }
+            // Next positions
+            for (int y = -1; y < 1; y++)
+            {
+                for (int x = -1; x < 1; x++)
+                {
+                    var currentTilePosition = TilePosition + new Vector2i(x, y);
+                    var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
+                    if (tilemapModel.CollidableIDs.Contains(currentTileID) == false)
+                    {
+                        continue;
+                    }
 
-            //        var currentTileWorldPosition = tilemap.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
-            //        var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
-            //        var rect = GetGlobalBounds();
-            //        if (rect.Intersects(tileRect))
-            //        {
-            //            Console.WriteLine(tilemap.ToString());
-            //            Position = previousPosition;
-            //            return;
-            //        }
-            //    }
-            //}
+                    var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
+                    var tileRect = new FloatRect(currentTileWorldPosition, new(tilemapModel.TileSize.X, tilemapModel.TileSize.Y));
+                    var rect = GetGlobalBounds();
+                    if (rect.Intersects(tileRect))
+                    {
+                        Console.WriteLine(tilemapLogic.ToString());
+                        Position = previousPosition;
+                        return;
+                    }
+                }
+            }
         }
 
         protected override void HandleMovement()

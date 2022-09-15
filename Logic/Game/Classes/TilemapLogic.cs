@@ -1,4 +1,6 @@
-﻿using Model.Game;
+﻿using Logic.Game.Interfaces;
+using Model.Game;
+using Model.Game.Classes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -8,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Logic.Game
+namespace Logic.Game.Classes
 {
     public class TilemapLogic : ITilemapLogic
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Game
+namespace Logic.Game.Interfaces
 {
     public interface ITilemapLogic
     {
