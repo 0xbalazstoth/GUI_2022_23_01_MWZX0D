@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.UI
+namespace Model.UI.Interfaces
 {
-    public class UIModel : IUIModel
+    public interface IUIModel
     {
         public Text FPSText { get; set; }
         public Font Font { get; set; }
