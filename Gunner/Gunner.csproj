@@ -9,6 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Logic\Logic.csproj" />
+    <ProjectReference Include="..\Renderer\Renderer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="SFML.Audio">
       <HintPath>DLLs\SFML.Audio.dll</HintPath>
     </Reference>
