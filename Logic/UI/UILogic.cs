@@ -1,5 +1,6 @@
 ﻿using Logic.Tools;
 using Model.UI;
+using Model.UI.Interfaces;
 using SFML.Graphics;
 using System;
 using System.Collections.Generic;

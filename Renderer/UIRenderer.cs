@@ -1,4 +1,5 @@
 ﻿using Model.UI;
+using Model.UI.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;

@@ -1,4 +1,5 @@
 ﻿using Model.Game;
+using Model.Game.Classes;
 using Model.UI;
 using SFML.Graphics;
 using System;

@@ -1,9 +1,14 @@
 ﻿using Logic.Game;
+using Logic.Game.Classes;
 using Logic.Game.Entities;
+using Logic.Game.Interfaces;
 using Logic.Tools;
 using Model.Game;
+using Model.Game.Classes;
 using Model.Tools;
 using Model.UI;
+using Model.UI.Classes;
+using Model.UI.Interfaces;
 using Renderer;
 using SFML.Graphics;
 using SFML.System;
@@ -30,6 +35,7 @@ namespace GameControl
         private GameRenderer gameRenderer;
 
         private ITilemapLogic tilemapLogic;
+        private PlayerLogic playerLogic;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
@@ -43,7 +49,7 @@ namespace GameControl
         private Texture[] playerTextures;
         private IntRect[] playerTextureRects;
 
-        private Player player;
+        //private Player player;
         private Enemy enemy;
         private List<Chest> chests;
 
@@ -54,7 +60,7 @@ namespace GameControl
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
 
-            this.gameLogic = new GameLogic(gameModel);
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap(tmxFile, tilesetFile);
@@ -90,8 +96,8 @@ namespace GameControl
             playerWalkUpAnimation.Speed = playerAnimationSpeed;
             playerWalkUpAnimation.Row = 3;
 
-            player = new Player(gameModel.Map.GetMapHeight, gameModel.Map.GetMapWidth) { Position = new(WINDOW_WIDTH / 2f, WINDOW_HEIGHT - 100) };
-            player.LoadTexture("player.png");
+            playerLogic = new PlayerLogic(gameModel, tilemapLogic) { Position = new(WINDOW_WIDTH / 2f, WINDOW_HEIGHT - 100) };
+            playerLogic.LoadTexture("player.png");
 
             enemy = new Enemy() { Position = new(100, 250) };
             enemy.LoadTexture("player.png");
@@ -187,17 +193,17 @@ namespace GameControl
             playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
             playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
 
-            player.Update(gameLogic.GetDeltaTime);
+            playerLogic.Update(gameLogic.GetDeltaTime);
             gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, player.Position, this.worldPos, gameLogic.GetDeltaTime);
+            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, playerLogic.Position, this.worldPos, gameLogic.GetDeltaTime);
 
-            player.UpdateTilePosition(gameModel.Map);
-            player.HandleMapCollision(gameModel.Map);
-            player.HandleEnemyCollision(enemy);
+            playerLogic.UpdateTilePosition(gameModel.Map);
+            playerLogic.HandleMapCollision(gameModel.Map);
+            playerLogic.HandleEnemyCollision(enemy);
 
             foreach (var chest in chests)
             {
-                player.HandleItemCollision(chest);
+                playerLogic.HandleItemCollision(chest);
             }
         }
 
@@ -208,8 +214,8 @@ namespace GameControl
             playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
             playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
 
-            player.RedrawTexture(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
-            window.Draw(player);
+            playerLogic.RedrawTexture(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
+            window.Draw(playerLogic);
 
             foreach (var chest in chests)
             {
