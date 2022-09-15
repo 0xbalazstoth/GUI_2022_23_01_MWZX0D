@@ -169,18 +169,18 @@ namespace Gunner
             gameModel.UIView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
             gameModel.UIView.Viewport = new FloatRect(0f, 0f, 1f, 1f);
 
-            //window.Closed += (s, e) => { window.Close(); };
-            //window.Resized += (s, e) =>
-            //{
-            //    gameModel.CameraView = new View();
-            //    gameModel.CameraView.Size = new Vector2f(e.Width, e.Height);
-            //    gameModel.CameraView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
-            //    window.SetView(gameModel.CameraView);
+            window.Closed += (s, e) => { window.Close(); };
+            window.Resized += (s, e) =>
+            {
+                gameModel.CameraView = new View();
+                gameModel.CameraView.Size = new Vector2f(e.Width, e.Height);
+                gameModel.CameraView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
+                window.SetView(gameModel.CameraView);
 
-            //    gameModel.UIView = new View();
-            //    gameModel.UIView.Size = new Vector2f(e.Width, e.Height);
-            //    gameModel.UIView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
-            //};
+                gameModel.UIView = new View();
+                gameModel.UIView.Size = new Vector2f(e.Width, e.Height);
+                gameModel.UIView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
+            };
         }
 
         private void CompositionTarget_Rendering(object? sender, EventArgs e)
