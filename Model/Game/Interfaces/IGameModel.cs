@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Game
+namespace Model.Game.Classes
 {
     public interface IGameModel
     {
         public Movement Movement { get; set; }
         public View CameraView { get; set; }
         public View UIView { get; set; }
-        public Map Map { get; set; }
+        public TilemapModel Map { get; set; }
     }
 }

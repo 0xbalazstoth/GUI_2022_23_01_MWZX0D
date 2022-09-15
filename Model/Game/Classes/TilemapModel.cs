@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Game
+namespace Model.Game.Classes
 {
-    public class Map
+    public class TilemapModel
     {
         public Vector2u Size { get; set; }
         public Vector2u TileSize { get; set; }
