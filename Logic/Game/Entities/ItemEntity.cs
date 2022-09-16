@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Logic.Game.Entities
 {
-    public abstract class ItemEntity : WorldEntity
+    public abstract class ItemEntity : Sprite
     {
         private Vector2i itemPosition;
 
@@ -19,14 +19,14 @@ namespace Logic.Game.Entities
             private set => itemPosition = value;
         }
 
-        public override void LoadTexture(string filename)
+        public void LoadTexture(string filename)
         {
             Texture = new Texture(filename);
             Origin = new(Texture.Size.X / 2f, Texture.Size.Y / 2f);
             Scale = new Vector2f((float)Size.X / Texture.Size.X, (float)Size.Y / Texture.Size.Y);
         }
 
-        public override void LoadTexture(Texture texture)
+        public void LoadTexture(Texture texture)
         {
             Texture = texture;
             Origin = new(Texture.Size.X / 2f, Texture.Size.Y / 2f);

@@ -12,7 +12,7 @@ using static SFML.Window.Keyboard;
 
 namespace Logic.Game.Entities
 {
-    public abstract class UnitEntity : WorldEntity
+    public abstract class UnitEntity : Sprite
     {
         private Vector2i tilePosition;
         private Dictionary<MovementDirection, Movement> movementDirections;
@@ -40,7 +40,7 @@ namespace Logic.Game.Entities
             movementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
         }
 
-        public override void LoadTexture(string filename)
+        public void LoadTexture(string filename)
         {
             Texture = new Texture(filename);
             Origin = new(Texture.Size.X / 2f, Texture.Size.Y / 2f);

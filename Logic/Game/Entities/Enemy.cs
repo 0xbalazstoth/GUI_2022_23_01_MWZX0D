@@ -33,10 +33,5 @@ namespace Logic.Game.Entities
         {
             return "[Type]: Unit; [Object]: Enemy";
         }
-
-        public override void LoadTexture(Texture texture)
-        {
-            
-        }
     }
 }

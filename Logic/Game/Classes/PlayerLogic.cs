@@ -8,100 +8,161 @@ using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static SFML.Window.Keyboard;
 
 namespace Logic.Game.Classes
 {
-    public class PlayerLogic : UnitEntity
+    public class PlayerLogic : IPlayerLogic
     {
-        private Vector2f previousPosition;
-        private uint mapHeight;
-        private uint mapWidth;
-        private Vector2f movementDirection;
-
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
 
-        public int MaxHP { get; set; }
-        public int CurrentHP { get; set; }
-        public string Name { get; set; }
+        private Dictionary<MovementDirection, Movement> movementDirections;
+        
+        private uint mapHeight;
+        private uint mapWidth;
+        private Vector2f movementDirection;
+        private Vector2f previousPosition;
 
-        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, uint windowWidth, uint windowHeight)
         {
             this.gameModel = gameModel;
-            this.mapHeight = gameModel.Map.GetMapHeight;
-            this.mapWidth = gameModel.Map.GetMapWidth;
             this.tilemapLogic = tilemapLogic;
 
-            Speed = 180f;
+            movementDirections = new Dictionary<MovementDirection, Movement>();
+            movementDirections.Add(MovementDirection.NoneOrUnknown, new Movement() { MovementDirection = MovementDirection.NoneOrUnknown, Direction = new Vector2f(0, 0) });
+            movementDirections.Add(MovementDirection.Up, new Movement() { MovementDirection = MovementDirection.Up, Direction = new Vector2f(0, -1f) });
+            movementDirections.Add(MovementDirection.Down, new Movement() { MovementDirection = MovementDirection.Down, Direction = new Vector2f(0, 1f) });
+            movementDirections.Add(MovementDirection.Left, new Movement() { MovementDirection = MovementDirection.Left, Direction = new Vector2f(-1f, 0) });
+            movementDirections.Add(MovementDirection.Right, new Movement() { MovementDirection = MovementDirection.Right, Direction = new Vector2f(1f, 0) });
+            movementDirections.Add(MovementDirection.UpLeft, new Movement() { MovementDirection = MovementDirection.UpLeft, Direction = new Vector2f(-1f, -1f) });
+            movementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
+            movementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
+            movementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
+
+            this.gameModel.Player.MovementDirections = movementDirections;
+            this.gameModel.Player.Speed = 180f;
+            this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
+
+            mapHeight = gameModel.Map.Height;
+            mapWidth = gameModel.Map.Width;
         }
 
-        public override void Update(float dt)
+        public Vector2f GetDirectionFromInput()
         {
-            DeltaTime = dt;
+            Dictionary<Key, Vector2f> input = new()
+            {
+               { Key.W, movementDirections[MovementDirection.Up].Direction },
+               { Key.S, movementDirections[MovementDirection.Down].Direction },
+               { Key.A, movementDirections[MovementDirection.Left].Direction },
+               { Key.D, movementDirections[MovementDirection.Right].Direction },
+            };
 
-            HandleMovement();
+            Vector2f direction = new();
+            foreach (var kvp in input)
+            {
+                if (IsKeyPressed(kvp.Key))
+                    direction += kvp.Value;
+            }
+
+            Vector2 numericsVector = Vector2.Normalize(new(direction.X, direction.Y));
+            return new(numericsVector.X, numericsVector.Y);
         }
 
-        public override void RedrawTexture(float dt, Texture[] texture, IntRect[] textureRect)
+        public MovementDirection GetMovementByDirection(Vector2f movementDirection)
         {
-            Texture = texture[0];
-            TextureRect = textureRect[0];
+            return movementDirections.Where(x => x.Value.Direction == movementDirection).FirstOrDefault().Key;
+        }
+
+        public void LoadTexture(string filename)
+        {
+            gameModel.Player.Texture = new Texture(filename);
+            gameModel.Player.Origin = new Vector2f(gameModel.Player.Texture.Size.X / 2, gameModel.Player.Texture.Size.Y / 2);
+        }
+
+        public void UpdateTilePosition(TilemapModel tilemap)
+        {
+            var x = gameModel.Player.Position.X + gameModel.Player.Origin.X;
+            var y = gameModel.Player.Position.Y + gameModel.Player.Origin.Y;
+
+            gameModel.Player.TilePosition = new Vector2i((int)(x / tilemap.TileSize.X), (int)(y / tilemap.TileSize.Y));
+        }
+
+        public void HandleMovement()
+        {
+            var movementDirection = GetDirectionFromInput();
+            if (float.IsNaN(movementDirection.X) || float.IsNaN(movementDirection.Y))
+                return;
+
+            previousPosition = gameModel.Player.Position;
+            gameModel.Player.Position += movementDirection * gameModel.Player.DeltaTime * gameModel.Player.Speed;
+            this.movementDirection = movementDirection;
+        }
+
+        public void LoadTexture(Texture filename)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect)
+        {
+            gameModel.Player.Texture = texture[0];
+            gameModel.Player.TextureRect = textureRect[0];
 
             var movement = GetMovementByDirection(movementDirection);
             if (movement == MovementDirection.Up)
             {
-                Texture = texture[3];
-                TextureRect = textureRect[3];
+                gameModel.Player.Texture = texture[3];
+                gameModel.Player.TextureRect = textureRect[3];
             }
             else if (movement == MovementDirection.Down)
             {
-                Texture = texture[1];
-                TextureRect = textureRect[1];
+                gameModel.Player.Texture = texture[1];
+                gameModel.Player.TextureRect = textureRect[1];
             }
             else if (movement == MovementDirection.Left)
             {
-                Texture = texture[2];
-                TextureRect = textureRect[2];
+                gameModel.Player.Texture = texture[2];
+                gameModel.Player.TextureRect = textureRect[2];
             }
             else if (movement == MovementDirection.Right)
             {
-                Texture = texture[4];
-                TextureRect = textureRect[4];
+                gameModel.Player.Texture = texture[4];
+                gameModel.Player.TextureRect = textureRect[4];
             }
         }
 
-        public void RedrawTexture(float dt, Texture texture, IntRect textureRect)
+        public void UpdateDeltaTime(float dt)
         {
-            Texture = texture;
-            TextureRect = textureRect;
-        }
+            gameModel.Player.DeltaTime = dt;
 
-        public void HandleItemCollision(ItemEntity item)
-        {
-            if (GetGlobalBounds().Intersects(item.GetGlobalBounds()))
-            {
-                Console.WriteLine(item.ToString());
-                Position = previousPosition;
-            }
+            HandleMovement();
         }
 
         public void HandleEnemyCollision(Enemy enemy)
         {
-            if (GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+            if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
             {
-                Console.WriteLine(enemy.ToString());
-                Position = previousPosition;
+                gameModel.Player.Position = previousPosition;
             }
         }
 
-        public void HandleMapCollision(TilemapModel tilemapModel)
+        public void HandleItemCollision(ItemEntity item)
         {
-            if (TilePosition.X < 1 || TilePosition.X > tilemapModel.Size.X - 1 || TilePosition.Y < 1 || TilePosition.Y > tilemapModel.Size.Y - 1)
+            if (gameModel.Player.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
             {
-                Console.WriteLine(tilemapModel.ToString());
-                Position = previousPosition;
+                gameModel.Player.Position = previousPosition;
+            }
+        }
+
+        public void HandleMapCollision(TilemapModel tilemap)
+        {
+            if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 1 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 1)
+            {
+                gameModel.Player.Position = previousPosition;
                 return;
             }
 
@@ -110,40 +171,24 @@ namespace Logic.Game.Classes
             {
                 for (int x = -1; x < 1; x++)
                 {
-                    var currentTilePosition = TilePosition + new Vector2i(x, y);
+                    var currentTilePosition = gameModel.Player.TilePosition + new Vector2i(x, y);
                     var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
-                    if (tilemapModel.CollidableIDs.Contains(currentTileID) == false)
+                    if (tilemap.CollidableIDs.Contains(currentTileID) == false)
                     {
                         continue;
                     }
 
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
-                    var tileRect = new FloatRect(currentTileWorldPosition, new(tilemapModel.TileSize.X, tilemapModel.TileSize.Y));
-                    var rect = GetGlobalBounds();
+                    var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
+                    var rect = gameModel.Player.GetGlobalBounds();
                     if (rect.Intersects(tileRect))
                     {
                         Console.WriteLine(tilemapLogic.ToString());
-                        Position = previousPosition;
+                        gameModel.Player.Position = previousPosition;
                         return;
                     }
                 }
             }
-        }
-
-        protected override void HandleMovement()
-        {
-            var movementDirection = GetDirectionFromInput();
-            if (float.IsNaN(movementDirection.X) || float.IsNaN(movementDirection.Y))
-                return;
-
-            previousPosition = Position;
-            Position += movementDirection * DeltaTime * Speed;
-            this.movementDirection = movementDirection;
-        }
-
-        public override void LoadTexture(Texture texture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

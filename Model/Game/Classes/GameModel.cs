@@ -8,5 +8,7 @@ namespace Model.Game.Classes
         public View UIView { get; set; }
         public Movement Movement { get; set; }
         public TilemapModel Map { get; set; }
+        public UnitEntityModel UnitEntity { get; set; }
+        public PlayerModel Player { get; set; }
     }
 }
