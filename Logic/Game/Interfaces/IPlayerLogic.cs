@@ -3,11 +3,6 @@ using Model.Game;
 using Model.Game.Classes;
 using SFML.Graphics;
 using SFML.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic.Game.Interfaces
 {
@@ -21,7 +16,7 @@ namespace Logic.Game.Interfaces
         void UpdateTilePosition(TilemapModel tilemap);
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
-        void HandleEnemyCollision(Enemy enemy);
+        void HandleEnemyCollision(EnemyModel enemy);
         void HandleItemCollision(ItemEntity item);
         void HandleMapCollision(TilemapModel tilemap);
     }

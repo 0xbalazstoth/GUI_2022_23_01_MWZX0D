@@ -20,18 +20,22 @@ namespace Logic.Game.Classes
 
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        private IPlayerLogic playerLogic; // INTERFÉSZ
+        private IPlayerLogic playerLogic;
+        private IEnemyLogic enemyLogic;
+
         private Clock deltaTimeClock;
         private float deltaTime;
 
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
             this.playerLogic = playerLogic;
+            this.enemyLogic = enemyLogic;
+
             deltaTimeClock = new Clock();
 
             gameModel.CameraView = new View();
@@ -39,6 +43,7 @@ namespace Logic.Game.Classes
 
             gameModel.Map = new TilemapModel();
             gameModel.Player = new PlayerModel();
+            gameModel.Enemy = new EnemyModel();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)

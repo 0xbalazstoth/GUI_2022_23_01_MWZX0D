@@ -14,5 +14,6 @@ namespace Model.Game.Classes
         public View UIView { get; set; }
         public TilemapModel Map { get; set; }
         public PlayerModel Player { get; set; }
+        public EnemyModel Enemy { get; set; }
     }
 }

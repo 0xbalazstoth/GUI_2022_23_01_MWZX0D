@@ -53,7 +53,8 @@ namespace Gunner
         private GameRenderer gameRenderer;
 
         private ITilemapLogic tilemapLogic;
-        private PlayerLogic playerLogic;
+        private IPlayerLogic playerLogic;
+        private IEnemyLogic enemyLogic;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
@@ -68,7 +69,7 @@ namespace Gunner
         private IntRect[] playerTextureRects;
 
         //private Player player;
-        private Enemy enemy;
+        //private Enemy enemy;
         private List<Chest> chests;
 
         private Vector2f worldPos;
@@ -88,7 +89,7 @@ namespace Gunner
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
 
-            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic);
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
@@ -127,8 +128,9 @@ namespace Gunner
             playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             playerLogic.LoadTexture("player.png");
 
-            enemy = new Enemy() { Position = new(100, 250) };
-            enemy.LoadTexture("player.png");
+            //enemy = new Enemy() { Position = new(100, 250) };
+            enemyLogic = new EnemyLogic(gameModel);
+            enemyLogic.LoadTexture("player.png");
 
             chests = new List<Chest>();
             chests.Add(new Chest() { Position = new(WINDOW_WIDTH / 2f, WINDOW_HEIGHT / 2f) });
@@ -237,7 +239,7 @@ namespace Gunner
 
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
-            playerLogic.HandleEnemyCollision(enemy);
+            playerLogic.HandleEnemyCollision(gameModel.Enemy);
 
             foreach (var chest in chests)
             {
@@ -253,7 +255,9 @@ namespace Gunner
             playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
 
             playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
+            
             window.Draw(gameModel.Player);
+            window.Draw(gameModel.Enemy);
 
             foreach (var chest in chests)
             {

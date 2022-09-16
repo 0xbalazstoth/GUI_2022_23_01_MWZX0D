@@ -102,9 +102,9 @@ namespace Logic.Game.Classes
             this.movementDirection = movementDirection;
         }
 
-        public void LoadTexture(Texture filename)
+        public void LoadTexture(Texture texture)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect)
@@ -142,7 +142,7 @@ namespace Logic.Game.Classes
             HandleMovement();
         }
 
-        public void HandleEnemyCollision(Enemy enemy)
+        public void HandleEnemyCollision(EnemyModel enemy)
         {
             if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
             {
