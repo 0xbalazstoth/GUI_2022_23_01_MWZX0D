@@ -1,6 +1,6 @@
-﻿using Logic.Game.Entities;
-using Model.Game;
+﻿using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 
@@ -17,7 +17,7 @@ namespace Logic.Game.Interfaces
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
         void HandleEnemyCollision(EnemyModel enemy);
-        void HandleItemCollision(ItemEntity item);
+        void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
     }
 }

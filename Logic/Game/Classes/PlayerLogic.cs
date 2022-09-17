@@ -1,8 +1,8 @@
 ﻿using Logic.Game.Classes;
-using Logic.Game.Entities;
 using Logic.Game.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -150,7 +150,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void HandleItemCollision(ItemEntity item)
+        public void HandleObjectCollision(Sprite item)
         {
             if (gameModel.Player.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
             {
