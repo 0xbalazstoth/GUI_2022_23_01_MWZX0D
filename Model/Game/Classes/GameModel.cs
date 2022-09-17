@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using System.Collections.Generic;
 
 namespace Model.Game.Classes
 {
@@ -8,5 +9,8 @@ namespace Model.Game.Classes
         public View UIView { get; set; }
         public Movement Movement { get; set; }
         public TilemapModel Map { get; set; }
+        public PlayerModel Player { get; set; }
+        public EnemyModel Enemy { get; set; }
+        public List<ChestModel> Chests { get ; set ; }
     }
 }

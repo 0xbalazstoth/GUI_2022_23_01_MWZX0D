@@ -1,6 +1,5 @@
 ﻿using Logic.Game;
 using Logic.Game.Classes;
-using Logic.Game.Entities;
 using Logic.Game.Interfaces;
 using Logic.Tools;
 using Model.Game.Classes;
@@ -53,7 +52,9 @@ namespace Gunner
         private GameRenderer gameRenderer;
 
         private ITilemapLogic tilemapLogic;
-        private PlayerLogic playerLogic;
+        private IPlayerLogic playerLogic;
+        private IEnemyLogic enemyLogic;
+        private IObjectEntityLogic chestLogic;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
@@ -67,10 +68,6 @@ namespace Gunner
         private Texture[] playerTextures;
         private IntRect[] playerTextureRects;
 
-        //private Player player;
-        private Enemy enemy;
-        private List<Chest> chests;
-
         private Vector2f worldPos;
 
         private TimeSpan lastRenderTime;
@@ -83,12 +80,12 @@ namespace Gunner
             SfmlSurfaceHost.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
 
-            System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+            System.Windows.Media.CompositionTarget.Rendering += RunGame;
 
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
 
-            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic);
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
@@ -99,6 +96,7 @@ namespace Gunner
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
 
             this.gameRenderer = new GameRenderer(gameModel, System.IO.Path.Combine(projectDirectory, "Assets/Textures"));
+            
             this.uiRenderer = new UIRenderer(uiModel, System.IO.Path.Combine(projectDirectory, "Assets/Fonts"), "FreeMono.ttf");
 
             InitSystem();
@@ -124,25 +122,21 @@ namespace Gunner
             playerWalkUpAnimation.Speed = playerAnimationSpeed;
             playerWalkUpAnimation.Row = 3;
 
-            playerLogic = new PlayerLogic(gameModel, tilemapLogic) { Position = new(WINDOW_WIDTH / 2f, WINDOW_HEIGHT - 100) };
+            playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             playerLogic.LoadTexture("player.png");
 
-            enemy = new Enemy() { Position = new(100, 250) };
-            enemy.LoadTexture("player.png");
+            enemyLogic = new EnemyLogic(gameModel);
+            enemyLogic.LoadTexture("player.png");
 
-            chests = new List<Chest>();
-            chests.Add(new Chest() { Position = new(WINDOW_WIDTH / 2f, WINDOW_HEIGHT / 2f) });
-            chests.Add(new Chest() { Position = new(50, 100) });
-            foreach (var chest in chests)
-            {
-                chest.LoadTexture("chest.png");
-            }
+            chestLogic = new ObjectEntityLogic(gameModel);
+            chestLogic.LoadTexture("chest.png");
+            
+            gameModel.Chests[0].Position = new Vector2f(100, 100);
         }
 
         private void InitSystem()
         {
-            //window.SetVerticalSyncEnabled(true);
-            window.SetFramerateLimit(144);
+            window.SetFramerateLimit(60);
 
             playerIdleAnimation = new Animation();
             playerIdleAnimation.Load("spritesheet.png", 4, 3);
@@ -160,30 +154,30 @@ namespace Gunner
             playerWalkUpAnimation.Load("spritesheet.png", 4, 3);
 
             gameModel.CameraView = new View();
-            gameModel.CameraView.Size = new Vector2f(600, 600);
+            gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.CameraView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
             gameModel.CameraView.Viewport = new FloatRect(0f, 0f, 1f, 1f);
 
             gameModel.UIView = new View();
-            gameModel.UIView.Size = new Vector2f(600, 600);
+            gameModel.UIView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.UIView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
             gameModel.UIView.Viewport = new FloatRect(0f, 0f, 1f, 1f);
 
-            //window.Closed += (s, e) => { window.Close(); };
-            //window.Resized += (s, e) =>
-            //{
-            //    gameModel.CameraView = new View();
-            //    gameModel.CameraView.Size = new Vector2f(e.Width, e.Height);
-            //    gameModel.CameraView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
-            //    window.SetView(gameModel.CameraView);
+            window.Closed += (s, e) => { window.Close(); };
+            window.Resized += (s, e) =>
+            {
+                gameModel.CameraView = new View();
+                gameModel.CameraView.Size = new Vector2f(e.Width, e.Height);
+                gameModel.CameraView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
+                window.SetView(gameModel.CameraView);
 
-            //    gameModel.UIView = new View();
-            //    gameModel.UIView.Size = new Vector2f(e.Width, e.Height);
-            //    gameModel.UIView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
-            //};
+                gameModel.UIView = new View();
+                gameModel.UIView.Size = new Vector2f(e.Width, e.Height);
+                gameModel.UIView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
+            };
         }
 
-        private void CompositionTarget_Rendering(object? sender, EventArgs e)
+        private void RunGame(object? sender, EventArgs e)
         {
             System.Windows.Media.RenderingEventArgs args = (System.Windows.Media.RenderingEventArgs)e;
             if (args.RenderingTime != lastRenderTime)
@@ -219,16 +213,6 @@ namespace Gunner
             window.SetView(window.DefaultView);
 
             window.Display();
-
-            //window.DispatchEvents();
-
-            //window.SetActive(true);
-            //window.Size = new Vector2u((uint)sfmlSurface.Size.Width, (uint)sfmlSurface.Size.Height);
-            //window.SetView(new View(new FloatRect(0, 0, sfmlSurface.Size.Width, sfmlSurface.Size.Height)));
-
-            //window.Clear(Color.Blue);
-
-            //window.Display();
         }
 
         public void Update()
@@ -241,17 +225,17 @@ namespace Gunner
             playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
             playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
 
-            playerLogic.Update(gameLogic.GetDeltaTime);
+            playerLogic.UpdateDeltaTime(gameLogic.GetDeltaTime);
             gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, playerLogic.Position, this.worldPos, gameLogic.GetDeltaTime);
+            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, this.worldPos, gameLogic.GetDeltaTime);
 
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
-            playerLogic.HandleEnemyCollision(enemy);
+            playerLogic.HandleEnemyCollision(gameModel.Enemy);
 
-            foreach (var chest in chests)
+            foreach (var chest in gameModel.Chests)
             {
-                playerLogic.HandleItemCollision(chest);
+                playerLogic.HandleObjectCollision(chest);
             }
         }
 
@@ -262,13 +246,7 @@ namespace Gunner
             playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
             playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
 
-            playerLogic.RedrawTexture(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
-            window.Draw(playerLogic);
-
-            foreach (var chest in chests)
-            {
-                window.Draw(chest);
-            }
+            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects); 
         }
 
         public void DrawUI()

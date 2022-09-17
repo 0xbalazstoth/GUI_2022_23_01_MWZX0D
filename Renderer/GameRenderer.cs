@@ -1,4 +1,5 @@
-﻿using Model.Game;
+﻿using Logic.Game;
+using Model.Game;
 using Model.Game.Classes;
 using Model.UI;
 using SFML.Graphics;
@@ -17,25 +18,39 @@ namespace Renderer
         private IGameModel gameModel;
         private string assetsPath;
 
-        public GameRenderer(IGameModel gameModel, string assetsPath)
+        public GameRenderer(IGameModel gameModel, string path)
         {
             this.gameModel = gameModel;
-            this.assetsPath = assetsPath;
+            this.assetsPath = path;
         }
 
         public void Draw(RenderTarget window)
         {
-            //window.Draw(DrawablePlayer());
-            DrawableTilemap(window);
+            DrawTilemap(window);
+            DrawPlayer(window);
+            DrawEnemy(window);
+            DrawObjects(window);
         }
 
-        //private Drawable DrawablePlayer()
-        //{
-        //    gameModel.Player.Texture = new Texture(Path.Combine(assetsPath, "player.png"));
-        //    return gameModel.Player;
-        //}
+        private void DrawObjects(RenderTarget window)
+        {
+            foreach (var chest in gameModel.Chests)
+            {
+                window.Draw(chest);
+            }
+        }
 
-        private void DrawableTilemap(RenderTarget window)
+        private void DrawEnemy(RenderTarget window)
+        {
+            window.Draw(gameModel.Enemy);
+        }
+
+        private void DrawPlayer(RenderTarget window)
+        {
+            window.Draw(gameModel.Player);
+        }
+
+        private void DrawTilemap(RenderTarget window)
         {
             for (int i = 0; i < gameModel.Map.Vertices.Count; i++)
             {

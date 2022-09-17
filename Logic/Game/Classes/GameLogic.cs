@@ -1,5 +1,4 @@
-﻿using Logic.Game.Entities;
-using Logic.Game.Interfaces;
+﻿using Logic.Game.Interfaces;
 using Model;
 using Model.Game;
 using Model.Game.Classes;
@@ -20,24 +19,33 @@ namespace Logic.Game.Classes
 
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        private PlayerLogic playerLogic; // INTERFÉSZ
+        private IPlayerLogic playerLogic;
+        private IEnemyLogic enemyLogic;
+        private IObjectEntityLogic objectEntityLogic;
+
         private Clock deltaTimeClock;
         private float deltaTime;
 
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, PlayerLogic playerLogic)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
             this.playerLogic = playerLogic;
+            this.enemyLogic = enemyLogic;
+            this.objectEntityLogic = objectEntityLogic;
+
             deltaTimeClock = new Clock();
 
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
             gameModel.Map = new TilemapModel();
+            gameModel.Player = new PlayerModel();
+            gameModel.Enemy = new EnemyModel();
+            gameModel.Chests = new List<ChestModel>();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
