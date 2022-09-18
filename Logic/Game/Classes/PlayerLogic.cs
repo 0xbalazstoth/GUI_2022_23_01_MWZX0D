@@ -21,7 +21,6 @@ namespace Logic.Game.Classes
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
 
-        private int delay = 0;
         private Vector2f movementDirection;
         private Vector2f previousPosition;
 
@@ -30,6 +29,7 @@ namespace Logic.Game.Classes
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
 
+            gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
         }

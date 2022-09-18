@@ -42,8 +42,8 @@ namespace Logic.Game.Classes
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            gameModel.Map = new TilemapModel();
-            gameModel.Player = new PlayerModel();
+            //gameModel.Map = new TilemapModel();
+            //gameModel.Player = new PlayerModel();
             gameModel.Enemy = new EnemyModel();
             gameModel.Chests = new List<ChestModel>();
             
@@ -80,15 +80,15 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer()
         {
-            //playerLogic.UpdateDeltaTime(deltaTime);
-            //playerLogic.UpdateTilePosition(gameModel.Map);
-            //playerLogic.HandleMapCollision(gameModel.Map);
-            //playerLogic.HandleEnemyCollision(gameModel.Enemy);
+            playerLogic.UpdateDeltaTime(deltaTime);
+            playerLogic.UpdateTilePosition(gameModel.Map);
+            playerLogic.HandleMapCollision(gameModel.Map);
+            playerLogic.HandleEnemyCollision(gameModel.Enemy);
 
-            //foreach (var chest in gameModel.Chests)
-            //{
-            //    playerLogic.HandleObjectCollision(chest);
-            //}
+            foreach (var chest in gameModel.Chests)
+            {
+                playerLogic.HandleObjectCollision(chest);
+            }
         }
 
         public void UpdateDeltaTime()

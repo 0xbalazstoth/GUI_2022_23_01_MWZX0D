@@ -86,12 +86,13 @@ namespace Gunner
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
 
+            this.tilemapLogic = new TilemapLogic(gameModel);
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
-
-            this.tilemapLogic = new TilemapLogic(gameModel);
 
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
@@ -123,7 +124,6 @@ namespace Gunner
             playerWalkUpAnimation.Speed = playerAnimationSpeed;
             playerWalkUpAnimation.Row = 3;
 
-            playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             playerLogic.LoadTexture("player.png");
 
             enemyLogic = new EnemyLogic(gameModel);
@@ -216,7 +216,7 @@ namespace Gunner
             window.Display();
         }
 
-        private void GameKeyDown()
+        private void GamePlayerControl()
         {
             Dictionary<Key, Vector2f> input = new()
             {
@@ -246,21 +246,11 @@ namespace Gunner
             playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
             playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
 
-            playerLogic.UpdateDeltaTime(gameLogic.GetDeltaTime);
-
-            GameKeyDown();
+            GamePlayerControl();
 
             gameLogic.UpdateCamera(gameModel.CameraView);
             gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, this.worldPos, gameLogic.GetDeltaTime);
             gameLogic.UpdatePlayer();
-            playerLogic.UpdateTilePosition(gameModel.Map);
-            playerLogic.HandleMapCollision(gameModel.Map);
-            playerLogic.HandleEnemyCollision(gameModel.Enemy);
-
-            foreach (var chest in gameModel.Chests)
-            {
-                playerLogic.HandleObjectCollision(chest);
-            }
         }
 
         public void DrawGame()
