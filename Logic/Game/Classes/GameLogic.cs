@@ -42,8 +42,6 @@ namespace Logic.Game.Classes
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            //gameModel.Map = new TilemapModel();
-            //gameModel.Player = new PlayerModel();
             gameModel.Enemy = new EnemyModel();
             gameModel.Chests = new List<ChestModel>();
             
@@ -104,6 +102,8 @@ namespace Logic.Game.Classes
 
         public void MoveCamera(uint mapWidth, Vector2f playerPosition, Vector2f cursorPositionWorld, float dt)
         {
+            // TODO: Shooting is not working because of the camera movement
+
             var direction = Vector2.Normalize(new(cursorPositionWorld.X - playerPosition.X, cursorPositionWorld.Y - playerPosition.Y));
             var position = new Vector2(playerPosition.X, playerPosition.Y);
             var distance = Vector2.Distance(new(playerPosition.X, playerPosition.Y), new(cursorPositionWorld.X, cursorPositionWorld.Y));

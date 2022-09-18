@@ -2,7 +2,9 @@
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,27 +12,17 @@ namespace Logic.Game
 {
     public class Bullet
     {
-        private RectangleShape rectangle;
-        public const float BULLET_SPEED = 20f;
-        Vector2f position;
+        public CircleShape shape { get; set; }
+        public Vector2f currVelocity { get; set; }
+        public float maxSpeed { get; set; }
 
-        Vector2f size = new Vector2f(5, 10);
-
-        public Vector2f Position { get { return position; } }
-        public RectangleShape RectangleBullet { get { return this.rectangle; } }
-
-        public Bullet(Vector2f position)
+        public Bullet(float radius = 5f)
         {
-            this.rectangle = new RectangleShape(size);
-            this.rectangle.FillColor = Color.White;
-            this.rectangle.Position = position;
-            this.position = position;
-        }
+            currVelocity = new Vector2f(0, 0);
+            maxSpeed = 15f;
 
-        public void Update()
-        {
-            this.position.Y -= BULLET_SPEED;
-            this.rectangle.Position = this.position;
+            shape = new CircleShape(radius);
+            shape.FillColor = Color.Red;
         }
     }
 }

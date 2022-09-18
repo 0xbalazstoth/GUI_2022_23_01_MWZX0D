@@ -13,8 +13,10 @@ using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -56,6 +58,13 @@ namespace Gunner
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic chestLogic;
+        
+        private Bullet bullet;
+        private List<Bullet> bullets;
+        private Vector2f playerCenter;
+        private Vector2f mousePosWindow;
+        private Vector2f aimDir;
+        private Vector2f aimDirNorm;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
@@ -133,6 +142,10 @@ namespace Gunner
             chestLogic.LoadTexture("chest.png");
             
             gameModel.Chests[0].Position = new Vector2f(100, 100);
+
+            bullet = new Bullet();
+            bullets = new List<Bullet>();
+            bullets.Add(bullet);
         }
 
         private void InitSystem()
@@ -204,7 +217,7 @@ namespace Gunner
             this.worldPos = worldPos;
 
             window.Clear();
-
+            
             window.SetView(gameModel.CameraView);
             DrawGame();
 
@@ -238,6 +251,35 @@ namespace Gunner
 
         public void Update()
         {
+            playerCenter = new Vector2f(gameModel.Player.Position.X + gameModel.Player.GetGlobalBounds().Width / 2f, gameModel.Player.Position.Y + gameModel.Player.GetGlobalBounds().Height / 2f);
+            mousePosWindow = (Vector2f)Mouse.GetPosition(window);
+            aimDir = mousePosWindow - playerCenter;
+            aimDirNorm = aimDir / (float)Math.Sqrt(aimDir.X * aimDir.X + aimDir.Y * aimDir.Y);
+
+            // shoot
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            {
+                Bullet tempBullet = new Bullet();
+                tempBullet.shape.Position = playerCenter;
+                tempBullet.currVelocity = aimDirNorm * tempBullet.maxSpeed;
+                bullets.Add(tempBullet);
+            }
+
+            // update bullets
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                bullets[i].shape.Position += bullets[i].currVelocity;
+
+                float distX = bullets[i].shape.Position.X - playerCenter.X;
+                float distY = bullets[i].shape.Position.Y - playerCenter.Y;
+
+                // remove bullets that go off screen
+                if (Math.Sqrt(distX * distX + distY * distY) > 1000)
+                {
+                    bullets.RemoveAt(i);
+                }
+            }
+
             uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
             playerIdleAnimation.Update(gameLogic.GetDeltaTime, 3);
@@ -249,7 +291,7 @@ namespace Gunner
             GamePlayerControl();
 
             gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, this.worldPos, gameLogic.GetDeltaTime);
+            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, worldPos, gameLogic.GetDeltaTime);
             gameLogic.UpdatePlayer();
         }
 
@@ -257,10 +299,15 @@ namespace Gunner
         {
             gameRenderer.Draw(window);
 
+            foreach (Bullet bullet in bullets)
+            {
+                window.Draw(bullet.shape);
+            }
+
             playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
             playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
 
-            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects); 
+            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
         }
 
         public void DrawUI()
