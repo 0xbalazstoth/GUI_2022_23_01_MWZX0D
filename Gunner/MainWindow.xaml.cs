@@ -226,7 +226,14 @@ namespace Gunner
                { Key.D, gameModel.MovementDirections[MovementDirection.Right].Direction },
             };
 
-            playerLogic.HandleMovement(input);
+            Vector2f direction = new();
+            foreach (var kvp in input)
+            {
+                if (IsKeyPressed(kvp.Key))
+                    direction += kvp.Value;
+            }
+
+            playerLogic.HandleMovement(direction);
         }
 
         public void Update()

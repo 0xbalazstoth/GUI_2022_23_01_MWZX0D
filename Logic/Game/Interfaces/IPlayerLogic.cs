@@ -11,9 +11,9 @@ namespace Logic.Game.Interfaces
     public interface IPlayerLogic
     {
         void UpdateDeltaTime(float dt);
-        void HandleMovement(Dictionary<Key, Vector2f> input);
+        void HandleMovement(Vector2f direction);
         void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
-        Vector2f GetDirectionFromInput(Dictionary<Key, Vector2f> input);
+        Vector2f GetDirectionFromInput(Vector2f direction);
         MovementDirection GetMovementByDirection(Vector2f movementDirection);
         void UpdateTilePosition(TilemapModel tilemap);
         void LoadTexture(string filename);

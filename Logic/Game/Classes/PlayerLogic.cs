@@ -34,15 +34,8 @@ namespace Logic.Game.Classes
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
         }
 
-        public Vector2f GetDirectionFromInput(Dictionary<Key, Vector2f> input)
+        public Vector2f GetDirectionFromInput(Vector2f direction)
         {
-            Vector2f direction = new();
-            foreach (var kvp in input)
-            {
-                if (IsKeyPressed(kvp.Key))
-                    direction += kvp.Value;
-            }
-
             Vector2 numericsVector = Vector2.Normalize(new(direction.X, direction.Y));
             return new(numericsVector.X, numericsVector.Y);
         }
@@ -66,9 +59,9 @@ namespace Logic.Game.Classes
             gameModel.Player.TilePosition = new Vector2i((int)(x / tilemap.TileSize.X), (int)(y / tilemap.TileSize.Y));
         }
 
-        public void HandleMovement(Dictionary<Key, Vector2f> input)
+        public void HandleMovement(Vector2f direction)
         {
-            var movementDirection = GetDirectionFromInput(input);
+            var movementDirection = GetDirectionFromInput(direction);
             if (float.IsNaN(movementDirection.X) || float.IsNaN(movementDirection.Y))
                 return;
 
