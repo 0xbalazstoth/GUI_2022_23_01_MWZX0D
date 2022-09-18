@@ -212,9 +212,9 @@ namespace Gunner
 
             Update();
 
-            var pixelPos = Mouse.GetPosition(window);
-            var worldPos = window.MapPixelToCoords(pixelPos);
-            this.worldPos = worldPos;
+            //var pixelPos = Mouse.GetPosition(window);
+            //var worldPos = window.MapPixelToCoords(pixelPos);
+            //this.worldPos = worldPos;
 
             window.Clear();
             
@@ -253,7 +253,8 @@ namespace Gunner
         {
             playerCenter = new Vector2f(gameModel.Player.Position.X + gameModel.Player.GetGlobalBounds().Width / 2f, gameModel.Player.Position.Y + gameModel.Player.GetGlobalBounds().Height / 2f);
             mousePosWindow = (Vector2f)Mouse.GetPosition(window);
-            aimDir = mousePosWindow - playerCenter;
+            worldPos = window.MapPixelToCoords(new Vector2i((int)mousePosWindow.X, (int)mousePosWindow.Y), gameModel.CameraView);
+            aimDir = worldPos - playerCenter;
             aimDirNorm = aimDir / (float)Math.Sqrt(aimDir.X * aimDir.X + aimDir.Y * aimDir.Y);
 
             // shoot
