@@ -10,5 +10,6 @@ namespace Model.Game.Classes
     {
         public string Name { get; set; }
         public int Health { get; set; }
+        public List<BulletModel> Bullets { get; set; }
     }
 }

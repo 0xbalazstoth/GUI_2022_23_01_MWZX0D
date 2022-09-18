@@ -2,6 +2,7 @@
 using Logic.Game.Classes;
 using Logic.Game.Interfaces;
 using Logic.Tools;
+using Model.Game;
 using Model.Game.Classes;
 using Model.Tools;
 using Model.UI.Classes;
@@ -21,12 +22,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static SFML.Window.Keyboard;
 using Color = SFML.Graphics.Color;
 using Keyboard = SFML.Window.Keyboard;
 using MessageBox = System.Windows.MessageBox;
@@ -215,6 +216,19 @@ namespace Gunner
             window.Display();
         }
 
+        private void GameKeyDown()
+        {
+            Dictionary<Key, Vector2f> input = new()
+            {
+               { Key.W, gameModel.MovementDirections[MovementDirection.Up].Direction },
+               { Key.S, gameModel.MovementDirections[MovementDirection.Down].Direction },
+               { Key.A, gameModel.MovementDirections[MovementDirection.Left].Direction },
+               { Key.D, gameModel.MovementDirections[MovementDirection.Right].Direction },
+            };
+
+            playerLogic.HandleMovement(input);
+        }
+
         public void Update()
         {
             uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
@@ -226,9 +240,12 @@ namespace Gunner
             playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
 
             playerLogic.UpdateDeltaTime(gameLogic.GetDeltaTime);
+
+            GameKeyDown();
+
             gameLogic.UpdateCamera(gameModel.CameraView);
             gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, this.worldPos, gameLogic.GetDeltaTime);
-
+            gameLogic.UpdatePlayer();
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
             playerLogic.HandleEnemyCollision(gameModel.Enemy);

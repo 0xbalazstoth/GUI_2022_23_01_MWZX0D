@@ -12,5 +12,6 @@ namespace Model.Game.Classes
         public PlayerModel Player { get; set; }
         public EnemyModel Enemy { get; set; }
         public List<ChestModel> Chests { get ; set ; }
+        public Dictionary<MovementDirection, Movement> MovementDirections { get; set; }
     }
 }

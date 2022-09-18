@@ -46,6 +46,17 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             gameModel.Enemy = new EnemyModel();
             gameModel.Chests = new List<ChestModel>();
+            
+            gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
+            gameModel.MovementDirections.Add(MovementDirection.NoneOrUnknown, new Movement() { MovementDirection = MovementDirection.NoneOrUnknown, Direction = new Vector2f(0, 0) });
+            gameModel.MovementDirections.Add(MovementDirection.Up, new Movement() { MovementDirection = MovementDirection.Up, Direction = new Vector2f(0, -1f) });
+            gameModel.MovementDirections.Add(MovementDirection.Down, new Movement() { MovementDirection = MovementDirection.Down, Direction = new Vector2f(0, 1f) });
+            gameModel.MovementDirections.Add(MovementDirection.Left, new Movement() { MovementDirection = MovementDirection.Left, Direction = new Vector2f(-1f, 0) });
+            gameModel.MovementDirections.Add(MovementDirection.Right, new Movement() { MovementDirection = MovementDirection.Right, Direction = new Vector2f(1f, 0) });
+            gameModel.MovementDirections.Add(MovementDirection.UpLeft, new Movement() { MovementDirection = MovementDirection.UpLeft, Direction = new Vector2f(-1f, -1f) });
+            gameModel.MovementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
+            gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
+            gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -69,7 +80,15 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer()
         {
-            
+            //playerLogic.UpdateDeltaTime(deltaTime);
+            //playerLogic.UpdateTilePosition(gameModel.Map);
+            //playerLogic.HandleMapCollision(gameModel.Map);
+            //playerLogic.HandleEnemyCollision(gameModel.Enemy);
+
+            //foreach (var chest in gameModel.Chests)
+            //{
+            //    playerLogic.HandleObjectCollision(chest);
+            //}
         }
 
         public void UpdateDeltaTime()

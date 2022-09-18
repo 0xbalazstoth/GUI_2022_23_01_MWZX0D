@@ -5,6 +5,7 @@ using Model.Game.Classes;
 using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,7 @@ namespace Logic.Game.Classes
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
 
-        private Dictionary<MovementDirection, Movement> movementDirections;
-        
-        private uint mapHeight;
-        private uint mapWidth;
+        private int delay = 0;
         private Vector2f movementDirection;
         private Vector2f previousPosition;
 
@@ -32,35 +30,12 @@ namespace Logic.Game.Classes
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
 
-            movementDirections = new Dictionary<MovementDirection, Movement>();
-            movementDirections.Add(MovementDirection.NoneOrUnknown, new Movement() { MovementDirection = MovementDirection.NoneOrUnknown, Direction = new Vector2f(0, 0) });
-            movementDirections.Add(MovementDirection.Up, new Movement() { MovementDirection = MovementDirection.Up, Direction = new Vector2f(0, -1f) });
-            movementDirections.Add(MovementDirection.Down, new Movement() { MovementDirection = MovementDirection.Down, Direction = new Vector2f(0, 1f) });
-            movementDirections.Add(MovementDirection.Left, new Movement() { MovementDirection = MovementDirection.Left, Direction = new Vector2f(-1f, 0) });
-            movementDirections.Add(MovementDirection.Right, new Movement() { MovementDirection = MovementDirection.Right, Direction = new Vector2f(1f, 0) });
-            movementDirections.Add(MovementDirection.UpLeft, new Movement() { MovementDirection = MovementDirection.UpLeft, Direction = new Vector2f(-1f, -1f) });
-            movementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
-            movementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
-            movementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
-
-            this.gameModel.Player.MovementDirections = movementDirections;
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
-
-            mapHeight = gameModel.Map.Height;
-            mapWidth = gameModel.Map.Width;
         }
 
-        public Vector2f GetDirectionFromInput()
+        public Vector2f GetDirectionFromInput(Dictionary<Key, Vector2f> input)
         {
-            Dictionary<Key, Vector2f> input = new()
-            {
-               { Key.W, movementDirections[MovementDirection.Up].Direction },
-               { Key.S, movementDirections[MovementDirection.Down].Direction },
-               { Key.A, movementDirections[MovementDirection.Left].Direction },
-               { Key.D, movementDirections[MovementDirection.Right].Direction },
-            };
-
             Vector2f direction = new();
             foreach (var kvp in input)
             {
@@ -74,7 +49,7 @@ namespace Logic.Game.Classes
 
         public MovementDirection GetMovementByDirection(Vector2f movementDirection)
         {
-            return movementDirections.Where(x => x.Value.Direction == movementDirection).FirstOrDefault().Key;
+            return gameModel.MovementDirections.Where(x => x.Value.Direction == movementDirection).FirstOrDefault().Key;
         }
 
         public void LoadTexture(string filename)
@@ -91,9 +66,9 @@ namespace Logic.Game.Classes
             gameModel.Player.TilePosition = new Vector2i((int)(x / tilemap.TileSize.X), (int)(y / tilemap.TileSize.Y));
         }
 
-        public void HandleMovement()
+        public void HandleMovement(Dictionary<Key, Vector2f> input)
         {
-            var movementDirection = GetDirectionFromInput();
+            var movementDirection = GetDirectionFromInput(input);
             if (float.IsNaN(movementDirection.X) || float.IsNaN(movementDirection.Y))
                 return;
 
@@ -138,8 +113,6 @@ namespace Logic.Game.Classes
         public void UpdateDeltaTime(float dt)
         {
             gameModel.Player.DeltaTime = dt;
-
-            HandleMovement();
         }
 
         public void HandleEnemyCollision(EnemyModel enemy)
@@ -183,7 +156,6 @@ namespace Logic.Game.Classes
                     var rect = gameModel.Player.GetGlobalBounds();
                     if (rect.Intersects(tileRect))
                     {
-                        Console.WriteLine(tilemapLogic.ToString());
                         gameModel.Player.Position = previousPosition;
                         return;
                     }
