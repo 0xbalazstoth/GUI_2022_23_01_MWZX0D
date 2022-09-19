@@ -156,7 +156,6 @@ namespace Logic.Game.Classes
 
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
                     var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
-
                     var rect = gameModel.Player.GetGlobalBounds();
                     if (rect.Intersects(tileRect))
                     {

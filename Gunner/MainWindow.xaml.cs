@@ -208,7 +208,6 @@ namespace Gunner
             gameLogic.UpdateDeltaTime();
 
             window.DispatchEvents();
-
             window.SetActive(true);
             window.Size = new Vector2u((uint)sfmlSurface.Size.Width, (uint)sfmlSurface.Size.Height);
             window.SetView(new View(new FloatRect(0, 0, sfmlSurface.Size.Width, sfmlSurface.Size.Height)));
