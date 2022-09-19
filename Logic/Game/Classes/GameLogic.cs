@@ -6,6 +6,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -42,10 +43,19 @@ namespace Logic.Game.Classes
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            gameModel.Map = new TilemapModel();
-            gameModel.Player = new PlayerModel();
             gameModel.Enemy = new EnemyModel();
             gameModel.Chests = new List<ChestModel>();
+            
+            gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
+            gameModel.MovementDirections.Add(MovementDirection.NoneOrUnknown, new Movement() { MovementDirection = MovementDirection.NoneOrUnknown, Direction = new Vector2f(0, 0) });
+            gameModel.MovementDirections.Add(MovementDirection.Up, new Movement() { MovementDirection = MovementDirection.Up, Direction = new Vector2f(0, -1f) });
+            gameModel.MovementDirections.Add(MovementDirection.Down, new Movement() { MovementDirection = MovementDirection.Down, Direction = new Vector2f(0, 1f) });
+            gameModel.MovementDirections.Add(MovementDirection.Left, new Movement() { MovementDirection = MovementDirection.Left, Direction = new Vector2f(-1f, 0) });
+            gameModel.MovementDirections.Add(MovementDirection.Right, new Movement() { MovementDirection = MovementDirection.Right, Direction = new Vector2f(1f, 0) });
+            gameModel.MovementDirections.Add(MovementDirection.UpLeft, new Movement() { MovementDirection = MovementDirection.UpLeft, Direction = new Vector2f(-1f, -1f) });
+            gameModel.MovementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
+            gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
+            gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -69,7 +79,15 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer()
         {
-            
+            playerLogic.UpdateDeltaTime(deltaTime);
+            playerLogic.UpdateTilePosition(gameModel.Map);
+            playerLogic.HandleMapCollision(gameModel.Map);
+            playerLogic.HandleEnemyCollision(gameModel.Enemy);
+
+            foreach (var chest in gameModel.Chests)
+            {
+                playerLogic.HandleObjectCollision(chest);
+            }
         }
 
         public void UpdateDeltaTime()
@@ -85,9 +103,13 @@ namespace Logic.Game.Classes
 
         public void MoveCamera(uint mapWidth, Vector2f playerPosition, Vector2f cursorPositionWorld, float dt)
         {
+            // TODO: Shooting is not working because of the camera movement
+
             var direction = Vector2.Normalize(new(cursorPositionWorld.X - playerPosition.X, cursorPositionWorld.Y - playerPosition.Y));
             var position = new Vector2(playerPosition.X, playerPosition.Y);
             var distance = Vector2.Distance(new(playerPosition.X, playerPosition.Y), new(cursorPositionWorld.X, cursorPositionWorld.Y));
+
+            Trace.WriteLine(direction);
 
             position += direction * Math.Min(distance / 3f, 100f);
 

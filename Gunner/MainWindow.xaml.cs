@@ -2,6 +2,7 @@
 using Logic.Game.Classes;
 using Logic.Game.Interfaces;
 using Logic.Tools;
+using Model.Game;
 using Model.Game.Classes;
 using Model.Tools;
 using Model.UI.Classes;
@@ -12,8 +13,10 @@ using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,12 +24,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static SFML.Window.Keyboard;
 using Color = SFML.Graphics.Color;
 using Keyboard = SFML.Window.Keyboard;
 using MessageBox = System.Windows.MessageBox;
@@ -55,6 +58,14 @@ namespace Gunner
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic chestLogic;
+        private IBulletLogic bulletLogic;
+        
+        private Bullet bullet;
+        private List<Bullet> bullets;
+        private Vector2f playerCenter;
+        private Vector2f mousePosWindow;
+        private Vector2f aimDir;
+        private Vector2f aimDirNorm;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
@@ -85,12 +96,14 @@ namespace Gunner
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
 
+            this.tilemapLogic = new TilemapLogic(gameModel);
+            this.bulletLogic = new BulletLogic(gameModel);
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
-
-            this.tilemapLogic = new TilemapLogic(gameModel);
 
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
@@ -122,7 +135,6 @@ namespace Gunner
             playerWalkUpAnimation.Speed = playerAnimationSpeed;
             playerWalkUpAnimation.Row = 3;
 
-            playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             playerLogic.LoadTexture("player.png");
 
             enemyLogic = new EnemyLogic(gameModel);
@@ -132,6 +144,10 @@ namespace Gunner
             chestLogic.LoadTexture("chest.png");
             
             gameModel.Chests[0].Position = new Vector2f(100, 100);
+
+            bullet = new Bullet();
+            bullets = new List<Bullet>();
+            bullets.Add(bullet);
         }
 
         private void InitSystem()
@@ -198,12 +214,8 @@ namespace Gunner
 
             Update();
 
-            var pixelPos = Mouse.GetPosition(window);
-            var worldPos = window.MapPixelToCoords(pixelPos);
-            this.worldPos = worldPos;
-
             window.Clear();
-
+            
             window.SetView(gameModel.CameraView);
             DrawGame();
 
@@ -215,8 +227,56 @@ namespace Gunner
             window.Display();
         }
 
+        private void GameController()
+        {
+            Dictionary<Key, Vector2f> input = new()
+            {
+               { Key.W, gameModel.MovementDirections[MovementDirection.Up].Direction },
+               { Key.S, gameModel.MovementDirections[MovementDirection.Down].Direction },
+               { Key.A, gameModel.MovementDirections[MovementDirection.Left].Direction },
+               { Key.D, gameModel.MovementDirections[MovementDirection.Right].Direction },
+            };
+
+            Vector2f direction = new();
+            foreach (var kvp in input)
+            {
+                if (IsKeyPressed(kvp.Key))
+                    direction += kvp.Value;
+            }
+
+            playerLogic.HandleMovement(direction);
+        }
+
         public void Update()
         {
+            playerLogic.UpdateWorldPositionByMouse(window);
+
+            // shoot
+            if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            {
+                bulletLogic.Shoot();
+                //Bullet tempBullet = new Bullet();
+                //tempBullet.shape.Position = gameModel.Player.Center;
+                //tempBullet.currVelocity = gameModel.Player.AimDirectionNormalized * tempBullet.maxSpeed;
+                //bullets.Add(tempBullet);
+            }
+
+            bulletLogic.Update();
+            //// update bullets
+            //for (int i = 0; i < bullets.Count; i++)
+            //{
+            //    bullets[i].shape.Position += bullets[i].currVelocity;
+
+            //    float distX = bullets[i].shape.Position.X - gameModel.Player.Center.X;
+            //    float distY = bullets[i].shape.Position.Y - gameModel.Player.Center.Y;
+
+            //    // remove bullets that go off screen
+            //    if (Math.Sqrt(distX * distX + distY * distY) > 1000)
+            //    {
+            //        bullets.RemoveAt(i);
+            //    }
+            //}
+
             uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
             playerIdleAnimation.Update(gameLogic.GetDeltaTime, 3);
@@ -225,28 +285,31 @@ namespace Gunner
             playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
             playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
 
-            playerLogic.UpdateDeltaTime(gameLogic.GetDeltaTime);
+            GameController();
+
             gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, this.worldPos, gameLogic.GetDeltaTime);
-
-            playerLogic.UpdateTilePosition(gameModel.Map);
-            playerLogic.HandleMapCollision(gameModel.Map);
-            playerLogic.HandleEnemyCollision(gameModel.Enemy);
-
-            foreach (var chest in gameModel.Chests)
-            {
-                playerLogic.HandleObjectCollision(chest);
-            }
+            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, worldPos, gameLogic.GetDeltaTime);
+            gameLogic.UpdatePlayer();
         }
 
         public void DrawGame()
         {
             gameRenderer.Draw(window);
 
+            //foreach (Bullet bullet in bullets)
+            //{
+            //    window.Draw(bullet.shape);
+            //}
+
+            foreach (var bullet in gameModel.Bullets)
+            {
+                window.Draw(bullet.Shape);
+            }
+
             playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
             playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
 
-            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects); 
+            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
         }
 
         public void DrawUI()
