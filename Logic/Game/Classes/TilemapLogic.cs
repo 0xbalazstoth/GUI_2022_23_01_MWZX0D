@@ -19,7 +19,9 @@ namespace Logic.Game.Classes
         
         public TilemapLogic(IGameModel gameModel)
         {
-            this.gameModel = gameModel; 
+            this.gameModel = gameModel;
+
+            gameModel.Map = new TilemapModel();
         }
 
         public int GetTileID(int layer, int x, int y)
