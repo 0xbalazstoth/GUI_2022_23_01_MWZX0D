@@ -30,6 +30,15 @@ namespace Renderer
             DrawPlayer(window);
             DrawEnemy(window);
             DrawObjects(window);
+            DrawBullets(window);
+        }
+
+        private void DrawBullets(RenderTarget window)
+        {
+            foreach (var bullet in gameModel.Bullets)
+            {
+                window.Draw(bullet.Shape);
+            }
         }
 
         private void DrawObjects(RenderTarget window)
