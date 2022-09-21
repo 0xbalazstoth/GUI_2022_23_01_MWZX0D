@@ -19,6 +19,22 @@ namespace Logic.Game.Classes
             gameModel.Bullets = new List<BulletModel>();
         }
 
+        public void HandleCollision(RenderWindow window)
+        {
+            // Check if bullets are in the window/screen
+
+            //for (int i = 0; i < gameModel.Bullets.Count; i++)
+            //{
+            //    if (gameModel.Bullets[i].Shape.Position.X < 0
+            //        || gameModel.Bullets[i].Shape.Position.X > window.Size.X
+            //        || gameModel.Bullets[i].Shape.Position.Y < 0
+            //        || gameModel.Bullets[i].Shape.Position.Y > window.Size.Y)
+            //    {
+            //        gameModel.Bullets.RemoveAt(i);
+            //    }
+            //}
+        }
+
         public void Shoot()
         {
             BulletModel tempBullet = new BulletModel();
@@ -39,7 +55,7 @@ namespace Logic.Game.Classes
                 float distX = gameModel.Bullets[i].Shape.Position.X - gameModel.Player.Center.X;
                 float distY = gameModel.Bullets[i].Shape.Position.Y - gameModel.Player.Center.Y;
 
-                if (Math.Sqrt(distX * distX + distY * distY) > 1000)
+                if (Math.Sqrt(distX * distX + distY * distY) > 600)
                 {
                     gameModel.Bullets.RemoveAt(i);
                 }

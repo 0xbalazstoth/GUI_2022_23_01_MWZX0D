@@ -59,27 +59,15 @@ namespace Gunner
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic chestLogic;
         private IBulletLogic bulletLogic;
-        
-        private Bullet bullet;
-        private List<Bullet> bullets;
-        private Vector2f playerCenter;
-        private Vector2f mousePosWindow;
-        private Vector2f aimDir;
-        private Vector2f aimDirNorm;
+        private IAnimationLogic animationLogic;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
         private UIRenderer uiRenderer;
 
-        private Animation playerIdleAnimation;
-        private Animation playerWalkDownAnimation;
-        private Animation playerWalkLeftAnimation;
-        private Animation playerWalkRightAnimation;
-        private Animation playerWalkUpAnimation;
-        private Texture[] playerTextures;
-        private IntRect[] playerTextureRects;
-
-        private Vector2f worldPos;
+        private RectangleShape enemy;
+        private List<RectangleShape> enemies;
+        int spawnCounter = 20;
 
         private TimeSpan lastRenderTime;
 
@@ -98,9 +86,11 @@ namespace Gunner
 
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel);
-            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+            
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+            this.animationLogic = new AnimationLogic(gameModel);
 
-            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic);
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
@@ -109,7 +99,7 @@ namespace Gunner
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
 
             this.gameRenderer = new GameRenderer(gameModel, System.IO.Path.Combine(projectDirectory, "Assets/Textures"));
-            
+
             this.uiRenderer = new UIRenderer(uiModel, System.IO.Path.Combine(projectDirectory, "Assets/Fonts"), "FreeMono.ttf");
 
             InitSystem();
@@ -118,23 +108,6 @@ namespace Gunner
 
         private void InitGameplay()
         {
-            float playerAnimationSpeed = 10f;
-
-            playerIdleAnimation.Speed = playerAnimationSpeed;
-            playerIdleAnimation.Row = 0;
-
-            playerWalkLeftAnimation.Speed = playerAnimationSpeed;
-            playerWalkLeftAnimation.Row = 1;
-
-            playerWalkRightAnimation.Speed = playerAnimationSpeed;
-            playerWalkRightAnimation.Row = 2;
-
-            playerWalkDownAnimation.Speed = playerAnimationSpeed;
-            playerWalkDownAnimation.Row = 0;
-
-            playerWalkUpAnimation.Speed = playerAnimationSpeed;
-            playerWalkUpAnimation.Row = 3;
-
             playerLogic.LoadTexture("player.png");
 
             enemyLogic = new EnemyLogic(gameModel);
@@ -142,33 +115,21 @@ namespace Gunner
 
             chestLogic = new ObjectEntityLogic(gameModel);
             chestLogic.LoadTexture("chest.png");
-            
+
             gameModel.Chests[0].Position = new Vector2f(100, 100);
 
-            bullet = new Bullet();
-            bullets = new List<Bullet>();
-            bullets.Add(bullet);
+            enemy = new RectangleShape();
+            enemy.Size = new Vector2f(32, 32);
+            enemy.FillColor = Color.Red;
+
+            enemies = new List<RectangleShape>();
+            enemies.Add(enemy);
         }
 
         private void InitSystem()
         {
-            window.SetFramerateLimit(60);
-
-            playerIdleAnimation = new Animation();
-            playerIdleAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkDownAnimation = new Animation();
-            playerWalkDownAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkLeftAnimation = new Animation();
-            playerWalkLeftAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkRightAnimation = new Animation();
-            playerWalkRightAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkUpAnimation = new Animation();
-            playerWalkUpAnimation.Load("spritesheet.png", 4, 3);
-
+            window.SetFramerateLimit(144);
+            
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.CameraView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
@@ -215,7 +176,7 @@ namespace Gunner
             Update();
 
             window.Clear();
-            
+
             window.SetView(gameModel.CameraView);
             DrawGame();
 
@@ -244,48 +205,57 @@ namespace Gunner
                     direction += kvp.Value;
             }
 
-            playerLogic.HandleMovement(direction);
-        }
-
-        public void Update()
-        {
-            playerLogic.UpdateWorldPositionByMouse(window);
-
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
                 bulletLogic.Shoot();
             }
 
-            bulletLogic.Update();
+            playerLogic.HandleMovement(direction);
+        }
+
+        public void Update()
+        {
+            gameLogic.UpdateBullets(window);
+
+            if (spawnCounter < 20)
+            {
+                spawnCounter++;
+            }
+
+            if (spawnCounter >= 20 && enemies.Count < 50)
+            {
+                enemy.Position = new Vector2f(new Random().Next(0, 1000), new Random().Next(0, 1000));
+                enemies.Add(enemy);
+
+                spawnCounter = 0;
+            }
 
             uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
-            playerIdleAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkUpAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkDownAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
+            animationLogic.Update(gameLogic.GetDeltaTime, 4);
+
+            playerLogic.UpdateAnimationTextures();
 
             GamePlayerControl();
 
             gameLogic.UpdateCamera(gameModel.CameraView);
             gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
-            gameLogic.UpdatePlayer();
+            gameLogic.UpdatePlayer(window);
         }
 
         public void DrawGame()
         {
             gameRenderer.Draw(window);
 
-            playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
-            playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
-
-            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
+            foreach (var enemy in enemies)
+            {
+                window.Draw(enemy);
+            }
         }
 
         public void DrawUI()
         {
-            //uiRenderer.Draw(window);
+            uiRenderer.Draw(window);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Logic.Game.Classes
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic objectEntityLogic;
+        private IBulletLogic bulletLogic;
 
         private Clock deltaTimeClock;
         private float deltaTime;
@@ -30,13 +31,14 @@ namespace Logic.Game.Classes
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic, IBulletLogic bulletLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
             this.playerLogic = playerLogic;
             this.enemyLogic = enemyLogic;
             this.objectEntityLogic = objectEntityLogic;
+            this.bulletLogic = bulletLogic;
 
             deltaTimeClock = new Clock();
 
@@ -77,8 +79,9 @@ namespace Logic.Game.Classes
             gameModel.Map.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
         }
 
-        public void UpdatePlayer()
+        public void UpdatePlayer(RenderWindow window)
         {
+            playerLogic.UpdateWorldPositionByMouse(window);
             playerLogic.UpdateDeltaTime(deltaTime);
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
@@ -88,6 +91,12 @@ namespace Logic.Game.Classes
             {
                 playerLogic.HandleObjectCollision(chest);
             }
+        }
+
+        public void UpdateBullets(RenderWindow window)
+        {
+            bulletLogic.HandleCollision(window);
+            bulletLogic.Update();
         }
 
         public void UpdateDeltaTime()

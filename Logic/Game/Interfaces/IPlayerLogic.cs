@@ -12,7 +12,7 @@ namespace Logic.Game.Interfaces
     {
         void UpdateDeltaTime(float dt);
         void HandleMovement(Vector2f direction);
-        void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
+        void UpdateAnimationTextures();
         Vector2f GetDirectionFromInput(Vector2f direction);
         MovementDirection GetMovementByDirection(Vector2f movementDirection);
         void UpdateTilePosition(TilemapModel tilemap);

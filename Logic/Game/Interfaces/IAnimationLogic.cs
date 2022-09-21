@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SFML.Graphics;
+using SFML.System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,7 @@ namespace Logic.Game.Interfaces
 {
     public interface IAnimationLogic
     {
-        void LoadTexture(string filename, uint totalRows, uint totalColumns);
+        //void LoadTexture(string filename, uint totalRows, uint totalColumns);
         void Update(float dt, int columnsInRow);
     }
 }

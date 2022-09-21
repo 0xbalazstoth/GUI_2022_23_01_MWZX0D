@@ -15,5 +15,6 @@ namespace Model.Game.Classes
         public Vector2f Center { get; set; }
         public Vector2f AimDirection { get; set; }
         public Vector2f AimDirectionNormalized { get; set; }
+        public Dictionary<MovementDirection, AnimationModel> Animations { get; set; }
     }
 }

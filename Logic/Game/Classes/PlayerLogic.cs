@@ -20,14 +20,16 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
+        private IAnimationLogic animationLogic;
 
         private Vector2f movementDirection;
         private Vector2f previousPosition;
 
-        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, uint windowWidth, uint windowHeight)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IAnimationLogic animationLogic, uint windowWidth, uint windowHeight)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
+            this.animationLogic = animationLogic;
 
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
@@ -75,31 +77,31 @@ namespace Logic.Game.Classes
             
         }
 
-        public void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect)
+        public void UpdateAnimationTextures()
         {
-            gameModel.Player.Texture = texture[0];
-            gameModel.Player.TextureRect = textureRect[0];
+            gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Idle].Texture;
+            gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Idle].TextureRect;
 
             var movement = GetMovementByDirection(movementDirection);
             if (movement == MovementDirection.Up)
             {
-                gameModel.Player.Texture = texture[3];
-                gameModel.Player.TextureRect = textureRect[3];
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Up].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Up].TextureRect;
             }
             else if (movement == MovementDirection.Down)
             {
-                gameModel.Player.Texture = texture[1];
-                gameModel.Player.TextureRect = textureRect[1];
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Down].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Down].TextureRect;
             }
             else if (movement == MovementDirection.Left)
             {
-                gameModel.Player.Texture = texture[2];
-                gameModel.Player.TextureRect = textureRect[2];
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Left].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Left].TextureRect;
             }
             else if (movement == MovementDirection.Right)
             {
-                gameModel.Player.Texture = texture[4];
-                gameModel.Player.TextureRect = textureRect[4];
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Right].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Right].TextureRect;
             }
         }
 
