@@ -101,13 +101,11 @@ namespace Logic.Game.Classes
             gameModel.CameraView = cameraView;
         }
 
-        public void MoveCamera(uint mapWidth, Vector2f playerPosition, Vector2f cursorPositionWorld, float dt)
+        public void MoveCamera(uint mapWidth, float dt)
         {
-            // TODO: Shooting is not working because of the camera movement
-
-            var direction = Vector2.Normalize(new(cursorPositionWorld.X - playerPosition.X, cursorPositionWorld.Y - playerPosition.Y));
-            var position = new Vector2(playerPosition.X, playerPosition.Y);
-            var distance = Vector2.Distance(new(playerPosition.X, playerPosition.Y), new(cursorPositionWorld.X, cursorPositionWorld.Y));
+            var direction = Vector2.Normalize(new(gameModel.WorldPositionInCamera.X - gameModel.Player.Position.X, gameModel.WorldPositionInCamera.Y - gameModel.Player.Position.Y));
+            var position = new Vector2(gameModel.Player.Position.X, gameModel.Player.Position.Y);
+            var distance = Vector2.Distance(new(gameModel.Player.Position.X, gameModel.Player.Position.Y), new(gameModel.WorldPositionInCamera.X, gameModel.WorldPositionInCamera.Y));
 
             Trace.WriteLine(direction);
 

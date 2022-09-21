@@ -227,7 +227,7 @@ namespace Gunner
             window.Display();
         }
 
-        private void GameController()
+        private void GamePlayerControl()
         {
             Dictionary<Key, Vector2f> input = new()
             {
@@ -251,31 +251,12 @@ namespace Gunner
         {
             playerLogic.UpdateWorldPositionByMouse(window);
 
-            // shoot
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
                 bulletLogic.Shoot();
-                //Bullet tempBullet = new Bullet();
-                //tempBullet.shape.Position = gameModel.Player.Center;
-                //tempBullet.currVelocity = gameModel.Player.AimDirectionNormalized * tempBullet.maxSpeed;
-                //bullets.Add(tempBullet);
             }
 
             bulletLogic.Update();
-            //// update bullets
-            //for (int i = 0; i < bullets.Count; i++)
-            //{
-            //    bullets[i].shape.Position += bullets[i].currVelocity;
-
-            //    float distX = bullets[i].shape.Position.X - gameModel.Player.Center.X;
-            //    float distY = bullets[i].shape.Position.Y - gameModel.Player.Center.Y;
-
-            //    // remove bullets that go off screen
-            //    if (Math.Sqrt(distX * distX + distY * distY) > 1000)
-            //    {
-            //        bullets.RemoveAt(i);
-            //    }
-            //}
 
             uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
@@ -285,26 +266,16 @@ namespace Gunner
             playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
             playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
 
-            GameController();
+            GamePlayerControl();
 
             gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameModel.Player.Position, worldPos, gameLogic.GetDeltaTime);
+            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
             gameLogic.UpdatePlayer();
         }
 
         public void DrawGame()
         {
             gameRenderer.Draw(window);
-
-            //foreach (Bullet bullet in bullets)
-            //{
-            //    window.Draw(bullet.shape);
-            //}
-
-            foreach (var bullet in gameModel.Bullets)
-            {
-                window.Draw(bullet.Shape);
-            }
 
             playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
             playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
