@@ -252,7 +252,7 @@ namespace Gunner
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
 
-                playerLogic.RotateGun();
+                playerLogic.FlipAndRotateGun();
             }  
         }
 

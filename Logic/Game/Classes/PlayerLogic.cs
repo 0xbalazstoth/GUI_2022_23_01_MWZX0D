@@ -138,29 +138,22 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void RotateGun()
+        public void FlipAndRotateGun()
         {
             var angle = (float)Math.Atan2(gameModel.Player.AimDirectionNormalized.Y, gameModel.Player.AimDirectionNormalized.X) * 180f / (float)Math.PI;
-            gameModel.Player.Gun.Rotation = angle;
 
-            // Flip gun vertically
+            // Flip and rotate gun
             if (angle > 90f || angle < -90f)
             {
-                gameModel.Player.Gun.Scale = new Vector2f(3f, -3f);
+                gameModel.Player.Gun.Scale = new Vector2f(-2.5f, 2.5f);
+                gameModel.Player.Gun.Rotation = angle + 180f;
+                gameModel.Player.Gun.Position = new Vector2f(gameModel.Player.Position.X - 10, gameModel.Player.Position.Y + 5);
             }
             else
             {
-                gameModel.Player.Gun.Scale = new Vector2f(3f, 3f);
-            }
-
-            // Flip gun horizontally
-            if (angle > 0f && angle < 180f)
-            {
-                gameModel.Player.Gun.Scale = new Vector2f(-3f, gameModel.Player.Gun.Scale.Y);
-            }
-            else
-            {
-                gameModel.Player.Gun.Scale = new Vector2f(3f, gameModel.Player.Gun.Scale.Y);
+                gameModel.Player.Gun.Scale = new Vector2f(2.5f, 2.5f);
+                gameModel.Player.Gun.Rotation = angle;
+                gameModel.Player.Gun.Position = new Vector2f(gameModel.Player.Position.X + 10, gameModel.Player.Position.Y + 5);
             }
         }
 

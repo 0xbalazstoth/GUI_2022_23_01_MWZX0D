@@ -93,8 +93,8 @@ namespace Logic.Game.Classes
                 playerLogic.HandleObjectCollision(chest);
             }
 
+            gameModel.Player.Gun.Scale = new Vector2f(2.5f, 2.5f);
             gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
-            gameModel.Player.Gun.Position = gameModel.Player.Position;
         }
 
         public void UpdateBullets(RenderWindow window)
