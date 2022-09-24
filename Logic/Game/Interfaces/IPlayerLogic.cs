@@ -22,5 +22,6 @@ namespace Logic.Game.Interfaces
         void HandleEnemyCollision(EnemyModel enemy);
         void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
+        void RotateGun();
     }
 }

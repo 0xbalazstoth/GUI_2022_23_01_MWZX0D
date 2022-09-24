@@ -1,6 +1,7 @@
 ﻿using Logic.Game.Interfaces;
 using Model.Game.Classes;
 using SFML.Graphics;
+using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,17 @@ namespace Logic.Game.Classes
         {
             this.gameModel = gameModel;
             gameModel.Bullets = new List<BulletModel>();
+
+            GunModel pistol = new GunModel();
+            pistol.GunType = GunType.Pistol;
+            pistol.Damage = 10;
+            pistol.MaxAmmo = 15;
+            pistol.Texture = new Texture("Assets/Textures/pistol.png");
+            pistol.TextureRect = new IntRect(0, 0, 12, 3);
+            pistol.Scale = new Vector2f(2, 2);
+
+            gameModel.Guns = new List<GunModel>();
+            gameModel.Guns.Add(pistol);
         }
 
         public void HandleCollision(RenderWindow window)
@@ -40,7 +52,7 @@ namespace Logic.Game.Classes
             BulletModel tempBullet = new BulletModel();
             tempBullet.Shape = new CircleShape(5);
             tempBullet.Speed = 15f;
-            tempBullet.Shape.Position = gameModel.Player.Center;
+            tempBullet.Shape.Position = gameModel.Player.Gun.Position;
             tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
 
             gameModel.Bullets.Add(tempBullet);

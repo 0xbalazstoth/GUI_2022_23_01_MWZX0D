@@ -98,9 +98,9 @@ namespace Gunner
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
 
-            this.gameRenderer = new GameRenderer(gameModel, System.IO.Path.Combine(projectDirectory, "Assets/Textures"));
+            this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
 
-            this.uiRenderer = new UIRenderer(uiModel, System.IO.Path.Combine(projectDirectory, "Assets/Fonts"), "FreeMono.ttf");
+            this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
 
             InitSystem();
             InitGameplay();
@@ -215,32 +215,45 @@ namespace Gunner
 
         public void Update()
         {
-            gameLogic.UpdateBullets(window);
-
-            if (spawnCounter < 20)
+            bool isInWindow = true;
+            if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)
             {
-                spawnCounter++;
+                isInWindow = false;
+            }
+            else
+            {
+                isInWindow = true;
             }
 
-            if (spawnCounter >= 20 && enemies.Count < 50)
+            if (isInWindow)
             {
-                enemy.Position = new Vector2f(new Random().Next(0, 1000), new Random().Next(0, 1000));
-                enemies.Add(enemy);
+                gameLogic.UpdateBullets(window);
 
-                spawnCounter = 0;
-            }
+                if (spawnCounter < 20)
+                {
+                    spawnCounter++;
+                }
 
-            uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
+                if (spawnCounter >= 20 && enemies.Count < 50)
+                {
+                    enemy.Position = new Vector2f(new Random().Next(0, 1000), new Random().Next(0, 1000));
+                    enemies.Add(enemy);
 
-            animationLogic.Update(gameLogic.GetDeltaTime, 4);
+                    spawnCounter = 0;
+                }
 
-            playerLogic.UpdateAnimationTextures();
+                uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
-            GamePlayerControl();
+                animationLogic.Update(gameLogic.GetDeltaTime, 4);
 
-            gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
-            gameLogic.UpdatePlayer(window);
+                GamePlayerControl();
+
+                gameLogic.UpdateCamera(gameModel.CameraView);
+                gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
+                gameLogic.UpdatePlayer(window);
+
+                playerLogic.RotateGun();
+            }  
         }
 
         public void DrawGame()
@@ -251,6 +264,8 @@ namespace Gunner
             {
                 window.Draw(enemy);
             }
+
+            window.Draw(gameModel.Player.Gun);
         }
 
         public void DrawUI()

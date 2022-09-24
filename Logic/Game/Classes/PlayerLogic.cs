@@ -34,6 +34,8 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
+
+            gameModel.Player.Gun = gameModel.Guns[0];
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -133,6 +135,32 @@ namespace Logic.Game.Classes
             if (gameModel.Player.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
             {
                 gameModel.Player.Position = previousPosition;
+            }
+        }
+
+        public void RotateGun()
+        {
+            var angle = (float)Math.Atan2(gameModel.Player.AimDirectionNormalized.Y, gameModel.Player.AimDirectionNormalized.X) * 180f / (float)Math.PI;
+            gameModel.Player.Gun.Rotation = angle;
+
+            // Flip gun vertically
+            if (angle > 90f || angle < -90f)
+            {
+                gameModel.Player.Gun.Scale = new Vector2f(3f, -3f);
+            }
+            else
+            {
+                gameModel.Player.Gun.Scale = new Vector2f(3f, 3f);
+            }
+
+            // Flip gun horizontally
+            if (angle > 0f && angle < 180f)
+            {
+                gameModel.Player.Gun.Scale = new Vector2f(-3f, gameModel.Player.Gun.Scale.Y);
+            }
+            else
+            {
+                gameModel.Player.Gun.Scale = new Vector2f(3f, gameModel.Player.Gun.Scale.Y);
             }
         }
 

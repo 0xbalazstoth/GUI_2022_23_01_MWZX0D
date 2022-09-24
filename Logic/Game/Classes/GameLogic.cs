@@ -81,6 +81,7 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer(RenderWindow window)
         {
+            playerLogic.UpdateAnimationTextures();
             playerLogic.UpdateWorldPositionByMouse(window);
             playerLogic.UpdateDeltaTime(deltaTime);
             playerLogic.UpdateTilePosition(gameModel.Map);
@@ -91,6 +92,9 @@ namespace Logic.Game.Classes
             {
                 playerLogic.HandleObjectCollision(chest);
             }
+
+            gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
+            gameModel.Player.Gun.Position = gameModel.Player.Position;
         }
 
         public void UpdateBullets(RenderWindow window)
@@ -115,8 +119,6 @@ namespace Logic.Game.Classes
             var direction = Vector2.Normalize(new(gameModel.WorldPositionInCamera.X - gameModel.Player.Position.X, gameModel.WorldPositionInCamera.Y - gameModel.Player.Position.Y));
             var position = new Vector2(gameModel.Player.Position.X, gameModel.Player.Position.Y);
             var distance = Vector2.Distance(new(gameModel.Player.Position.X, gameModel.Player.Position.Y), new(gameModel.WorldPositionInCamera.X, gameModel.WorldPositionInCamera.Y));
-
-            Trace.WriteLine(direction);
 
             position += direction * Math.Min(distance / 3f, 100f);
 
