@@ -66,8 +66,8 @@ namespace Gunner
         private UIRenderer uiRenderer;
 
         private RectangleShape enemy;
+        private RectangleShape enemy2;
         private List<RectangleShape> enemies;
-        int spawnCounter = 20;
 
         private TimeSpan lastRenderTime;
 
@@ -122,8 +122,13 @@ namespace Gunner
             enemy.Size = new Vector2f(32, 32);
             enemy.FillColor = Color.Red;
 
+            enemy2 = new RectangleShape();
+            enemy2.Size = new Vector2f(32, 32);
+            enemy2.FillColor = Color.Blue;
+
             enemies = new List<RectangleShape>();
             enemies.Add(enemy);
+            enemies.Add(enemy2);
         }
 
         private void InitSystem()
@@ -229,18 +234,7 @@ namespace Gunner
             {
                 gameLogic.UpdateBullets(window);
 
-                if (spawnCounter < 20)
-                {
-                    spawnCounter++;
-                }
-
-                if (spawnCounter >= 20 && enemies.Count < 50)
-                {
-                    enemy.Position = new Vector2f(new Random().Next(0, 1000), new Random().Next(0, 1000));
-                    enemies.Add(enemy);
-
-                    spawnCounter = 0;
-                }
+                EnemyChasePlayer();
 
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
@@ -271,6 +265,31 @@ namespace Gunner
         public void DrawUI()
         {
             uiRenderer.Draw(window);
+        }
+
+        // ENEMY CHASE PLAYER
+        public void EnemyChasePlayer()
+        {
+            foreach (var enemy in enemies)
+            {
+                if (gameModel.Player.Position.X < enemy.Position.X)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X - 1, enemy.Position.Y);
+                }
+                else if (gameModel.Player.Position.X > enemy.Position.X)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X + 1, enemy.Position.Y);
+                }
+
+                if (gameModel.Player.Position.Y < enemy.Position.Y)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y - 1);
+                }
+                else if (gameModel.Player.Position.Y > enemy.Position.Y)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
+                }
+            }
         }
     }
 }
