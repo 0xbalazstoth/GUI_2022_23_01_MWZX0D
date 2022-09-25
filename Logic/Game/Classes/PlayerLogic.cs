@@ -34,6 +34,7 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
+            previousPosition = this.gameModel.Player.Position;
 
             gameModel.Player.Gun = gameModel.Guns[0];
         }
@@ -83,27 +84,40 @@ namespace Logic.Game.Classes
         {
             gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Idle].Texture;
             gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Idle].TextureRect;
+            gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
 
             var movement = GetMovementByDirection(movementDirection);
-            if (movement == MovementDirection.Up)
+
+            //if (movement == MovementDirection.Up)
+            //{
+            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Up].Texture;
+            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Up].TextureRect;
+            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+            //}
+            //else if (movement == MovementDirection.Down)
+            //{
+            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Down].Texture;
+            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Down].TextureRect;
+            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+            //}
+            //else if (movement == MovementDirection.Left)
+            //{
+            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Left].Texture;
+            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Left].TextureRect;
+            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+            //}
+            //else if (movement == MovementDirection.Right)
+            //{
+            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Right].Texture;
+            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Right].TextureRect;
+            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+            //}
+
+            if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
             {
-                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Up].Texture;
-                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Up].TextureRect;
-            }
-            else if (movement == MovementDirection.Down)
-            {
-                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Down].Texture;
-                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Down].TextureRect;
-            }
-            else if (movement == MovementDirection.Left)
-            {
-                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Left].Texture;
-                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Left].TextureRect;
-            }
-            else if (movement == MovementDirection.Right)
-            {
-                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Right].Texture;
-                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Right].TextureRect;
+                gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
+                gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
             }
         }
 
@@ -187,10 +201,11 @@ namespace Logic.Game.Classes
                 return;
             }
 
-            // Next positions
-            for (int y = -1; y < 1; y++)
+            // Change -2,2 if the player is bigger than 32x32
+            
+            for (int y = -2; y < 2; y++)
             {
-                for (int x = -1; x < 1; x++)
+                for (int x = -2; x < 2; x++)
                 {
                     var currentTilePosition = gameModel.Player.TilePosition + new Vector2i(x, y);
                     var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
@@ -202,6 +217,7 @@ namespace Logic.Game.Classes
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
                     var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
                     var rect = gameModel.Player.GetGlobalBounds();
+
                     if (rect.Intersects(tileRect))
                     {
                         gameModel.Player.Position = previousPosition;

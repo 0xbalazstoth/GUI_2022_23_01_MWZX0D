@@ -108,8 +108,6 @@ namespace Gunner
 
         private void InitGameplay()
         {
-            playerLogic.LoadTexture("player.png");
-
             enemyLogic = new EnemyLogic(gameModel);
             enemyLogic.LoadTexture("player.png");
 
@@ -123,6 +121,7 @@ namespace Gunner
             enemy.FillColor = Color.Red;
 
             enemy2 = new RectangleShape();
+            enemy2.Position = new Vector2f(50, 100);
             enemy2.Size = new Vector2f(32, 32);
             enemy2.FillColor = Color.Blue;
 
@@ -207,7 +206,9 @@ namespace Gunner
             foreach (var kvp in input)
             {
                 if (IsKeyPressed(kvp.Key))
+                {
                     direction += kvp.Value;
+                }
             }
 
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
