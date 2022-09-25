@@ -34,6 +34,8 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
+            this.gameModel.Player.Bullets = new List<BulletModel>();
+            
             previousPosition = this.gameModel.Player.Position;
 
             gameModel.Player.Gun = gameModel.Guns[0];
@@ -193,6 +195,18 @@ namespace Logic.Game.Classes
             }
         }
 
+        // Handle bullet collision with tile
+        public void HandleBulletCollisionWithTile(Sprite tile)
+        {
+            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
+            {
+                if (gameModel.Player.Bullets[i].Shape.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
+                {
+                    gameModel.Player.Bullets.RemoveAt(i);
+                }
+            }
+        }
+
         public void HandleMapCollision(TilemapModel tilemap)
         {
             if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 1 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 1)
@@ -202,7 +216,6 @@ namespace Logic.Game.Classes
             }
 
             // Change -2,2 if the player is bigger than 32x32
-            
             for (int y = -2; y < 2; y++)
             {
                 for (int x = -2; x < 2; x++)

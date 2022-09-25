@@ -239,7 +239,7 @@ namespace Gunner
 
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
 
-                animationLogic.Update(gameLogic.GetDeltaTime, 4);
+                animationLogic.Update(gameLogic.GetDeltaTime);
 
                 GamePlayerControl();
 

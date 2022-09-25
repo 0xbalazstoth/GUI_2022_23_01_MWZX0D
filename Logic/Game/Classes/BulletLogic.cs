@@ -17,7 +17,6 @@ namespace Logic.Game.Classes
         public BulletLogic(IGameModel gameModel)
         {
             this.gameModel = gameModel;
-            gameModel.Bullets = new List<BulletModel>();
 
             GunModel pistol = new GunModel();
             pistol.GunType = GunType.Pistol;
@@ -55,21 +54,21 @@ namespace Logic.Game.Classes
             tempBullet.Shape.Position = gameModel.Player.Gun.Position;
             tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
 
-            gameModel.Bullets.Add(tempBullet);
+            gameModel.Player.Bullets.Add(tempBullet);
         }
 
         public void Update()
         {
-            for (int i = 0; i < gameModel.Bullets.Count; i++)
+            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
             {
-                gameModel.Bullets[i].Shape.Position += gameModel.Bullets[i].Velocity;
+                gameModel.Player.Bullets[i].Shape.Position += gameModel.Player.Bullets[i].Velocity;
 
-                float distX = gameModel.Bullets[i].Shape.Position.X - gameModel.Player.Center.X;
-                float distY = gameModel.Bullets[i].Shape.Position.Y - gameModel.Player.Center.Y;
+                float distX = gameModel.Player.Bullets[i].Shape.Position.X - gameModel.Player.Center.X;
+                float distY = gameModel.Player.Bullets[i].Shape.Position.Y - gameModel.Player.Center.Y;
 
                 if (Math.Sqrt(distX * distX + distY * distY) > 600)
                 {
-                    gameModel.Bullets.RemoveAt(i);
+                    gameModel.Player.Bullets.RemoveAt(i);
                 }
             }
         }

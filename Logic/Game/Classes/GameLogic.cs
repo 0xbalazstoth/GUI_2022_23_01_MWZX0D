@@ -135,6 +135,9 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(result.X, result.Y);
             }
+
+            // Shake camera
+            //gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)

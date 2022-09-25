@@ -80,7 +80,7 @@ namespace Logic.Game.Classes
             gameModel.Player.Animations[MovementDirection.Down].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.Y);
         }
 
-        public void Update(float dt, int columnsInRow)
+        public void Update(float dt)
         {
             foreach (var playerAnimation in gameModel.Player.Animations)
             {
