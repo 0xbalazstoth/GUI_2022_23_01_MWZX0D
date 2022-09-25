@@ -270,6 +270,9 @@ namespace Gunner
         // ENEMY CHASE PLAYER
         public void EnemyChasePlayer()
         {
+            // https://github.com/pushbuttonreceivecode/Top-Down-Shooter-Mechanics-Part-1/blob/master/main.cpp
+            // https://code.markrichards.ninja/sfml/top-down-shoot-em-up-mechanics-part-1
+
             foreach (var enemy in enemies)
             {
                 if (gameModel.Player.Position.X < enemy.Position.X)

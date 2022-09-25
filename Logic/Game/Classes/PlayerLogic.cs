@@ -142,7 +142,29 @@ namespace Logic.Game.Classes
         {
             var angle = (float)Math.Atan2(gameModel.Player.AimDirectionNormalized.Y, gameModel.Player.AimDirectionNormalized.X) * 180f / (float)Math.PI;
 
-            // Flip and rotate gun
+            // Change player animation texture by aim direction
+            if (angle > 45f && angle < 135f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Down].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Down].TextureRect;
+            }
+            else if (angle < -45f && angle > -135f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Up].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Up].TextureRect;
+            }
+            else if (angle > 135f || angle < -135f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Left].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Left].TextureRect;
+            }
+            else if (angle < 45f && angle > -45f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Right].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Right].TextureRect;
+            }
+
+            // Rotate gun
             if (angle > 90f || angle < -90f)
             {
                 gameModel.Player.Gun.Scale = new Vector2f(-2.5f, 2.5f);
