@@ -19,6 +19,7 @@ namespace Logic.Game.Classes
         {
             this.gameModel = gameModel;
 
+            #region Player animation setup
             gameModel.Player.Animations = new Dictionary<MovementDirection, AnimationModel>();
             gameModel.Player.Animations.Add(MovementDirection.Idle, new AnimationModel() {
                 Row = 0,
@@ -78,10 +79,12 @@ namespace Logic.Game.Classes
             });
             gameModel.Player.Animations[MovementDirection.Down].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.Down].Texture);
             gameModel.Player.Animations[MovementDirection.Down].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.Y);
+            #endregion
         }
 
         public void Update(float dt)
         {
+            // Player animation
             foreach (var playerAnimation in gameModel.Player.Animations)
             {
                 playerAnimation.Value.Counter += playerAnimation.Value.Speed * dt;

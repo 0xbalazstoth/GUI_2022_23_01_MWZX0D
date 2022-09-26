@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace Model.Game.Classes
 {
-    public class BulletModel
+    public class BulletModel : Sprite
     {
         public CircleShape Shape { get; set; }
         public Vector2f Velocity { get; set; }
         public float Speed { get; set; }
+        public Dictionary<string, AnimationModel> Animations { get; set; }
     }
 }

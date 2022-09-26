@@ -90,31 +90,6 @@ namespace Logic.Game.Classes
 
             var movement = GetMovementByDirection(movementDirection);
 
-            //if (movement == MovementDirection.Up)
-            //{
-            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Up].Texture;
-            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Up].TextureRect;
-            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            //}
-            //else if (movement == MovementDirection.Down)
-            //{
-            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Down].Texture;
-            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Down].TextureRect;
-            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            //}
-            //else if (movement == MovementDirection.Left)
-            //{
-            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Left].Texture;
-            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Left].TextureRect;
-            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            //}
-            //else if (movement == MovementDirection.Right)
-            //{
-            //    gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Right].Texture;
-            //    gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Right].TextureRect;
-            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            //}
-
             if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
             {
                 gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
