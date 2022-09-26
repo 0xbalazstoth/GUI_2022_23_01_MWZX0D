@@ -214,6 +214,11 @@ namespace Gunner
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
                 bulletLogic.Shoot();
+
+                //for (int i = 0; i < 20; i++)
+                //{
+                //    gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
+                //}
             }
 
             playerLogic.HandleMovement(direction);
@@ -248,6 +253,20 @@ namespace Gunner
                 gameLogic.UpdatePlayer(window);
 
                 playerLogic.FlipAndRotateGun();
+
+                // Bullet collision with enemy
+                foreach (var bullet in gameModel.Player.Bullets.ToList())
+                {
+                    foreach (var enemy in enemies)
+                    {
+                        if (bullet.Shape.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+                        {
+                            gameModel.Player.Bullets.Remove(bullet);
+                            enemies.Remove(enemy);
+                            break;
+                        }
+                    }
+                }
             }  
         }
 

@@ -190,7 +190,7 @@ namespace Logic.Game.Classes
                 return;
             }
 
-            // Change -2,2 if the player is bigger than 32x32
+            // Change -1,1 if the player is bigger than 32x32
             for (int y = -2; y < 2; y++)
             {
                 for (int x = -2; x < 2; x++)

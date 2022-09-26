@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Model.Game.Classes
 {
-    public class BulletModel : Sprite
+    public class BulletModel
     {
         public CircleShape Shape { get; set; }
         public Vector2f Velocity { get; set; }
