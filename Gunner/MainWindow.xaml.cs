@@ -68,6 +68,8 @@ namespace Gunner
         private RectangleShape enemy;
         private RectangleShape enemy2;
         private List<RectangleShape> enemies;
+        private CircleShape[] cShapes;
+        private CircleShape currentCollactableItme;
 
         private TimeSpan lastRenderTime;
 
@@ -125,6 +127,24 @@ namespace Gunner
             enemies = new List<RectangleShape>();
             enemies.Add(enemy);
             enemies.Add(enemy2);
+
+            cShapes = new CircleShape[5];
+
+            for (int i = 0; i < cShapes.Length; i++)
+            {
+                cShapes[i] = new CircleShape(10);
+                cShapes[i].Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                cShapes[i].FillColor = new Color((byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255));
+
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (cShapes[i].GetGlobalBounds().Intersects(cShapes[j].GetGlobalBounds()))
+                    {
+                        cShapes[i].Position = new Vector2f(new Random().Next() % 600 + 50, new Random().Next() % 600 + 50);
+                        j = 0;
+                    }
+                }
+            }
         }
 
         private void InitSystem()
@@ -222,7 +242,8 @@ namespace Gunner
 
             if (IsKeyPressed(Key.I))
             {
-                playerLogic.AddItemToInventory("a" + (char)new Random().Next(97, 102));
+                //playerLogic.AddItemToInventory("a" + (char)new Random().Next(97, 102));
+                ;
             }
         }
 
@@ -254,8 +275,6 @@ namespace Gunner
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
 
-                playerLogic.FlipAndRotateGun();
-
                 // Bullet collision with enemy
                 foreach (var bullet in gameModel.Player.Bullets.ToList())
                 {
@@ -269,6 +288,15 @@ namespace Gunner
                         }
                     }
                 }
+
+                for (int i = 0; i < cShapes.Length; i++)
+                {
+                    if (gameModel.Player.GetGlobalBounds().Intersects(cShapes[i].GetGlobalBounds()))
+                    {
+                        Trace.WriteLine($"ITEM PICKED: {i}");
+                        playerLogic.AddItemToInventory(cShapes[i]);
+                    }
+                }
             }  
         }
 
@@ -279,6 +307,11 @@ namespace Gunner
             foreach (var enemy in enemies)
             {
                 window.Draw(enemy);
+            }
+
+            foreach (var item in cShapes)
+            {
+                window.Draw(item);
             }
         }
 

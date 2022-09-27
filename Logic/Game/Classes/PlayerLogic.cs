@@ -42,7 +42,7 @@ namespace Logic.Game.Classes
 
             this.gameModel.Player.Inventory = new InventoryModel();
             this.gameModel.Player.Inventory.MaxItemsCount = 10;
-            this.gameModel.Player.Inventory.Items = new List<string>();
+            this.gameModel.Player.Inventory.Items = new List<Drawable>();
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -188,7 +188,7 @@ namespace Logic.Game.Classes
 
         public void HandleMapCollision(TilemapModel tilemap)
         {
-            if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 1 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 1)
+            if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 2 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 0.2)
             {
                 gameModel.Player.Position = previousPosition;
                 return;
@@ -219,7 +219,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void AddItemToInventory(string item)
+        public void AddItemToInventory(Drawable item)
         {
             if (gameModel.Player.Inventory.Items.Count <= gameModel.Player.Inventory.MaxItemsCount)
             {
