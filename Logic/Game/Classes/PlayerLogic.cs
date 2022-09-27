@@ -39,6 +39,10 @@ namespace Logic.Game.Classes
             previousPosition = this.gameModel.Player.Position;
 
             gameModel.Player.Gun = gameModel.Guns[0];
+
+            this.gameModel.Player.Inventory = new InventoryModel();
+            this.gameModel.Player.Inventory.MaxItemsCount = 10;
+            this.gameModel.Player.Inventory.Items = new List<string>();
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -212,6 +216,14 @@ namespace Logic.Game.Classes
                         return;
                     }
                 }
+            }
+        }
+
+        public void AddItemToInventory(string item)
+        {
+            if (gameModel.Player.Inventory.Items.Count <= gameModel.Player.Inventory.MaxItemsCount)
+            {
+                gameModel.Player.Inventory.Items.Add(item);
             }
         }
     }

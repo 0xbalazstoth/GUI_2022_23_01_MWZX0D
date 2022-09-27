@@ -95,9 +95,6 @@ namespace Gunner
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
 
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
 
             this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
@@ -222,6 +219,11 @@ namespace Gunner
             }
 
             playerLogic.HandleMovement(direction);
+
+            if (IsKeyPressed(Key.I))
+            {
+                playerLogic.AddItemToInventory("a" + (char)new Random().Next(97, 102));
+            }
         }
 
         public void Update()
@@ -278,8 +280,6 @@ namespace Gunner
             {
                 window.Draw(enemy);
             }
-
-            window.Draw(gameModel.Player.Gun);
         }
 
         public void DrawUI()
