@@ -87,7 +87,7 @@ namespace Gunner
             this.uiModel = new UIModel();
 
             this.tilemapLogic = new TilemapLogic(gameModel);
-            this.bulletLogic = new BulletLogic(gameModel);
+            this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
             
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             this.animationLogic = new AnimationLogic(gameModel);

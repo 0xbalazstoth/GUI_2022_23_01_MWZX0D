@@ -4,6 +4,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ namespace Logic.Game.Classes
     public class BulletLogic : IBulletLogic
     {
         private IGameModel gameModel;
+        private ITilemapLogic tilemapLogic;
 
-        public BulletLogic(IGameModel gameModel)
+        public BulletLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
             this.gameModel = gameModel;
+            this.tilemapLogic = tilemapLogic;
 
             GunModel pistol = new GunModel();
             pistol.GunType = GunType.Pistol;
@@ -30,20 +33,30 @@ namespace Logic.Game.Classes
             gameModel.Guns.Add(pistol);
         }
 
-        public void HandleCollision(RenderWindow window)
+        public void HandleMapCollision(RenderWindow window)
         {
-            // Check if bullets are in the window/screen
+            foreach (BulletModel bullet in gameModel.Player.Bullets)
+            {
+                var xTileposition = bullet.Shape.Position.X + bullet.Shape.Origin.X;
+                var yTileposition = bullet.Shape.Position.Y + bullet.Shape.Origin.Y;
+                var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
 
-            //for (int i = 0; i < gameModel.Bullets.Count; i++)
-            //{
-            //    if (gameModel.Bullets[i].Shape.Position.X < 0
-            //        || gameModel.Bullets[i].Shape.Position.X > window.Size.X
-            //        || gameModel.Bullets[i].Shape.Position.Y < 0
-            //        || gameModel.Bullets[i].Shape.Position.Y > window.Size.Y)
-            //    {
-            //        gameModel.Bullets.RemoveAt(i);
-            //    }
-            //}
+                var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                {
+                    continue;
+                }
+
+                var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                var rect = bullet.Shape.GetGlobalBounds();
+
+                if (rect.Intersects(tileRect))
+                {
+                    gameModel.Player.Bullets.Remove(bullet);
+                    return;
+                }
+            }
         }
 
         public void Shoot()

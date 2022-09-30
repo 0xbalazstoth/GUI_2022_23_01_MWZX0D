@@ -97,10 +97,10 @@ namespace Logic.Game.Classes
 
             playerLogic.FlipAndRotateGun();
         }
-
+        
         public void UpdateBullets(RenderWindow window)
         {
-            bulletLogic.HandleCollision(window);
+            bulletLogic.HandleMapCollision(window);
             bulletLogic.Update();
         }
 
