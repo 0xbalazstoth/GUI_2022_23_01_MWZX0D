@@ -59,6 +59,18 @@ namespace Logic.Game.Classes
             }
         }
 
+        public void HandleObjectCollision(Sprite item)
+        {
+            foreach (var bullet in gameModel.Player.Bullets)
+            {
+                if (bullet.Shape.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
+                {
+                    gameModel.Player.Bullets.Remove(bullet);
+                    return;
+                }
+            }
+        }
+
         public void Shoot()
         {
             BulletModel tempBullet = new BulletModel();

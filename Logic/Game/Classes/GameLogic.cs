@@ -2,6 +2,7 @@
 using Model;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -46,7 +47,7 @@ namespace Logic.Game.Classes
             gameModel.UIView = new View();
 
             gameModel.Enemy = new EnemyModel();
-            gameModel.Chests = new List<ChestModel>();
+            gameModel.Objects = new List<IObjectEntity>();
             
             gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
             gameModel.MovementDirections.Add(MovementDirection.Up, new Movement() { MovementDirection = MovementDirection.Up, Direction = new Vector2f(0, -1f) });
@@ -87,7 +88,7 @@ namespace Logic.Game.Classes
             playerLogic.HandleMapCollision(gameModel.Map);
             playerLogic.HandleEnemyCollision(gameModel.Enemy);
 
-            foreach (var chest in gameModel.Chests)
+            foreach (ChestModel chest in gameModel.Objects)
             {
                 playerLogic.HandleObjectCollision(chest);
             }
@@ -101,6 +102,12 @@ namespace Logic.Game.Classes
         public void UpdateBullets(RenderWindow window)
         {
             bulletLogic.HandleMapCollision(window);
+
+            foreach (ChestModel chest in gameModel.Objects)
+            {
+                bulletLogic.HandleObjectCollision(chest);
+            }
+
             bulletLogic.Update();
         }
 

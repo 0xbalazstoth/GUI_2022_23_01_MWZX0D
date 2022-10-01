@@ -113,7 +113,7 @@ namespace Gunner
             chestLogic = new ObjectEntityLogic(gameModel);
             chestLogic.LoadTexture("chest.png");
 
-            gameModel.Chests[0].Position = new Vector2f(100, 100);
+            (gameModel.Objects[0] as ChestModel).Position = new Vector2f(100, 100);
 
             enemy = new RectangleShape();
             enemy.Size = new Vector2f(32, 32);
@@ -243,7 +243,6 @@ namespace Gunner
             if (IsKeyPressed(Key.I))
             {
                 //playerLogic.AddItemToInventory("a" + (char)new Random().Next(97, 102));
-                ;
             }
         }
 

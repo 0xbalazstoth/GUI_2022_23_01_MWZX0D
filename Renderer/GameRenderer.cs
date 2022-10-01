@@ -43,7 +43,7 @@ namespace Renderer
 
         private void DrawObjects(RenderTarget window)
         {
-            foreach (var chest in gameModel.Chests)
+            foreach (ChestModel chest in gameModel.Objects)
             {
                 window.Draw(chest);
             }

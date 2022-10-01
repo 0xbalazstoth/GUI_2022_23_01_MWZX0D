@@ -10,5 +10,6 @@ namespace Model.Game.Interfaces
     public interface IObjectEntity
     {
         public Vector2i Size { get; set; }
+        public bool IsObjectMovable { get; set; }
     }
 }
