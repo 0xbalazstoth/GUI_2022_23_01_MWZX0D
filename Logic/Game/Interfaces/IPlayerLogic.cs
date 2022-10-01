@@ -23,6 +23,9 @@ namespace Logic.Game.Interfaces
         void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
         void FlipAndRotateGun();
-        void AddItemToInventory(Drawable item);
+        void AddItemToInventory(ICollectibleItem item);
+        void RemoveItemToInventory(ICollectibleItem item);
+        void HandleInventory();
+
     }
 }
