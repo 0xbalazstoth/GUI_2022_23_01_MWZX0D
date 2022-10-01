@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Model.Game.Enums;
 
 namespace Model.Game.Classes
 {
-    public enum EnemyType
-    {
-        Enemy,
-        Boss
-    }
-
     public class EnemyModel : UnitEntityModel
     {
         public string Name { get; set; }

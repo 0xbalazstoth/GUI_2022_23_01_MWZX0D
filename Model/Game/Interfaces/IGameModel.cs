@@ -22,5 +22,7 @@ namespace Model.Game.Classes
         public Vector2f MousePositionWindow { get; set; }
         public Vector2f WorldPositionInCamera { get; set; }
         public List<GunModel> Guns { get; set; }
+        public List<ICollectibleItem> Items { get; set; }
+
     }
 }
