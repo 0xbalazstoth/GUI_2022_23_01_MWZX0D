@@ -31,6 +31,7 @@ namespace Renderer
             DrawEnemy(window);
             DrawObjects(window);
             DrawBullets(window);
+            DrawCollectibleItems(window);
         }
 
         private void DrawBullets(RenderTarget window)
@@ -52,6 +53,14 @@ namespace Renderer
         private void DrawEnemy(RenderTarget window)
         {
             window.Draw(gameModel.Enemy);
+        }
+
+        private void DrawCollectibleItems(RenderTarget window)
+        {
+            foreach (var item in gameModel.CollectibleItems)
+            {
+                window.Draw(item.Item);
+            }
         }
 
         private void DrawPlayer(RenderTarget window)

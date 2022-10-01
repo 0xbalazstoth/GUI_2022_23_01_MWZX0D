@@ -1,5 +1,6 @@
 ﻿using Logic.Game.Interfaces;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using SFML.Graphics;
 using SFML.System;
 using System;
