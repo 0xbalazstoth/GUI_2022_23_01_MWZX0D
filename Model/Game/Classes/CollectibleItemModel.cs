@@ -10,6 +10,6 @@ namespace Model.Game.Classes
         public Guid Id { get; set; }
         public CircleShape Item { get; set; }
         public bool IsCollected { get; set; }
-        public ItemType type { get; set; } = ItemType.Item;
+        public ItemType ItemType { get; set; } = ItemType.Item;
     }
 }
