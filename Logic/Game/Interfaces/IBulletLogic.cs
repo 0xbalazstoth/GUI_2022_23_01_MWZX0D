@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Model.Game.Classes;
+using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +12,7 @@ namespace Logic.Game.Interfaces
     {
         void Update();
         void Shoot();
+        void HandleMapCollision(RenderWindow window);
+        void HandleObjectCollision(Sprite item);
     }
 }
