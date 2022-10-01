@@ -11,5 +11,7 @@ namespace Model.Game.Classes
         public Dictionary<Guid, int> Quantities { get; set; }
 
         public int Capacity { get; set; }
+
+        public int MaxCapacity { get; set; } = 10;
     }
 }

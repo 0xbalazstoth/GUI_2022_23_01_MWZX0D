@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace Logic.Game.Classes
 {
+
     public class PlayerLogic : IPlayerLogic
     {
         private IGameModel gameModel;
@@ -219,11 +220,47 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void AddItemToInventory(Drawable item)
+        public void AddItemToInventory(ICollectibleItem item)
         {
-            if (gameModel.Player.Inventory.Items.Count <= gameModel.Player.Inventory.MaxItemsCount)
+            if (gameModel.Player.Inventory.Capacity < gameModel.Player.Inventory.MaxCapacity)
             {
-                gameModel.Player.Inventory.Items.Add(item);
+                gameModel.Player.Inventory.Capacity++;
+                if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
+                {
+                    gameModel.Player.Inventory.Quantities[item.Id]+=1;
+                }
+                else
+                {
+                    gameModel.Player.Inventory.Items.Add(item.Id, item);
+                    gameModel.Player.Inventory.Quantities[item.Id] = 1;
+                }
+            }
+            foreach (var inventoryItem in gameModel.Player.Inventory.Items)
+            {
+                Trace.WriteLine($"Id: {inventoryItem.Key}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+            }
+        }
+
+        public void RemoveItemToInventory(ICollectibleItem item)
+        {
+            
+        }
+
+        public void HandleInventory()
+        {
+            foreach(var item in gameModel.CollectibleItems)
+            {
+                if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds())){
+                    Trace.WriteLine($"{item.Id} item has been collected");
+                    AddItemToInventory(item);
+                    (item as CollectibleItemModel).IsCollected = true;
+                }
+
+                if ((item as CollectibleItemModel).IsCollected)
+                {
+                    gameModel.CollectibleItems.Remove(item);
+                    return;
+                }
             }
         }
     }

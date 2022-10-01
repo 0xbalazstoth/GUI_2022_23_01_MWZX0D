@@ -58,6 +58,26 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
+
+            gameModel.CollectibleItems = new List<ICollectibleItem>();
+            for (int i = 0; i < 10; i++)
+            {
+                CollectibleItemModel item = new CollectibleItemModel();
+                item.Item = new CircleShape();
+                item.Item.Radius = 12f;
+                item.Item.FillColor = new Color((byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255));
+                item.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                item.Id = Guid.NewGuid();
+                gameModel.CollectibleItems.Add(item);
+                for (int j = 0; j < i-1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
+            }
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -97,6 +117,7 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
 
             playerLogic.FlipAndRotateGun();
+            playerLogic.HandleInventory();
         }
         
         public void UpdateBullets(RenderWindow window)
