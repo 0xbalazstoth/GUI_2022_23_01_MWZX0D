@@ -41,8 +41,8 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun = gameModel.Guns[0];
 
             this.gameModel.Player.Inventory = new InventoryModel();
-            this.gameModel.Player.Inventory.MaxItemsCount = 10;
-            this.gameModel.Player.Inventory.Items = new List<Drawable>();
+            this.gameModel.Player.Inventory.Items = new Dictionary<Guid, ICollectibleItem>();
+            this.gameModel.Player.Inventory.Quantities = new Dictionary<Guid, int>();
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
