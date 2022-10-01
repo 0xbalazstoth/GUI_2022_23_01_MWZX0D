@@ -8,7 +8,7 @@ namespace Model.Game.Interfaces
     {
         Guid Id { get; set; }
 
-        ItemType type {get;set;}
+        ItemType ItemType { get; set; }
 
         CircleShape Item { get; set; }
 
