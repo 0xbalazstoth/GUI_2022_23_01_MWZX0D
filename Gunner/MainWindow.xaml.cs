@@ -68,8 +68,6 @@ namespace Gunner
         private RectangleShape enemy;
         private RectangleShape enemy2;
         private List<RectangleShape> enemies;
-        private CircleShape[] cShapes;
-        private CircleShape currentCollactableItme;
 
         private TimeSpan lastRenderTime;
 
@@ -81,7 +79,7 @@ namespace Gunner
             SfmlSurfaceHost.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
 
-            System.Windows.Media.CompositionTarget.Rendering += RunGame;
+            CompositionTarget.Rendering += RunGame;
 
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
@@ -127,24 +125,6 @@ namespace Gunner
             enemies = new List<RectangleShape>();
             enemies.Add(enemy);
             enemies.Add(enemy2);
-
-            cShapes = new CircleShape[5];
-
-            for (int i = 0; i < cShapes.Length; i++)
-            {
-                cShapes[i] = new CircleShape(10);
-                cShapes[i].Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                cShapes[i].FillColor = new Color((byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255));
-
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (cShapes[i].GetGlobalBounds().Intersects(cShapes[j].GetGlobalBounds()))
-                    {
-                        cShapes[i].Position = new Vector2f(new Random().Next() % 600 + 50, new Random().Next() % 600 + 50);
-                        j = 0;
-                    }
-                }
-            }
         }
 
         private void InitSystem()
@@ -177,7 +157,7 @@ namespace Gunner
 
         private void RunGame(object? sender, EventArgs e)
         {
-            System.Windows.Media.RenderingEventArgs args = (System.Windows.Media.RenderingEventArgs)e;
+            RenderingEventArgs args = (RenderingEventArgs)e;
             if (args.RenderingTime != lastRenderTime)
             {
                 GameLoop();
@@ -287,15 +267,6 @@ namespace Gunner
                         }
                     }
                 }
-
-                for (int i = 0; i < cShapes.Length; i++)
-                {
-                    if (gameModel.Player.GetGlobalBounds().Intersects(cShapes[i].GetGlobalBounds()))
-                    {
-                        Trace.WriteLine($"ITEM PICKED: {i}");
-                        playerLogic.AddItemToInventory(cShapes[i]);
-                    }
-                }
             }  
         }
 
@@ -306,11 +277,6 @@ namespace Gunner
             foreach (var enemy in enemies)
             {
                 window.Draw(enemy);
-            }
-
-            foreach (var item in cShapes)
-            {
-                window.Draw(item);
             }
         }
 
