@@ -24,10 +24,11 @@ namespace Logic.Game.Classes
             ChestModel chestModel = new ChestModel();
             chestModel.Size = new Vector2i(32, 32);
             chestModel.Texture = new Texture(filename);
-            chestModel.Origin = new Vector2f(chestModel.Texture.Size.X / 2, chestModel.Texture.Size.Y / 2);
+            chestModel.IsObjectMovable = false;
             chestModel.Scale = new Vector2f((float)chestModel.Size.X / chestModel.Texture.Size.X, (float)chestModel.Size.Y / chestModel.Texture.Size.Y);
+            chestModel.Origin = new Vector2f(chestModel.Texture.Size.X / 2, chestModel.Texture.Size.Y / 2);
 
-            gameModel.Chests.Add(chestModel);
+            gameModel.Objects.Add(chestModel);
         }
 
         public void LoadTexture(Texture texture)
@@ -38,7 +39,7 @@ namespace Logic.Game.Classes
             chestModel.Origin = new Vector2f(chestModel.Texture.Size.X / 2, chestModel.Texture.Size.Y / 2);
             chestModel.Scale = new Vector2f((float)chestModel.Size.X / chestModel.Texture.Size.X, (float)chestModel.Size.Y / chestModel.Texture.Size.Y);
 
-            gameModel.Chests.Add(chestModel);
+            gameModel.Objects.Add(chestModel);
         }
 
         public void UpdateDeltaTime(float dt)

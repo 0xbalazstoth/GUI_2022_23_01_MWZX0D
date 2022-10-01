@@ -59,27 +59,17 @@ namespace Gunner
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic chestLogic;
         private IBulletLogic bulletLogic;
-        
-        private Bullet bullet;
-        private List<Bullet> bullets;
-        private Vector2f playerCenter;
-        private Vector2f mousePosWindow;
-        private Vector2f aimDir;
-        private Vector2f aimDirNorm;
+        private IAnimationLogic animationLogic;
 
         private IUILogic uiLogic;
         private IUIModel uiModel;
         private UIRenderer uiRenderer;
 
-        private Animation playerIdleAnimation;
-        private Animation playerWalkDownAnimation;
-        private Animation playerWalkLeftAnimation;
-        private Animation playerWalkRightAnimation;
-        private Animation playerWalkUpAnimation;
-        private Texture[] playerTextures;
-        private IntRect[] playerTextureRects;
-
-        private Vector2f worldPos;
+        private RectangleShape enemy;
+        private RectangleShape enemy2;
+        private List<RectangleShape> enemies;
+        private CircleShape[] cShapes;
+        private CircleShape currentCollactableItme;
 
         private TimeSpan lastRenderTime;
 
@@ -97,20 +87,19 @@ namespace Gunner
             this.uiModel = new UIModel();
 
             this.tilemapLogic = new TilemapLogic(gameModel);
-            this.bulletLogic = new BulletLogic(gameModel);
-            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+            this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
+            
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+            this.animationLogic = new AnimationLogic(gameModel);
 
-            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic);
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
 
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
 
-            this.gameRenderer = new GameRenderer(gameModel, System.IO.Path.Combine(projectDirectory, "Assets/Textures"));
-            
-            this.uiRenderer = new UIRenderer(uiModel, System.IO.Path.Combine(projectDirectory, "Assets/Fonts"), "FreeMono.ttf");
+            this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
 
             InitSystem();
             InitGameplay();
@@ -118,57 +107,50 @@ namespace Gunner
 
         private void InitGameplay()
         {
-            float playerAnimationSpeed = 10f;
-
-            playerIdleAnimation.Speed = playerAnimationSpeed;
-            playerIdleAnimation.Row = 0;
-
-            playerWalkLeftAnimation.Speed = playerAnimationSpeed;
-            playerWalkLeftAnimation.Row = 1;
-
-            playerWalkRightAnimation.Speed = playerAnimationSpeed;
-            playerWalkRightAnimation.Row = 2;
-
-            playerWalkDownAnimation.Speed = playerAnimationSpeed;
-            playerWalkDownAnimation.Row = 0;
-
-            playerWalkUpAnimation.Speed = playerAnimationSpeed;
-            playerWalkUpAnimation.Row = 3;
-
-            playerLogic.LoadTexture("player.png");
-
             enemyLogic = new EnemyLogic(gameModel);
             enemyLogic.LoadTexture("player.png");
 
             chestLogic = new ObjectEntityLogic(gameModel);
             chestLogic.LoadTexture("chest.png");
-            
-            gameModel.Chests[0].Position = new Vector2f(100, 100);
 
-            bullet = new Bullet();
-            bullets = new List<Bullet>();
-            bullets.Add(bullet);
+            (gameModel.Objects[0] as ChestModel).Position = new Vector2f(100, 100);
+
+            enemy = new RectangleShape();
+            enemy.Size = new Vector2f(32, 32);
+            enemy.FillColor = Color.Red;
+
+            enemy2 = new RectangleShape();
+            enemy2.Position = new Vector2f(50, 100);
+            enemy2.Size = new Vector2f(32, 32);
+            enemy2.FillColor = Color.Blue;
+
+            enemies = new List<RectangleShape>();
+            enemies.Add(enemy);
+            enemies.Add(enemy2);
+
+            cShapes = new CircleShape[5];
+
+            for (int i = 0; i < cShapes.Length; i++)
+            {
+                cShapes[i] = new CircleShape(10);
+                cShapes[i].Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                cShapes[i].FillColor = new Color((byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255));
+
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (cShapes[i].GetGlobalBounds().Intersects(cShapes[j].GetGlobalBounds()))
+                    {
+                        cShapes[i].Position = new Vector2f(new Random().Next() % 600 + 50, new Random().Next() % 600 + 50);
+                        j = 0;
+                    }
+                }
+            }
         }
 
         private void InitSystem()
         {
-            window.SetFramerateLimit(60);
-
-            playerIdleAnimation = new Animation();
-            playerIdleAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkDownAnimation = new Animation();
-            playerWalkDownAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkLeftAnimation = new Animation();
-            playerWalkLeftAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkRightAnimation = new Animation();
-            playerWalkRightAnimation.Load("spritesheet.png", 4, 3);
-
-            playerWalkUpAnimation = new Animation();
-            playerWalkUpAnimation.Load("spritesheet.png", 4, 3);
-
+            window.SetFramerateLimit(144);
+            
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.CameraView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
@@ -215,7 +197,7 @@ namespace Gunner
             Update();
 
             window.Clear();
-            
+
             window.SetView(gameModel.CameraView);
             DrawGame();
 
@@ -241,51 +223,128 @@ namespace Gunner
             foreach (var kvp in input)
             {
                 if (IsKeyPressed(kvp.Key))
+                {
                     direction += kvp.Value;
+                }
             }
-
-            playerLogic.HandleMovement(direction);
-        }
-
-        public void Update()
-        {
-            playerLogic.UpdateWorldPositionByMouse(window);
 
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
                 bulletLogic.Shoot();
+
+                //for (int i = 0; i < 20; i++)
+                //{
+                //    gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
+                //}
             }
 
-            bulletLogic.Update();
+            playerLogic.HandleMovement(direction);
 
-            uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
+            if (IsKeyPressed(Key.I))
+            {
+                //playerLogic.AddItemToInventory("a" + (char)new Random().Next(97, 102));
+            }
+        }
 
-            playerIdleAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkUpAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkDownAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkLeftAnimation.Update(gameLogic.GetDeltaTime, 3);
-            playerWalkRightAnimation.Update(gameLogic.GetDeltaTime, 3);
+        public void Update()
+        {
+            bool isInWindow = true;
+            if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)
+            {
+                isInWindow = false;
+            }
+            else
+            {
+                isInWindow = true;
+            }
 
-            GamePlayerControl();
+            if (isInWindow)
+            {
+                gameLogic.UpdateBullets(window);
 
-            gameLogic.UpdateCamera(gameModel.CameraView);
-            gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
-            gameLogic.UpdatePlayer();
+                EnemyChasePlayer();
+
+                uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
+
+                animationLogic.Update(gameLogic.GetDeltaTime);
+
+                GamePlayerControl();
+
+                gameLogic.UpdateCamera(gameModel.CameraView);
+                gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
+                gameLogic.UpdatePlayer(window);
+
+                // Bullet collision with enemy
+                foreach (var bullet in gameModel.Player.Bullets.ToList())
+                {
+                    foreach (var enemy in enemies)
+                    {
+                        if (bullet.Shape.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+                        {
+                            gameModel.Player.Bullets.Remove(bullet);
+                            enemies.Remove(enemy);
+                            break;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < cShapes.Length; i++)
+                {
+                    if (gameModel.Player.GetGlobalBounds().Intersects(cShapes[i].GetGlobalBounds()))
+                    {
+                        Trace.WriteLine($"ITEM PICKED: {i}");
+                        playerLogic.AddItemToInventory(cShapes[i]);
+                    }
+                }
+            }  
         }
 
         public void DrawGame()
         {
             gameRenderer.Draw(window);
 
-            playerTextures = new Texture[] { playerIdleAnimation.Texture, playerWalkDownAnimation.Texture, playerWalkLeftAnimation.Texture, playerWalkUpAnimation.Texture, playerWalkRightAnimation.Texture };
-            playerTextureRects = new IntRect[] { playerIdleAnimation.TextureRect, playerWalkDownAnimation.TextureRect, playerWalkLeftAnimation.TextureRect, playerWalkUpAnimation.TextureRect, playerWalkRightAnimation.TextureRect };
+            foreach (var enemy in enemies)
+            {
+                window.Draw(enemy);
+            }
 
-            playerLogic.UpdateAnimationTextures(gameLogic.GetDeltaTime, playerTextures, playerTextureRects);
+            foreach (var item in cShapes)
+            {
+                window.Draw(item);
+            }
         }
 
         public void DrawUI()
         {
-            //uiRenderer.Draw(window);
+            uiRenderer.Draw(window);
+        }
+
+        // ENEMY CHASE PLAYER
+        public void EnemyChasePlayer()
+        {
+            // https://github.com/pushbuttonreceivecode/Top-Down-Shooter-Mechanics-Part-1/blob/master/main.cpp
+            // https://code.markrichards.ninja/sfml/top-down-shoot-em-up-mechanics-part-1
+
+            foreach (var enemy in enemies)
+            {
+                if (gameModel.Player.Position.X < enemy.Position.X)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X - 1, enemy.Position.Y);
+                }
+                else if (gameModel.Player.Position.X > enemy.Position.X)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X + 1, enemy.Position.Y);
+                }
+
+                if (gameModel.Player.Position.Y < enemy.Position.Y)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y - 1);
+                }
+                else if (gameModel.Player.Position.Y > enemy.Position.Y)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
+                }
+            }
         }
     }
 }
