@@ -29,11 +29,6 @@ namespace Logic.Game.Classes
             {
                 CollectibleItemModel item = new CollectibleItemModel();
                 item.Item = new Sprite();
-                //item.Item.Texture = new Texture("Assets/Textures/Coin.png");
-                //item.Item.TextureRect = new IntRect(0, 0, 16, 16);
-                //item.Item = new CircleShape();
-                //item.Item.Radius = 12f;
-                //item.Item.FillColor = new Color((byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255), (byte)(new Random().Next() % 255));
                 item.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 item.type = Model.Game.Enums.ItemType.Coin;
                 item.Id = Guid.NewGuid();
@@ -69,7 +64,6 @@ namespace Logic.Game.Classes
 
         public void UpdateItemAnimationTextures()
         {
-            // TODO: Fix animations, because right now not adding textures to the animation list
             for (int i = 0; i < gameModel.CollectibleItems.Count; i++)
             {
                 gameModel.CollectibleItems[i].Item.Texture = (gameModel.CollectibleItems[i] as CollectibleItemModel).Animations[gameModel.CollectibleItems[i].type].Texture;
