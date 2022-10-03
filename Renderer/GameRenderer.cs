@@ -57,6 +57,13 @@ namespace Renderer
 
         private void DrawCollectibleItems(RenderTarget window)
         {
+            foreach (CollectibleItemModel coin in gameModel.CollectibleItems.Where(x => x.type == Model.Game.Enums.ItemType.Coin))
+            {
+                coin.Animations[coin.type].Texture = new Texture("Assets/Textures/coin_sheet.png");
+                coin.Animations[coin.type].Sprite = new Sprite(coin.Animations[coin.type].Texture);
+                coin.Animations[coin.type].Sprite.TextureRect = new IntRect(0, 0, coin.Animations[coin.type].GetSpriteSize.X, coin.Animations[coin.type].GetSpriteSize.Y);
+            }
+
             foreach (var item in gameModel.CollectibleItems)
             {
                 window.Draw(item.Item);

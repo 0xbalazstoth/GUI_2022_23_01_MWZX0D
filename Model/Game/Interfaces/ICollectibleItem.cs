@@ -10,7 +10,7 @@ namespace Model.Game.Interfaces
 
         ItemType type {get;set;}
 
-        CircleShape Item { get; set; }
+        Sprite Item { get; set; }
 
         bool IsCollected {get;set;}
     }

@@ -5,5 +5,6 @@
         Item,
         Weapon,
         Potion,
+        Coin
     }
 }
