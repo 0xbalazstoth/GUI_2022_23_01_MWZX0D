@@ -27,11 +27,11 @@ namespace Renderer
         public void Draw(RenderTarget window)
         {
             DrawTilemap(window);
+            DrawCollectibleItems(window);
             DrawPlayer(window);
             DrawEnemy(window);
             DrawObjects(window);
             DrawBullets(window);
-            DrawCollectibleItems(window);
         }
 
         private void DrawBullets(RenderTarget window)

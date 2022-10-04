@@ -264,20 +264,25 @@ namespace Logic.Game.Classes
 
         public void HandleInventory()
         {
-            foreach(var item in gameModel.CollectibleItems)
+            foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {
+
                 if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
                 {
-                    Trace.WriteLine($"{item.ItemType} has been collected");
-                    AddItemToInventory(item);
-                    (item as CollectibleItemModel).IsCollected = true;
-                }
+                    var items = gameModel.Player.Inventory.Quantities.Sum(x => x.Value);
 
-                if ((item as CollectibleItemModel).IsCollected)
-                {
-                    gameModel.CollectibleItems.Remove(item);
-                    return;
-                }
+                    if (items < gameModel.Player.Inventory.MaxCapacity)
+                    {
+                        Trace.WriteLine($"{item.ItemType} has been collected");
+                        AddItemToInventory(item);
+                        item.IsCollected = true;
+                        if (item.IsCollected)
+                        {
+                            gameModel.CollectibleItems.Remove(item);
+                            return;
+                        }
+                    }
+                } 
             }
         }
     }
