@@ -267,6 +267,8 @@ namespace Gunner
                         }
                     }
                 }
+
+                tilemapLogic.UpdateItemAnimationTextures();
             }  
         }
 
