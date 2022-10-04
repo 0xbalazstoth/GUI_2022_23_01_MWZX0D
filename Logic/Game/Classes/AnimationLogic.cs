@@ -68,10 +68,10 @@ namespace Logic.Game.Classes
             #endregion
 
             #region Item animation setup
-            foreach (CollectibleItemModel item in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
+            foreach (CollectibleItemModel coin in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
             {
-                item.Animations = new Dictionary<ItemType, AnimationModel>();
-                item.Animations.Add(ItemType.Coin, new AnimationModel()
+                coin.Animations = new Dictionary<ItemType, AnimationModel>();
+                coin.Animations.Add(ItemType.Coin, new AnimationModel()
                 {
                     Row = 0,
                     ColumnsInRow = 2,
@@ -81,6 +81,18 @@ namespace Logic.Game.Classes
                 });
             }
 
+            foreach (CollectibleItemModel healthPotion in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Health_Potion))
+            {
+                healthPotion.Animations = new Dictionary<ItemType, AnimationModel>();
+                healthPotion.Animations.Add(ItemType.Health_Potion, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 2,
+                    TotalRows = 1,
+                    TotalColumns = 2,
+                    Speed = 3f,
+                });
+            }
             #endregion
         }
 
@@ -112,6 +124,22 @@ namespace Logic.Game.Classes
                     }
                     itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
                     coinItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+                }
+            }
+
+            // Health potion animation
+            foreach (CollectibleItemModel healthPotionItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Health_Potion))
+            {
+                foreach (var itemAnimation in healthPotionItem.Animations)
+                {
+                    itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
+
+                    if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
+                    {
+                        itemAnimation.Value.Counter = 0f;
+                    }
+                    itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
+                    healthPotionItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                 }
             }
         }
