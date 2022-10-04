@@ -31,7 +31,7 @@ namespace Logic.Game.Classes
                 item.Item = new Sprite();
                 item.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 item.ItemType = Model.Game.Enums.ItemType.Coin;
-                item.Id = Guid.NewGuid();
+                item.Id = (int)item.ItemType;
                 gameModel.CollectibleItems.Add(item);
                 for (int j = 0; j < i - 1; j++)
                 {

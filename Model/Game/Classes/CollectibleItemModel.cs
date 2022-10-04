@@ -8,7 +8,7 @@ namespace Model.Game.Classes
 {
     public class CollectibleItemModel : ICollectibleItem
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public Sprite Item { get; set; }
         public bool IsCollected { get; set; }
         public ItemType ItemType { get; set; } = ItemType.Item;

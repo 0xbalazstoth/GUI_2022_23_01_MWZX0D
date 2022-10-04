@@ -6,9 +6,9 @@ namespace Model.Game.Classes
 {
     public class InventoryModel
     {
-        public Dictionary<Guid,ICollectibleItem>  Items { get; set; }
+        public Dictionary<int,ICollectibleItem>  Items { get; set; }
 
-        public Dictionary<Guid, int> Quantities { get; set; }
+        public Dictionary<int, int> Quantities { get; set; }
 
         public int Capacity { get; set; }
 

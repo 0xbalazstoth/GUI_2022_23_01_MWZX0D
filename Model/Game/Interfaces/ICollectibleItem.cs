@@ -6,7 +6,7 @@ namespace Model.Game.Interfaces
 {
     public interface ICollectibleItem
     {
-        Guid Id { get; set; }
+        int Id { get; set; }
 
         ItemType ItemType { get; set; }
 
