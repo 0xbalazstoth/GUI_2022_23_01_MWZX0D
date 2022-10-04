@@ -42,8 +42,8 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun = gameModel.Guns[0];
 
             this.gameModel.Player.Inventory = new InventoryModel();
-            this.gameModel.Player.Inventory.Items = new Dictionary<Guid, ICollectibleItem>();
-            this.gameModel.Player.Inventory.Quantities = new Dictionary<Guid, int>();
+            this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
+            this.gameModel.Player.Inventory.Quantities = new Dictionary<int, int>();
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -237,7 +237,7 @@ namespace Logic.Game.Classes
             }
             foreach (var inventoryItem in gameModel.Player.Inventory.Items)
             {
-                Trace.WriteLine($"Id: {inventoryItem.Key}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
             }
         }
 
@@ -258,7 +258,7 @@ namespace Logic.Game.Classes
             }
             foreach (var inventoryItem in gameModel.Player.Inventory.Items)
             {
-                Trace.WriteLine($"Id: {inventoryItem.Key}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
             }
         }
 
@@ -268,7 +268,7 @@ namespace Logic.Game.Classes
             {
                 if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
                 {
-                    Trace.WriteLine($"{item.Id} item has been collected");
+                    Trace.WriteLine($"{item.ItemType} has been collected");
                     AddItemToInventory(item);
                     (item as CollectibleItemModel).IsCollected = true;
                 }
