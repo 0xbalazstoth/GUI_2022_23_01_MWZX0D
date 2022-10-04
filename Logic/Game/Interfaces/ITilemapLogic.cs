@@ -11,5 +11,6 @@ namespace Logic.Game.Interfaces
     {
         int GetTileID(int layer, int x, int y);
         Vector2f GetTileWorldPosition(int x, int y);
+        void UpdateItemAnimationTextures();
     }
 }
