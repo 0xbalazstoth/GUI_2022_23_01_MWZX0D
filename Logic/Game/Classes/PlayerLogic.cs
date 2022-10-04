@@ -243,14 +243,31 @@ namespace Logic.Game.Classes
 
         public void RemoveItemToInventory(ICollectibleItem item)
         {
-            
+            if (gameModel.Player.Inventory.Capacity > 0)
+            {
+                gameModel.Player.Inventory.Capacity--;
+                if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
+                {
+                    gameModel.Player.Inventory.Quantities[item.Id] -= 1;
+                    if (gameModel.Player.Inventory.Quantities[item.Id] == 0)
+                    {
+                        gameModel.Player.Inventory.Items.Remove(item.Id);
+                        gameModel.Player.Inventory.Quantities.Remove(item.Id);
+                    }
+                }
+            }
+            foreach (var inventoryItem in gameModel.Player.Inventory.Items)
+            {
+                Trace.WriteLine($"Id: {inventoryItem.Key}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+            }
         }
 
         public void HandleInventory()
         {
             foreach(var item in gameModel.CollectibleItems)
             {
-                if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds())){
+                if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
+                {
                     Trace.WriteLine($"{item.Id} item has been collected");
                     AddItemToInventory(item);
                     (item as CollectibleItemModel).IsCollected = true;

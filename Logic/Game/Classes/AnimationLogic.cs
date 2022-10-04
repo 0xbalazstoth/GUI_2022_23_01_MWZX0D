@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Logic.Game.Interfaces;
 using Model.Game.Classes;
 using Model.Game;
+using Model.Game.Enums;
 
 namespace Logic.Game.Classes
 {
@@ -65,6 +66,22 @@ namespace Logic.Game.Classes
                 Speed = 10f,
             });
             #endregion
+
+            #region Item animation setup
+            foreach (CollectibleItemModel item in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
+            {
+                item.Animations = new Dictionary<ItemType, AnimationModel>();
+                item.Animations.Add(ItemType.Coin, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 2,
+                    TotalRows = 1,
+                    TotalColumns = 2,
+                    Speed = 3f,
+                });
+            }
+
+            #endregion
         }
 
         public void Update(float dt)
@@ -80,6 +97,22 @@ namespace Logic.Game.Classes
                 }
                 playerAnimation.Value.TextureRect = new IntRect((int)playerAnimation.Value.Counter * playerAnimation.Value.GetSpriteSize.X, playerAnimation.Value.Row * playerAnimation.Value.GetSpriteSize.Y, playerAnimation.Value.GetSpriteSize.X, playerAnimation.Value.GetSpriteSize.Y);
                 gameModel.Player.Animations[playerAnimation.Key].TextureRect = playerAnimation.Value.TextureRect;
+            }
+
+            // Coin animation
+            foreach (CollectibleItemModel coinItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
+            {
+                foreach (var itemAnimation in coinItem.Animations)
+                {
+                    itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
+
+                    if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
+                    {
+                        itemAnimation.Value.Counter = 0f;
+                    }
+                    itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
+                    coinItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+                }
             }
         }
     }
