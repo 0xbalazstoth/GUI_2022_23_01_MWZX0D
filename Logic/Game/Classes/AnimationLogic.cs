@@ -80,6 +80,7 @@ namespace Logic.Game.Classes
                     Speed = 3f,
                 });
             }
+            #endregion
 
             foreach (CollectibleItemModel healthPotion in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Health_Potion))
             {
@@ -91,6 +92,20 @@ namespace Logic.Game.Classes
                     TotalRows = 1,
                     TotalColumns = 2,
                     Speed = 3f,
+                });
+            }
+            
+            #region Bullet animation setup
+            foreach (var bullet in gameModel.Player.Bullets)
+            {
+                bullet.Animations = new Dictionary<GunType, AnimationModel>();
+                bullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 7f,
                 });
             }
             #endregion
@@ -140,6 +155,22 @@ namespace Logic.Game.Classes
                     }
                     itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
                     healthPotionItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+                }
+            }
+
+            // Bullet animation
+            foreach (var bullet in gameModel.Player.Bullets)
+            {
+                foreach (var bulletAnimation in bullet.Animations)
+                {
+                    bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
+
+                    if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
+                    {
+                        bulletAnimation.Value.Counter = 0f;
+                    }
+                    bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+                    bullet.Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
                 }
             }
         }

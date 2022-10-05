@@ -38,7 +38,14 @@ namespace Renderer
         {
             foreach (var bullet in gameModel.Player.Bullets)
             {
-                window.Draw(bullet.Shape);
+                bullet.Animations[gameModel.Player.Gun.GunType].Texture = new Texture("Assets/Textures/bullet_sheet.png");
+                bullet.Animations[gameModel.Player.Gun.GunType].Sprite = new Sprite(bullet.Animations[gameModel.Player.Gun.GunType].Texture);
+                bullet.Animations[gameModel.Player.Gun.GunType].Sprite.TextureRect = new IntRect(0, 0, bullet.Animations[gameModel.Player.Gun.GunType].GetSpriteSize.X, bullet.Animations[gameModel.Player.Gun.GunType].GetSpriteSize.Y);
+            }
+
+            foreach (var bullet in gameModel.Player.Bullets)
+            {
+                window.Draw(bullet.Bullet);
             }
         }
 

@@ -180,7 +180,7 @@ namespace Logic.Game.Classes
         {
             for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
             {
-                if (gameModel.Player.Bullets[i].Shape.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
+                if (gameModel.Player.Bullets[i].Bullet.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
                 {
                     gameModel.Player.Bullets.RemoveAt(i);
                 }

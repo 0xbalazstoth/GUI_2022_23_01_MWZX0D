@@ -259,7 +259,7 @@ namespace Gunner
                 {
                     foreach (var enemy in enemies)
                     {
-                        if (bullet.Shape.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+                        if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                         {
                             gameModel.Player.Bullets.Remove(bullet);
                             enemies.Remove(enemy);
@@ -269,6 +269,7 @@ namespace Gunner
                 }
 
                 tilemapLogic.UpdateItemAnimationTextures();
+                bulletLogic.UpdateBulletAnimationTextures();
             }  
         }
 
