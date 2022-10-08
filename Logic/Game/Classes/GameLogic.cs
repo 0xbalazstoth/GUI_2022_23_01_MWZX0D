@@ -153,9 +153,6 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(result.X, result.Y);
             }
-
-            // Shake camera
-            //gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)
@@ -178,7 +175,7 @@ namespace Logic.Game.Classes
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < new Random().Next(3, 7); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
@@ -196,7 +193,7 @@ namespace Logic.Game.Classes
                 }
             }
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < new Random().Next(1, 5); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();

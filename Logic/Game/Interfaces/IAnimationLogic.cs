@@ -10,8 +10,6 @@ namespace Logic.Game.Interfaces
 {
     public interface IAnimationLogic
     {
-        //void LoadTexture(string filename, uint totalRows, uint totalColumns);
         void Update(float dt);
-        void CollectibleItemAnimationSetup();
     }
 }

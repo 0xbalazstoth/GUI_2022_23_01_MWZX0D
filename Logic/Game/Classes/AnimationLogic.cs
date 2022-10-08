@@ -66,10 +66,7 @@ namespace Logic.Game.Classes
                 Speed = 10f,
             });
             #endregion
-        }
 
-        public void CollectibleItemAnimationSetup()
-        {
             #region Item animation setup
             foreach (CollectibleItemModel coin in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
             {

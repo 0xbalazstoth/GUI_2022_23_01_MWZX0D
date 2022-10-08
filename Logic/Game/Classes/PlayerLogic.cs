@@ -269,12 +269,25 @@ namespace Logic.Game.Classes
 
                 if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
                 {
-                    var items = gameModel.Player.Inventory.Quantities.Sum(x => x.Value);
+                    if (item.ItemType != Model.Game.Enums.ItemType.Coin)
+                    {
+                        var items = gameModel.Player.Inventory.Quantities.Sum(x => x.Value);
 
-                    if (items < gameModel.Player.Inventory.MaxCapacity)
+                        if (items < gameModel.Player.Inventory.MaxCapacity)
+                        {
+                            Trace.WriteLine($"{item.ItemType} has been collected");
+                            AddItemToInventory(item);
+                            item.IsCollected = true;
+                            if (item.IsCollected)
+                            {
+                                gameModel.CollectibleItems.Remove(item);
+                                return;
+                            }
+                        }
+                    }
+                    else
                     {
                         Trace.WriteLine($"{item.ItemType} has been collected");
-                        AddItemToInventory(item);
                         item.IsCollected = true;
                         if (item.IsCollected)
                         {
