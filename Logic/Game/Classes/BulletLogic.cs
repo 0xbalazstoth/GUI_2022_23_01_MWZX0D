@@ -75,10 +75,21 @@ namespace Logic.Game.Classes
         public void Shoot()
         {
             BulletModel tempBullet = new BulletModel();
-            tempBullet.Bullet = new CircleShape(5);
+            tempBullet.Bullet = new Sprite();
             tempBullet.Speed = 15f;
             tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
             tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
+            tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
+
+            tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+            tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 8,
+                TotalRows = 1,
+                TotalColumns = 8,
+                Speed = 10f,
+            });
 
             gameModel.Player.Gun.Bullets.Add(tempBullet);
         }
@@ -96,6 +107,15 @@ namespace Logic.Game.Classes
                 {
                     gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
+            }
+        }
+
+        public void UpdateBulletAnimationTextures()
+        {
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
+            {
+                gameModel.Player.Gun.Bullets[i].Bullet.Texture = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].Texture;
+                gameModel.Player.Gun.Bullets[i].Bullet.TextureRect = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].TextureRect;
             }
         }
     }

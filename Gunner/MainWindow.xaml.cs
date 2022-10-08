@@ -242,8 +242,6 @@ namespace Gunner
 
                 gameLogic.UpdateBullets(window);
 
-                GamePlayerControl();
-
                 gameLogic.UpdateCamera(gameModel.CameraView);
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
@@ -264,6 +262,9 @@ namespace Gunner
 
                 gameLogic.UpdateTilemap();
                 animationLogic.Update(gameLogic.GetDeltaTime);
+                
+                GamePlayerControl();
+                bulletLogic.UpdateBulletAnimationTextures();
             }  
         }
 

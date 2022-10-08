@@ -3,6 +3,7 @@ using Model.Game;
 using Model.Game.Classes;
 using Model.UI;
 using SFML.Graphics;
+using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,6 +37,13 @@ namespace Renderer
 
         private void DrawBullets(RenderTarget window)
         {
+            foreach (var pistolBullet in gameModel.Player.Gun.Bullets)
+            {
+                pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture = new Texture("Assets/Textures/bullet_sheet.png");
+                pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture);
+                pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
+            }
+            
             foreach (var bullet in gameModel.Player.Gun.Bullets)
             {
                 window.Draw(bullet.Bullet);
