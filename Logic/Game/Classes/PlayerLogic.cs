@@ -35,11 +35,11 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
-            this.gameModel.Player.Bullets = new List<BulletModel>();
-            
-            previousPosition = this.gameModel.Player.Position;
 
             gameModel.Player.Gun = gameModel.Guns[0];
+            this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
+            
+            previousPosition = this.gameModel.Player.Position;
 
             this.gameModel.Player.Inventory = new InventoryModel();
             this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
@@ -178,11 +178,11 @@ namespace Logic.Game.Classes
         // Handle bullet collision with tile
         public void HandleBulletCollisionWithTile(Sprite tile)
         {
-            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
-                if (gameModel.Player.Bullets[i].Bullet.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
+                if (gameModel.Player.Gun.Bullets[i].Bullet.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
                 {
-                    gameModel.Player.Bullets.RemoveAt(i);
+                    gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
             }
         }

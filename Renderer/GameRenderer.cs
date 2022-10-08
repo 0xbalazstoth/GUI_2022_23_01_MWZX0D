@@ -36,7 +36,7 @@ namespace Renderer
 
         private void DrawBullets(RenderTarget window)
         {
-            foreach (var bullet in gameModel.Player.Bullets)
+            foreach (var bullet in gameModel.Player.Gun.Bullets)
             {
                 window.Draw(bullet.Bullet);
             }

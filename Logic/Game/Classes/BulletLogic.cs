@@ -36,7 +36,7 @@ namespace Logic.Game.Classes
 
         public void HandleMapCollision(RenderWindow window)
         {
-            foreach (BulletModel bullet in gameModel.Player.Bullets)
+            foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
             {
                 var xTileposition = bullet.Bullet.Position.X + bullet.Bullet.Origin.X;
                 var yTileposition = bullet.Bullet.Position.Y + bullet.Bullet.Origin.Y;
@@ -54,7 +54,7 @@ namespace Logic.Game.Classes
 
                 if (rect.Intersects(tileRect))
                 {
-                    gameModel.Player.Bullets.Remove(bullet);
+                    gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
             }
@@ -62,11 +62,11 @@ namespace Logic.Game.Classes
 
         public void HandleObjectCollision(Sprite item)
         {
-            foreach (var bullet in gameModel.Player.Bullets)
+            foreach (var bullet in gameModel.Player.Gun.Bullets)
             {
                 if (bullet.Bullet.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
                 {
-                    gameModel.Player.Bullets.Remove(bullet);
+                    gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
             }
@@ -80,21 +80,21 @@ namespace Logic.Game.Classes
             tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
             tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
 
-            gameModel.Player.Bullets.Add(tempBullet);
+            gameModel.Player.Gun.Bullets.Add(tempBullet);
         }
 
         public void Update()
         {
-            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
-                gameModel.Player.Bullets[i].Bullet.Position += gameModel.Player.Bullets[i].Velocity;
+                gameModel.Player.Gun.Bullets[i].Bullet.Position += gameModel.Player.Gun.Bullets[i].Velocity;
 
-                float distX = gameModel.Player.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
-                float distY = gameModel.Player.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
+                float distX = gameModel.Player.Gun.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
+                float distY = gameModel.Player.Gun.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
 
                 if (Math.Sqrt(distX * distX + distY * distY) > 600)
                 {
-                    gameModel.Player.Bullets.RemoveAt(i);
+                    gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
             }
         }

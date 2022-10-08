@@ -87,21 +87,8 @@ namespace Gunner
 
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
-            
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-            foreach (var bullet in gameModel.Player.Bullets)
-            {
-                bullet.Animations = new Dictionary<GunType, AnimationModel>();
-                bullet.Animations.Add(GunType.Pistol, new AnimationModel()
-                {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 7f,
-                });
-            }
+            
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel);
             
@@ -233,11 +220,6 @@ namespace Gunner
             }
 
             playerLogic.HandleMovement(direction);
-
-            if (IsKeyPressed(Key.I))
-            {
-                //playerLogic.AddItemToInventory("a" + (char)new Random().Next(97, 102));
-            }
         }
 
         public void Update()
@@ -267,13 +249,13 @@ namespace Gunner
                 gameLogic.UpdatePlayer(window);
 
                 // Bullet collision with enemy
-                foreach (var bullet in gameModel.Player.Bullets.ToList())
+                foreach (var bullet in gameModel.Player.Gun.Bullets.ToList())
                 {
                     foreach (var enemy in enemies)
                     {
                         if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                         {
-                            gameModel.Player.Bullets.Remove(bullet);
+                            gameModel.Player.Gun.Bullets.Remove(bullet);
                             enemies.Remove(enemy);
                             break;
                         }
