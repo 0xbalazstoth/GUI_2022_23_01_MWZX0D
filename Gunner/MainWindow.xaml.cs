@@ -238,7 +238,9 @@ namespace Gunner
             {
                 EnemyChasePlayer();
 
-                uiLogic.UpdateFPS(gameLogic.GetDeltaTime); 
+                uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
+
+                animationLogic.Update(gameLogic.GetDeltaTime);
 
                 gameLogic.UpdateBullets(window);
 
@@ -261,7 +263,6 @@ namespace Gunner
                 }
 
                 gameLogic.UpdateTilemap();
-                animationLogic.Update(gameLogic.GetDeltaTime);
                 
                 GamePlayerControl();
                 bulletLogic.UpdateBulletAnimationTextures();
