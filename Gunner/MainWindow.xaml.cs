@@ -4,6 +4,7 @@ using Logic.Game.Interfaces;
 using Logic.Tools;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.Tools;
 using Model.UI.Classes;
 using Model.UI.Interfaces;
@@ -88,10 +89,23 @@ namespace Gunner
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
             
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
-            this.animationLogic = new AnimationLogic(gameModel);
 
+            foreach (var bullet in gameModel.Player.Bullets)
+            {
+                bullet.Animations = new Dictionary<GunType, AnimationModel>();
+                bullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 7f,
+                });
+            }
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel);
+            
+            this.animationLogic = new AnimationLogic(gameModel);
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
 
@@ -240,13 +254,11 @@ namespace Gunner
 
             if (isInWindow)
             {
-                gameLogic.UpdateBullets(window);
-
                 EnemyChasePlayer();
 
-                uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
+                uiLogic.UpdateFPS(gameLogic.GetDeltaTime); 
 
-                animationLogic.Update(gameLogic.GetDeltaTime);
+                gameLogic.UpdateBullets(window);
 
                 GamePlayerControl();
 
@@ -268,8 +280,8 @@ namespace Gunner
                     }
                 }
 
-                tilemapLogic.UpdateItemAnimationTextures();
-                bulletLogic.UpdateBulletAnimationTextures();
+                gameLogic.UpdateTilemap();
+                animationLogic.Update(gameLogic.GetDeltaTime);
             }  
         }
 

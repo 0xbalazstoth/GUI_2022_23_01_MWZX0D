@@ -15,6 +15,7 @@ namespace Logic.Game.Interfaces
         void UpdateDeltaTime();
         void UpdateCamera(View cameraView);
         void UpdateBullets(RenderWindow window);
+        void UpdateTilemap();
         void MoveCamera(uint mapWidth, float dt);
         void SetView(ref View cameraView, Vector2f size, Vector2f? center = null, FloatRect? viewport = null);
         void SetTilemap(string tmxFile, string tilesetFile);

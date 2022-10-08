@@ -112,6 +112,11 @@ namespace Logic.Game.Classes
             bulletLogic.Update();
         }
 
+        public void UpdateTilemap()
+        {
+            tilemapLogic.UpdateItemAnimationTextures();
+        }
+
         public void UpdateDeltaTime()
         {
             deltaTime = deltaTimeClock.ElapsedTime.AsSeconds();
