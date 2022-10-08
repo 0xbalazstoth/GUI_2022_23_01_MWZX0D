@@ -16,22 +16,34 @@ using System.Threading.Tasks;
 
 namespace Logic.Game.Classes
 {
+
     public class PlayerLogic : IPlayerLogic
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
+        private IAnimationLogic animationLogic;
 
         private Vector2f movementDirection;
         private Vector2f previousPosition;
 
-        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, uint windowWidth, uint windowHeight)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IAnimationLogic animationLogic, uint windowWidth, uint windowHeight)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
+            this.animationLogic = animationLogic;
 
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
+            this.gameModel.Player.Bullets = new List<BulletModel>();
+            
+            previousPosition = this.gameModel.Player.Position;
+
+            gameModel.Player.Gun = gameModel.Guns[0];
+
+            this.gameModel.Player.Inventory = new InventoryModel();
+            this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
+            this.gameModel.Player.Inventory.Quantities = new Dictionary<int, int>();
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -75,31 +87,19 @@ namespace Logic.Game.Classes
             
         }
 
-        public void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect)
+        public void UpdateAnimationTextures()
         {
-            gameModel.Player.Texture = texture[0];
-            gameModel.Player.TextureRect = textureRect[0];
+            gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Idle].Texture;
+            gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Idle].TextureRect;
+            gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
 
             var movement = GetMovementByDirection(movementDirection);
-            if (movement == MovementDirection.Up)
+
+            if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
             {
-                gameModel.Player.Texture = texture[3];
-                gameModel.Player.TextureRect = textureRect[3];
-            }
-            else if (movement == MovementDirection.Down)
-            {
-                gameModel.Player.Texture = texture[1];
-                gameModel.Player.TextureRect = textureRect[1];
-            }
-            else if (movement == MovementDirection.Left)
-            {
-                gameModel.Player.Texture = texture[2];
-                gameModel.Player.TextureRect = textureRect[2];
-            }
-            else if (movement == MovementDirection.Right)
-            {
-                gameModel.Player.Texture = texture[4];
-                gameModel.Player.TextureRect = textureRect[4];
+                gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
+                gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
             }
         }
 
@@ -134,18 +134,71 @@ namespace Logic.Game.Classes
             }
         }
 
+        public void FlipAndRotateGun()
+        {
+            var angle = (float)Math.Atan2(gameModel.Player.AimDirectionNormalized.Y, gameModel.Player.AimDirectionNormalized.X) * 180f / (float)Math.PI;
+
+            // Change player animation texture by aim direction
+            if (angle > 45f && angle < 135f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Down].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Down].TextureRect;
+            }
+            else if (angle < -45f && angle > -135f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Up].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Up].TextureRect;
+            }
+            else if (angle > 135f || angle < -135f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Left].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Left].TextureRect;
+            }
+            else if (angle < 45f && angle > -45f)
+            {
+                gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Right].Texture;
+                gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Right].TextureRect;
+            }
+
+            // Rotate gun
+            if (angle > 90f || angle < -90f)
+            {
+                gameModel.Player.Gun.Scale = new Vector2f(-2.5f, 2.5f);
+                gameModel.Player.Gun.Rotation = angle + 180f;
+                gameModel.Player.Gun.Position = new Vector2f(gameModel.Player.Position.X - 10, gameModel.Player.Position.Y + 5);
+            }
+            else
+            {
+                gameModel.Player.Gun.Scale = new Vector2f(2.5f, 2.5f);
+                gameModel.Player.Gun.Rotation = angle;
+                gameModel.Player.Gun.Position = new Vector2f(gameModel.Player.Position.X + 10, gameModel.Player.Position.Y + 5);
+            }
+        }
+
+        // Handle bullet collision with tile
+        public void HandleBulletCollisionWithTile(Sprite tile)
+        {
+            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
+            {
+                if (gameModel.Player.Bullets[i].Shape.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
+                {
+                    gameModel.Player.Bullets.RemoveAt(i);
+                }
+            }
+        }
+
         public void HandleMapCollision(TilemapModel tilemap)
         {
-            if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 1 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 1)
+            if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 2 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 0.2)
             {
                 gameModel.Player.Position = previousPosition;
                 return;
             }
 
-            // Next positions
-            for (int y = -1; y < 1; y++)
+            // Change -1,1 if the player is bigger than 32x32
+            for (int y = -2; y < 2; y++)
             {
-                for (int x = -1; x < 1; x++)
+                for (int x = -2; x < 2; x++)
                 {
                     var currentTilePosition = gameModel.Player.TilePosition + new Vector2i(x, y);
                     var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
@@ -157,12 +210,79 @@ namespace Logic.Game.Classes
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
                     var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
                     var rect = gameModel.Player.GetGlobalBounds();
+
                     if (rect.Intersects(tileRect))
                     {
                         gameModel.Player.Position = previousPosition;
                         return;
                     }
                 }
+            }
+        }
+
+        public void AddItemToInventory(ICollectibleItem item)
+        {
+            if (gameModel.Player.Inventory.Capacity < gameModel.Player.Inventory.MaxCapacity)
+            {
+                gameModel.Player.Inventory.Capacity++;
+                if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
+                {
+                    gameModel.Player.Inventory.Quantities[item.Id]+=1;
+                }
+                else
+                {
+                    gameModel.Player.Inventory.Items.Add(item.Id, item);
+                    gameModel.Player.Inventory.Quantities[item.Id] = 1;
+                }
+            }
+            foreach (var inventoryItem in gameModel.Player.Inventory.Items)
+            {
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+            }
+        }
+
+        public void RemoveItemToInventory(ICollectibleItem item)
+        {
+            if (gameModel.Player.Inventory.Capacity > 0)
+            {
+                gameModel.Player.Inventory.Capacity--;
+                if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
+                {
+                    gameModel.Player.Inventory.Quantities[item.Id] -= 1;
+                    if (gameModel.Player.Inventory.Quantities[item.Id] == 0)
+                    {
+                        gameModel.Player.Inventory.Items.Remove(item.Id);
+                        gameModel.Player.Inventory.Quantities.Remove(item.Id);
+                    }
+                }
+            }
+            foreach (var inventoryItem in gameModel.Player.Inventory.Items)
+            {
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+            }
+        }
+
+        public void HandleInventory()
+        {
+            foreach (CollectibleItemModel item in gameModel.CollectibleItems)
+            {
+
+                if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
+                {
+                    var items = gameModel.Player.Inventory.Quantities.Sum(x => x.Value);
+
+                    if (items < gameModel.Player.Inventory.MaxCapacity)
+                    {
+                        Trace.WriteLine($"{item.ItemType} has been collected");
+                        AddItemToInventory(item);
+                        item.IsCollected = true;
+                        if (item.IsCollected)
+                        {
+                            gameModel.CollectibleItems.Remove(item);
+                            return;
+                        }
+                    }
+                } 
             }
         }
     }

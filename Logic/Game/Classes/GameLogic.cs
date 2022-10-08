@@ -2,6 +2,7 @@
 using Model;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -23,6 +24,7 @@ namespace Logic.Game.Classes
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic objectEntityLogic;
+        private IBulletLogic bulletLogic;
 
         private Clock deltaTimeClock;
         private float deltaTime;
@@ -30,13 +32,14 @@ namespace Logic.Game.Classes
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic, IBulletLogic bulletLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
             this.playerLogic = playerLogic;
             this.enemyLogic = enemyLogic;
             this.objectEntityLogic = objectEntityLogic;
+            this.bulletLogic = bulletLogic;
 
             deltaTimeClock = new Clock();
 
@@ -44,10 +47,9 @@ namespace Logic.Game.Classes
             gameModel.UIView = new View();
 
             gameModel.Enemy = new EnemyModel();
-            gameModel.Chests = new List<ChestModel>();
+            gameModel.Objects = new List<IObjectEntity>();
             
             gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
-            gameModel.MovementDirections.Add(MovementDirection.NoneOrUnknown, new Movement() { MovementDirection = MovementDirection.NoneOrUnknown, Direction = new Vector2f(0, 0) });
             gameModel.MovementDirections.Add(MovementDirection.Up, new Movement() { MovementDirection = MovementDirection.Up, Direction = new Vector2f(0, -1f) });
             gameModel.MovementDirections.Add(MovementDirection.Down, new Movement() { MovementDirection = MovementDirection.Down, Direction = new Vector2f(0, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.Left, new Movement() { MovementDirection = MovementDirection.Left, Direction = new Vector2f(-1f, 0) });
@@ -77,17 +79,37 @@ namespace Logic.Game.Classes
             gameModel.Map.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
         }
 
-        public void UpdatePlayer()
+        public void UpdatePlayer(RenderWindow window)
         {
+            playerLogic.UpdateAnimationTextures();
+            playerLogic.UpdateWorldPositionByMouse(window);
             playerLogic.UpdateDeltaTime(deltaTime);
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
             playerLogic.HandleEnemyCollision(gameModel.Enemy);
 
-            foreach (var chest in gameModel.Chests)
+            foreach (ChestModel chest in gameModel.Objects)
             {
                 playerLogic.HandleObjectCollision(chest);
             }
+
+            gameModel.Player.Gun.Scale = new Vector2f(2.5f, 2.5f);
+            gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
+
+            playerLogic.FlipAndRotateGun();
+            playerLogic.HandleInventory();
+        }
+        
+        public void UpdateBullets(RenderWindow window)
+        {
+            bulletLogic.HandleMapCollision(window);
+
+            foreach (ChestModel chest in gameModel.Objects)
+            {
+                bulletLogic.HandleObjectCollision(chest);
+            }
+
+            bulletLogic.Update();
         }
 
         public void UpdateDeltaTime()
@@ -107,8 +129,6 @@ namespace Logic.Game.Classes
             var position = new Vector2(gameModel.Player.Position.X, gameModel.Player.Position.Y);
             var distance = Vector2.Distance(new(gameModel.Player.Position.X, gameModel.Player.Position.Y), new(gameModel.WorldPositionInCamera.X, gameModel.WorldPositionInCamera.Y));
 
-            Trace.WriteLine(direction);
-
             position += direction * Math.Min(distance / 3f, 100f);
 
             var moveDirection = Vector2.Normalize(new(position.X - gameModel.CameraView.Center.X, position.Y - gameModel.CameraView.Center.Y));
@@ -125,6 +145,9 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(result.X, result.Y);
             }
+
+            // Shake camera
+            //gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)

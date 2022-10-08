@@ -9,7 +9,6 @@ namespace Model.Game
 {
     public enum MovementDirection
     {
-        NoneOrUnknown,
         Up,
         Down,
         Left,
@@ -18,7 +17,9 @@ namespace Model.Game
         UpRight,
         DownLeft,
         DownRight,
-        Idle
+        Idle,
+        IdleLeft,
+        IdleRight
     }
 
     public class Movement

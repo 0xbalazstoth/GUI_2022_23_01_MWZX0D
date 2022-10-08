@@ -12,7 +12,7 @@ namespace Logic.Game.Interfaces
     {
         void UpdateDeltaTime(float dt);
         void HandleMovement(Vector2f direction);
-        void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
+        void UpdateAnimationTextures();
         Vector2f GetDirectionFromInput(Vector2f direction);
         MovementDirection GetMovementByDirection(Vector2f movementDirection);
         void UpdateTilePosition(TilemapModel tilemap);
@@ -22,5 +22,10 @@ namespace Logic.Game.Interfaces
         void HandleEnemyCollision(EnemyModel enemy);
         void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
+        void FlipAndRotateGun();
+        void AddItemToInventory(ICollectibleItem item);
+        void RemoveItemToInventory(ICollectibleItem item);
+        void HandleInventory();
+
     }
 }

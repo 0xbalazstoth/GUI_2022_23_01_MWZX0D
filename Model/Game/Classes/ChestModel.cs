@@ -13,5 +13,6 @@ namespace Model.Game.Classes
     {
         public int MaxItemsCount { get; set; }
         public Vector2i Size { get; set; }
+        public bool IsObjectMovable { get; set; }
     }
 }
