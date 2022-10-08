@@ -39,6 +39,34 @@ using View = SFML.Graphics.View;
 
 namespace Gunner
 {
+    public static class CompositionTargetEx
+    {
+        private static TimeSpan _last = TimeSpan.Zero;
+        private static event EventHandler<RenderingEventArgs> _FrameUpdating;
+        public static event EventHandler<RenderingEventArgs> Rendering
+        {
+            add
+            {
+                if (_FrameUpdating == null)
+                    CompositionTarget.Rendering += CompositionTarget_Rendering;
+                _FrameUpdating += value;
+            }
+            remove
+            {
+                _FrameUpdating -= value;
+                if (_FrameUpdating == null)
+                    CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            }
+        }
+        static void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            RenderingEventArgs args = (RenderingEventArgs)e;
+            if (args.RenderingTime == _last)
+                return;
+            _last = args.RenderingTime; _FrameUpdating(sender, args);
+        }
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -80,7 +108,8 @@ namespace Gunner
             SfmlSurfaceHost.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
 
-            CompositionTarget.Rendering += RunGame;
+            //CompositionTarget.Rendering += RunGame;
+            CompositionTargetEx.Rendering += RunGame;
 
             this.gameModel = new GameModel();
             this.uiModel = new UIModel();
@@ -130,7 +159,8 @@ namespace Gunner
 
         private void InitSystem()
         {
-            window.SetFramerateLimit(144);
+            //window.SetFramerateLimit(144);
+            window.SetVerticalSyncEnabled(true);
             
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -155,7 +185,7 @@ namespace Gunner
                 gameModel.UIView.Center = new Vector2f(e.Width / 2f, e.Height / 2f);
             };
         }
-
+        
         private void RunGame(object? sender, EventArgs e)
         {
             RenderingEventArgs args = (RenderingEventArgs)e;
@@ -211,6 +241,7 @@ namespace Gunner
 
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
+                // One bullet per click
                 bulletLogic.Shoot();
 
                 //for (int i = 0; i < 20; i++)

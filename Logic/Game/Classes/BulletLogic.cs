@@ -36,6 +36,17 @@ namespace Logic.Game.Classes
 
         public void HandleMapCollision(RenderWindow window)
         {
+            // Check for window collision
+            foreach (var bullet in gameModel.Player.Gun.Bullets)
+            {
+                if (bullet.Bullet.Position.X < 0 || bullet.Bullet.Position.X > window.Size.X || bullet.Bullet.Position.Y < 0 || bullet.Bullet.Position.Y > window.Size.Y * 2)
+                {
+                    // Remove bullet
+                    gameModel.Player.Gun.Bullets.Remove(bullet);
+                    return;
+                }
+            }
+
             foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
             {
                 var xTileposition = bullet.Bullet.Position.X + bullet.Bullet.Origin.X;

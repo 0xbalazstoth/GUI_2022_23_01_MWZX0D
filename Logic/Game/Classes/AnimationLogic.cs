@@ -138,6 +138,7 @@ namespace Logic.Game.Classes
                     {
                         itemAnimation.Value.Counter = 0f;
                     }
+
                     itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
                     healthPotionItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                 }
