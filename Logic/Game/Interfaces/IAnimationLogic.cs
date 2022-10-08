@@ -12,5 +12,6 @@ namespace Logic.Game.Interfaces
     {
         //void LoadTexture(string filename, uint totalRows, uint totalColumns);
         void Update(float dt);
+        void CollectibleItemAnimationSetup();
     }
 }

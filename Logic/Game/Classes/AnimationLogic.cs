@@ -66,7 +66,10 @@ namespace Logic.Game.Classes
                 Speed = 10f,
             });
             #endregion
+        }
 
+        public void CollectibleItemAnimationSetup()
+        {
             #region Item animation setup
             foreach (CollectibleItemModel coin in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
             {
@@ -145,9 +148,9 @@ namespace Logic.Game.Classes
             }
 
             // Bullet animation
-            foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
-                foreach (var bulletAnimation in bullet.Animations)
+                foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
                 {
                     bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
 
@@ -157,7 +160,7 @@ namespace Logic.Game.Classes
                     }
 
                     bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
-                    bullet.Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                    gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
                 }
             }
         }

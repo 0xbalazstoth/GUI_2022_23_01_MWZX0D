@@ -120,11 +120,11 @@ namespace Gunner
             
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel);
-            
+
             this.animationLogic = new AnimationLogic(gameModel);
+            animationLogic.CollectibleItemAnimationSetup();
 
             this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
-
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
 
             this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
@@ -241,13 +241,7 @@ namespace Gunner
 
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
-                // One bullet per click
                 bulletLogic.Shoot();
-
-                //for (int i = 0; i < 20; i++)
-                //{
-                //    gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
-                //}
             }
 
             playerLogic.HandleMovement(direction);
@@ -270,11 +264,9 @@ namespace Gunner
                 EnemyChasePlayer();
 
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
-
                 animationLogic.Update(gameLogic.GetDeltaTime);
 
                 gameLogic.UpdateBullets(window);
-
                 gameLogic.UpdateCamera(gameModel.CameraView);
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
@@ -297,7 +289,7 @@ namespace Gunner
                 
                 GamePlayerControl();
                 bulletLogic.UpdateBulletAnimationTextures();
-            }  
+            }
         }
 
         public void DrawGame()

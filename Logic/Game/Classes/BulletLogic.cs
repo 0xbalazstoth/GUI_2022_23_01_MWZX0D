@@ -36,22 +36,17 @@ namespace Logic.Game.Classes
 
         public void HandleMapCollision(RenderWindow window)
         {
-            // Check for window collision
-            foreach (var bullet in gameModel.Player.Gun.Bullets)
+            foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
             {
-                if (bullet.Bullet.Position.X < 0 || bullet.Bullet.Position.X > window.Size.X || bullet.Bullet.Position.Y < 0 || bullet.Bullet.Position.Y > window.Size.Y * 2)
+                var xTileposition = bullet.Bullet.Position.X;
+                var yTileposition = bullet.Bullet.Position.Y;
+                var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
+
+                if (tilePosition.X < 0 || tilePosition.X > gameModel.Map.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.Map.Size.Y)
                 {
-                    // Remove bullet
                     gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
-            }
-
-            foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
-            {
-                var xTileposition = bullet.Bullet.Position.X + bullet.Bullet.Origin.X;
-                var yTileposition = bullet.Bullet.Position.Y + bullet.Bullet.Origin.Y;
-                var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
 
                 var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
                 if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
@@ -103,6 +98,9 @@ namespace Logic.Game.Classes
             });
 
             gameModel.Player.Gun.Bullets.Add(tempBullet);
+
+            // Shake camera
+            gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void Update()
