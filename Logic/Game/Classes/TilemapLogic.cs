@@ -23,43 +23,6 @@ namespace Logic.Game.Classes
             this.gameModel = gameModel;
 
             gameModel.Map = new TilemapModel();
-
-            gameModel.CollectibleItems = new List<ICollectibleItem>();
-            for (int i = 0; i < 10; i++)
-            {
-                CollectibleItemModel coinItem = new CollectibleItemModel();
-                coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
-                coinItem.Id = (int)coinItem.ItemType;
-                gameModel.CollectibleItems.Add(coinItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        j = 0;
-                    }
-                }
-            }
-
-            for (int i = 0; i < 5; i++)
-            {
-                CollectibleItemModel healtPotionItem = new CollectibleItemModel();
-                healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
-                healtPotionItem.Id = (int)healtPotionItem.ItemType;
-                gameModel.CollectibleItems.Add(healtPotionItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        j = 0;
-                    }
-                }
-            }
         }
 
         public int GetTileID(int layer, int x, int y)

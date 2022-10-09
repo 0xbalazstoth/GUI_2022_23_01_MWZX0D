@@ -14,5 +14,6 @@ namespace Logic.Game.Interfaces
         void Shoot();
         void HandleMapCollision(RenderWindow window);
         void HandleObjectCollision(Sprite item);
+        void UpdateBulletAnimationTextures();
     }
 }

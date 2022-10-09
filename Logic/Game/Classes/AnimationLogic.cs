@@ -111,10 +111,11 @@ namespace Logic.Game.Classes
                 gameModel.Player.Animations[playerAnimation.Key].TextureRect = playerAnimation.Value.TextureRect;
             }
 
-            // Coin animation
-            foreach (CollectibleItemModel coinItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
+
+            // Item animation
+            foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {
-                foreach (var itemAnimation in coinItem.Animations)
+                foreach (var itemAnimation in item.Animations)
                 {
                     itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
 
@@ -123,23 +124,24 @@ namespace Logic.Game.Classes
                         itemAnimation.Value.Counter = 0f;
                     }
                     itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    coinItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+                    item.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                 }
             }
 
-            // Health potion animation
-            foreach (CollectibleItemModel healthPotionItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Health_Potion))
+            // Bullet animation
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
-                foreach (var itemAnimation in healthPotionItem.Animations)
+                foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
                 {
-                    itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
+                    bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
 
-                    if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
+                    if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
                     {
-                        itemAnimation.Value.Counter = 0f;
+                        bulletAnimation.Value.Counter = 0f;
                     }
-                    itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    healthPotionItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+
+                    bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+                    gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
                 }
             }
         }

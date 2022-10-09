@@ -1,4 +1,5 @@
-﻿using Model.Game.Interfaces;
+﻿using Model.Game.Enums;
+using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -11,9 +12,9 @@ namespace Model.Game.Classes
 {
     public class BulletModel
     {
-        public CircleShape Shape { get; set; }
+        public Sprite Bullet { get; set; }
         public Vector2f Velocity { get; set; }
         public float Speed { get; set; }
-        public Dictionary<string, AnimationModel> Animations { get; set; }
+        public Dictionary<GunType, AnimationModel> Animations { get; set; }
     }
 }
