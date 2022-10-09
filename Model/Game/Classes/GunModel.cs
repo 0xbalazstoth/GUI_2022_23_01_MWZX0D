@@ -15,5 +15,6 @@ namespace Model.Game.Classes
         public int CurrentAmmo { get; set; }
         public int Damage { get; set; }
         public GunType GunType { get; set; }
+        public List<BulletModel> Bullets { get; set; }
     }
 }

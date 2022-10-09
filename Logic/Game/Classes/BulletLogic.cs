@@ -36,11 +36,17 @@ namespace Logic.Game.Classes
 
         public void HandleMapCollision(RenderWindow window)
         {
-            foreach (BulletModel bullet in gameModel.Player.Bullets)
+            foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
             {
-                var xTileposition = bullet.Shape.Position.X + bullet.Shape.Origin.X;
-                var yTileposition = bullet.Shape.Position.Y + bullet.Shape.Origin.Y;
+                var xTileposition = bullet.Bullet.Position.X;
+                var yTileposition = bullet.Bullet.Position.Y;
                 var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
+
+                if (tilePosition.X < 0 || tilePosition.X > gameModel.Map.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.Map.Size.Y)
+                {
+                    gameModel.Player.Gun.Bullets.Remove(bullet);
+                    return;
+                }
 
                 var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
                 if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
@@ -50,11 +56,11 @@ namespace Logic.Game.Classes
 
                 var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
                 var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
-                var rect = bullet.Shape.GetGlobalBounds();
+                var rect = bullet.Bullet.GetGlobalBounds();
 
                 if (rect.Intersects(tileRect))
                 {
-                    gameModel.Player.Bullets.Remove(bullet);
+                    gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
             }
@@ -62,11 +68,11 @@ namespace Logic.Game.Classes
 
         public void HandleObjectCollision(Sprite item)
         {
-            foreach (var bullet in gameModel.Player.Bullets)
+            foreach (var bullet in gameModel.Player.Gun.Bullets)
             {
-                if (bullet.Shape.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
+                if (bullet.Bullet.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
                 {
-                    gameModel.Player.Bullets.Remove(bullet);
+                    gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
             }
@@ -75,27 +81,50 @@ namespace Logic.Game.Classes
         public void Shoot()
         {
             BulletModel tempBullet = new BulletModel();
-            tempBullet.Shape = new CircleShape(5);
+            tempBullet.Bullet = new Sprite();
             tempBullet.Speed = 15f;
-            tempBullet.Shape.Position = gameModel.Player.Gun.Position;
+            tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
             tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
+            tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
 
-            gameModel.Player.Bullets.Add(tempBullet);
+            tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+            tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 8,
+                TotalRows = 1,
+                TotalColumns = 8,
+                Speed = 10f,
+            });
+
+            gameModel.Player.Gun.Bullets.Add(tempBullet);
+
+            // Shake camera
+            gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void Update()
         {
-            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
-                gameModel.Player.Bullets[i].Shape.Position += gameModel.Player.Bullets[i].Velocity;
+                gameModel.Player.Gun.Bullets[i].Bullet.Position += gameModel.Player.Gun.Bullets[i].Velocity;
 
-                float distX = gameModel.Player.Bullets[i].Shape.Position.X - gameModel.Player.Center.X;
-                float distY = gameModel.Player.Bullets[i].Shape.Position.Y - gameModel.Player.Center.Y;
+                float distX = gameModel.Player.Gun.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
+                float distY = gameModel.Player.Gun.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
 
                 if (Math.Sqrt(distX * distX + distY * distY) > 600)
                 {
-                    gameModel.Player.Bullets.RemoveAt(i);
+                    gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
+            }
+        }
+
+        public void UpdateBulletAnimationTextures()
+        {
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
+            {
+                gameModel.Player.Gun.Bullets[i].Bullet.Texture = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].Texture;
+                gameModel.Player.Gun.Bullets[i].Bullet.TextureRect = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].TextureRect;
             }
         }
     }

@@ -2,6 +2,7 @@
 using Model;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
@@ -58,6 +59,8 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
+
+            CreateSpawnableItems();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -112,6 +115,11 @@ namespace Logic.Game.Classes
             bulletLogic.Update();
         }
 
+        public void UpdateTilemap()
+        {
+            tilemapLogic.UpdateItemAnimationTextures();
+        }
+
         public void UpdateDeltaTime()
         {
             deltaTime = deltaTimeClock.ElapsedTime.AsSeconds();
@@ -145,9 +153,6 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(result.X, result.Y);
             }
-
-            // Shake camera
-            //gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)
@@ -163,6 +168,47 @@ namespace Logic.Game.Classes
             if (viewport != null)
             {
                 view.Viewport = viewport.Value;
+            }
+        }
+
+        public void CreateSpawnableItems()
+        {
+            gameModel.CollectibleItems = new List<ICollectibleItem>();
+
+            for (int i = 0; i < new Random().Next(3, 7); i++)
+            {
+                CollectibleItemModel coinItem = new CollectibleItemModel();
+                coinItem.Item = new Sprite();
+                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
+                coinItem.Id = (int)coinItem.ItemType;
+                gameModel.CollectibleItems.Add(coinItem);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
+            }
+
+            for (int i = 0; i < new Random().Next(1, 5); i++)
+            {
+                CollectibleItemModel healtPotionItem = new CollectibleItemModel();
+                healtPotionItem.Item = new Sprite();
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
+                healtPotionItem.Id = (int)healtPotionItem.ItemType;
+                gameModel.CollectibleItems.Add(healtPotionItem);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
             }
         }
     }
