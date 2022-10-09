@@ -210,6 +210,25 @@ namespace Logic.Game.Classes
                     }
                 }
             }
+
+            for (int i = 0; i < new Random().Next(1, 5); i++)
+            {
+                CollectibleItemModel speedPotion = new CollectibleItemModel();
+                speedPotion.Item = new Sprite();
+                speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
+                speedPotion.Id = (int)speedPotion.ItemType;
+                gameModel.CollectibleItems.Add(speedPotion);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
+            }
+
         }
     }
 }

@@ -9,5 +9,6 @@
         Agility_Potion,
         Tool,
         Weapon,
+        Speed_Potion
     }
 }
