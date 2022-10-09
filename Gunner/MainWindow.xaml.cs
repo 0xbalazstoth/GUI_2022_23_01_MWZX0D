@@ -287,6 +287,8 @@ namespace Gunner
                 
                 GamePlayerControl();
                 bulletLogic.UpdateBulletAnimationTextures();
+                gameLogic.SpawnItems();
+                
             }
         }
 

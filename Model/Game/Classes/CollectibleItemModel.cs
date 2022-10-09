@@ -13,5 +13,6 @@ namespace Model.Game.Classes
         public bool IsCollected { get; set; }
         public ItemType ItemType { get; set; } = ItemType.Item;
         public Dictionary<ItemType, AnimationModel> Animations { get; set; }
+        public bool Spawned { get; set; }
     }
 }
