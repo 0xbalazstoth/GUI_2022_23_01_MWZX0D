@@ -60,6 +60,8 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
 
+            
+            SetTilemap("map.tmx", "tilemap.png");
             CreateSpawnableItems();
         }
 
@@ -229,6 +231,11 @@ namespace Logic.Game.Classes
                 }
             }
 
+        }
+
+        public void SpawnItems()
+        {
+            
         }
     }
 }
