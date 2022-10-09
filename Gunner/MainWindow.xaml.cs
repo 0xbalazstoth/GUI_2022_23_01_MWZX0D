@@ -157,8 +157,8 @@ namespace Gunner
 
         private void InitSystem()
         {
-            //window.SetFramerateLimit(144);
-            window.SetVerticalSyncEnabled(true);
+            window.SetFramerateLimit(144);
+            //window.SetVerticalSyncEnabled(true);
             
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
