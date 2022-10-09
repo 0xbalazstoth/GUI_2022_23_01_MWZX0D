@@ -123,7 +123,7 @@ namespace Gunner
 
             this.animationLogic = new AnimationLogic(gameModel);
 
-            this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
+            //this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
             this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
 
@@ -287,6 +287,8 @@ namespace Gunner
                 
                 GamePlayerControl();
                 bulletLogic.UpdateBulletAnimationTextures();
+                gameLogic.SpawnItems();
+                
             }
         }
 

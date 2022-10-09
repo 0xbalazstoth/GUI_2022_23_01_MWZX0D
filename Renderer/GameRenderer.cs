@@ -21,6 +21,7 @@ namespace Renderer
         private Texture pistolBulletTexture;
         private Texture coinTexture;
         private Texture healthPotionTexture;
+        private Texture speedPotionTexture;
         private Dictionary<MovementDirection, Texture> playerTextures;
 
         public GameRenderer(IGameModel gameModel, string path)
@@ -33,6 +34,7 @@ namespace Renderer
             
             coinTexture = new Texture("Assets/Textures/coin_sheet.png");
             healthPotionTexture = new Texture("Assets/Textures/health_potion_sheet.png");
+            speedPotionTexture = new("Assets/Textures/speed_potion_sheet.png");
             
             playerTextures = new Dictionary<MovementDirection, Texture>();
             playerTextures.Add(MovementDirection.IdleRight, new Texture("Assets/Textures/idle_right.png"));
@@ -96,6 +98,13 @@ namespace Renderer
                 healthPotion.Animations[healthPotion.ItemType].Texture = healthPotionTexture;
                 healthPotion.Animations[healthPotion.ItemType].Sprite = new Sprite(healthPotion.Animations[healthPotion.ItemType].Texture);
                 healthPotion.Animations[healthPotion.ItemType].Sprite.TextureRect = new IntRect(0, 0, healthPotion.Animations[healthPotion.ItemType].GetSpriteSize.X, healthPotion.Animations[healthPotion.ItemType].GetSpriteSize.Y);
+            }
+
+            foreach (CollectibleItemModel speedPotion in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Speed_Potion))
+            {
+                speedPotion.Animations[speedPotion.ItemType].Texture = speedPotionTexture;
+                speedPotion.Animations[speedPotion.ItemType].Sprite = new Sprite(speedPotion.Animations[speedPotion.ItemType].Texture);
+                speedPotion.Animations[speedPotion.ItemType].Sprite.TextureRect = new IntRect(0, 0, speedPotion.Animations[speedPotion.ItemType].GetSpriteSize.X, speedPotion.Animations[speedPotion.ItemType].GetSpriteSize.Y);
             }
 
             foreach (var item in gameModel.CollectibleItems)

@@ -60,7 +60,11 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
 
+            
+            SetTilemap("map.tmx", "tilemap.png");
             CreateSpawnableItems();
+            //SpawnItems();
+            
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -175,39 +179,93 @@ namespace Logic.Game.Classes
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < new Random().Next(3, 7); i++)
+            for (int i = 0; i < new Random().Next(20, 30); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                //coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.Id = (int)coinItem.ItemType;
+                
                 gameModel.CollectibleItems.Add(coinItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        j = 0;
-                    }
-                }
+                //for (int j = 0; j < i - 1; j++)
+                //{
+                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                //    {
+                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                //        j = 0;
+                //    }
+                //}
             }
 
             for (int i = 0; i < new Random().Next(1, 5); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                //healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
+                
                 gameModel.CollectibleItems.Add(healtPotionItem);
-                for (int j = 0; j < i - 1; j++)
+                //for (int j = 0; j < i - 1; j++)
+                //{
+                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                //    {
+                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                //        j = 0;
+                //    }
+                //}
+            }
+
+            for (int i = 0; i < new Random().Next(1, 5); i++)
+            {
+                CollectibleItemModel speedPotion = new CollectibleItemModel();
+                speedPotion.Item = new Sprite();
+                //speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
+                speedPotion.Id = (int)speedPotion.ItemType;
+                
+                gameModel.CollectibleItems.Add(speedPotion);
+                //for (int j = 0; j < i - 1; j++)
+                //{
+                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                //    {
+                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                //        j = 0;
+                //    }
+                //}
+            }
+
+        }
+
+        public void SpawnItems()
+        {
+            foreach (var item in gameModel.CollectibleItems)
+            {
+                var xTilePosition = item.Item.Position.X;
+                var yTilePosition = item.Item.Position.Y;
+                var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y));
+                var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
                 {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    continue;
+                    
+                }
+
+                var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                var rect = item.Item.GetGlobalBounds();
+                
+
+                if (rect.Intersects(tileRect))
+                {
+                    if (!(item as CollectibleItemModel).Spawned)
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        j = 0;
+                        item.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        (item as CollectibleItemModel).Spawned = true;
                     }
+
+                    return;
                 }
             }
         }
