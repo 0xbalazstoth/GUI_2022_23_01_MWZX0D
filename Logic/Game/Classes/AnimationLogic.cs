@@ -111,10 +111,11 @@ namespace Logic.Game.Classes
                 gameModel.Player.Animations[playerAnimation.Key].TextureRect = playerAnimation.Value.TextureRect;
             }
 
-            // Coin animation
-            foreach (CollectibleItemModel coinItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
+
+            // Item animation
+            foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {
-                foreach (var itemAnimation in coinItem.Animations)
+                foreach (var itemAnimation in item.Animations)
                 {
                     itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
 
@@ -123,24 +124,7 @@ namespace Logic.Game.Classes
                         itemAnimation.Value.Counter = 0f;
                     }
                     itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    coinItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
-                }
-            }
-
-            // Health potion animation
-            foreach (CollectibleItemModel healthPotionItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Health_Potion))
-            {
-                foreach (var itemAnimation in healthPotionItem.Animations)
-                {
-                    itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
-
-                    if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
-                    {
-                        itemAnimation.Value.Counter = 0f;
-                    }
-
-                    itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    healthPotionItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+                    item.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                 }
             }
 

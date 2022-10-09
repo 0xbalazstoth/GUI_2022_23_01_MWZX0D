@@ -23,6 +23,8 @@ namespace Renderer
         {
             this.gameModel = gameModel;
             this.assetsPath = path;
+
+            // TODO: Should be be creating texture every frame, this is the reason of fps drops!
         }
 
         public void Draw(RenderTarget window)
