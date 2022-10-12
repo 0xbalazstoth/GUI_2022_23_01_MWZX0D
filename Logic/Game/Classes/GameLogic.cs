@@ -95,7 +95,7 @@ namespace Logic.Game.Classes
             playerLogic.HandleMapCollision(gameModel.Map);
             playerLogic.HandleEnemyCollision(gameModel.Enemy);
 
-            foreach (ChestModel chest in gameModel.Objects)
+            foreach (ObjectEntityModel chest in gameModel.Objects)
             {
                 playerLogic.HandleObjectCollision(chest);
             }
@@ -111,7 +111,7 @@ namespace Logic.Game.Classes
         {
             bulletLogic.HandleMapCollision(window);
 
-            foreach (ChestModel chest in gameModel.Objects)
+            foreach (ObjectEntityModel chest in gameModel.Objects)
             {
                 bulletLogic.HandleObjectCollision(chest);
             }
@@ -179,93 +179,116 @@ namespace Logic.Game.Classes
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < new Random().Next(20, 30); i++)
+            for (int i = 0; i < new Random().Next(5, 30); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                //coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.Id = (int)coinItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(coinItem);
-                //for (int j = 0; j < i - 1; j++)
-                //{
-                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                //    {
-                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                //        j = 0;
-                //    }
-                //}
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
             }
 
             for (int i = 0; i < new Random().Next(1, 5); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                //healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(healtPotionItem);
-                //for (int j = 0; j < i - 1; j++)
-                //{
-                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                //    {
-                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                //        j = 0;
-                //    }
-                //}
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
             }
 
             for (int i = 0; i < new Random().Next(1, 5); i++)
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
-                //speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
                 
                 gameModel.CollectibleItems.Add(speedPotion);
-                //for (int j = 0; j < i - 1; j++)
-                //{
-                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                //    {
-                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                //        j = 0;
-                //    }
-                //}
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
             }
-
         }
 
         public void SpawnItems()
         {
             foreach (var item in gameModel.CollectibleItems)
             {
-                var xTilePosition = item.Item.Position.X;
-                var yTilePosition = item.Item.Position.Y;
-                var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y));
-                var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                for (int y = -3; y < 3; y++)
                 {
-                    continue;
-                    
-                }
-
-                var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
-                var rect = item.Item.GetGlobalBounds();
-                
-
-                if (rect.Intersects(tileRect))
-                {
-                    if (!(item as CollectibleItemModel).Spawned)
+                    for (int x = -3; x < 3; x++)
                     {
-                        item.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        (item as CollectibleItemModel).Spawned = true;
-                    }
+                        var xTilePosition = item.Item.Position.X;
+                        var yTilePosition = item.Item.Position.Y;
+                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+                        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                        {
+                            continue;
+                        }
 
-                    return;
+                        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                        var rect = item.Item.GetGlobalBounds();
+
+                        if (tileRect.Intersects(rect))
+                        {
+                            gameModel.CollectibleItems.Remove(item);
+
+                            var optimalPosition = new Vector2f(); 
+                            var optimalDistance = float.MaxValue;
+
+                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+                            {
+                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+                                {
+                                    var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
+                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+                                    {
+                                        var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
+                                        var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
+                                        if (distance < optimalDistance)
+                                        {
+                                            optimalDistance = distance;
+                                            optimalPosition = tileWorldPosition;
+                                        }
+                                    }
+                                }
+                            }
+
+                            item.Item.Position = optimalPosition;
+                            gameModel.CollectibleItems.Add(item);
+
+                            return;
+                        }
+                    }
                 }
             }
         }
