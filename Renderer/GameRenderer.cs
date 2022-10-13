@@ -23,6 +23,7 @@ namespace Renderer
         private Texture healthPotionTexture;
         private Texture speedPotionTexture;
         private Dictionary<MovementDirection, Texture> playerTextures;
+        private Texture enemyTexture;
 
         public GameRenderer(IGameModel gameModel, string path)
         {
@@ -34,7 +35,8 @@ namespace Renderer
             
             coinTexture = new Texture("Assets/Textures/coin_sheet.png");
             healthPotionTexture = new Texture("Assets/Textures/health_potion_sheet.png");
-            speedPotionTexture = new("Assets/Textures/speed_potion_sheet.png");
+            speedPotionTexture = new Texture("Assets/Textures/speed_potion_sheet.png");
+            enemyTexture = new Texture("Assets/Textures/player.png");
             
             playerTextures = new Dictionary<MovementDirection, Texture>();
             playerTextures.Add(MovementDirection.IdleRight, new Texture("Assets/Textures/idle_right.png"));
@@ -81,7 +83,12 @@ namespace Renderer
 
         private void DrawEnemy(RenderTarget window)
         {
-            window.Draw(gameModel.Enemy);
+            foreach (var enemy in gameModel.Enemies)
+            {
+                enemy.Texture = enemyTexture;
+                
+                window.Draw(enemy);
+            }
         }
 
         private void DrawCollectibleItems(RenderTarget window)

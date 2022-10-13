@@ -118,11 +118,14 @@ namespace Logic.Game.Classes
             gameModel.Player.AimDirectionNormalized = gameModel.Player.AimDirection / (float)Math.Sqrt(gameModel.Player.AimDirection.X * gameModel.Player.AimDirection.X + gameModel.Player.AimDirection.Y * gameModel.Player.AimDirection.Y);
         }
 
-        public void HandleEnemyCollision(EnemyModel enemy)
+        public void HandleEnemyCollision()
         {
-            if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+            foreach (var enemy in gameModel.Enemies)
             {
-                gameModel.Player.Position = previousPosition;
+                if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+                {
+                    gameModel.Player.Position = previousPosition;
+                }
             }
         }
 
@@ -172,18 +175,6 @@ namespace Logic.Game.Classes
                 gameModel.Player.Gun.Scale = new Vector2f(2.5f, 2.5f);
                 gameModel.Player.Gun.Rotation = angle;
                 gameModel.Player.Gun.Position = new Vector2f(gameModel.Player.Position.X + 10, gameModel.Player.Position.Y + 5);
-            }
-        }
-
-        // Handle bullet collision with tile
-        public void HandleBulletCollisionWithTile(Sprite tile)
-        {
-            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
-            {
-                if (gameModel.Player.Gun.Bullets[i].Bullet.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
-                {
-                    gameModel.Player.Gun.Bullets.RemoveAt(i);
-                }
             }
         }
 

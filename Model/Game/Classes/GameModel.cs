@@ -12,7 +12,7 @@ namespace Model.Game.Classes
         public Movement Movement { get; set; }
         public TilemapModel Map { get; set; }
         public PlayerModel Player { get; set; }
-        public EnemyModel Enemy { get; set; }
+        public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get ; set ; }
         public Dictionary<MovementDirection, Movement> MovementDirections { get; set; }
         public Vector2f MousePositionWindow { get; set; }

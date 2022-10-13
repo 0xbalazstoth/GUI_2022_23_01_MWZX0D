@@ -47,7 +47,7 @@ namespace Logic.Game.Classes
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            gameModel.Enemy = new EnemyModel();
+            gameModel.Enemies = new List<EnemyModel>();
             gameModel.Objects = new List<IObjectEntity>();
             
             gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
@@ -63,6 +63,7 @@ namespace Logic.Game.Classes
             
             SetTilemap("map.tmx", "tilemap.png");
             CreateSpawnableItems();
+            CreateSpawnableEnemies();
             //SpawnItems();
             
         }
@@ -93,7 +94,7 @@ namespace Logic.Game.Classes
             playerLogic.UpdateDeltaTime(deltaTime);
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
-            playerLogic.HandleEnemyCollision(gameModel.Enemy);
+            playerLogic.HandleEnemyCollision();
 
             foreach (ObjectEntityModel chest in gameModel.Objects)
             {
@@ -285,6 +286,83 @@ namespace Logic.Game.Classes
 
                             item.Item.Position = optimalPosition;
                             gameModel.CollectibleItems.Add(item);
+
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CreateSpawnableEnemies()
+        {
+            for (int i = 0; i < new Random().Next(2, 6); i++)
+            {
+                EnemyModel enemy = new EnemyModel();
+                enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                enemy.Speed = 100f;
+                enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
+
+                gameModel.Enemies.Add(enemy);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.Enemies[i].GetGlobalBounds().Intersects(gameModel.Enemies[j].GetGlobalBounds()))
+                    {
+                        gameModel.Enemies.RemoveAt(i);
+                        j = 0;
+                    }
+                }
+            }
+        }
+
+        public void SpawnEnemies()
+        {
+            foreach (var enemy in gameModel.Enemies)
+            {
+                for (int y = -3; y < 3; y++)
+                {
+                    for (int x = -3; x < 3; x++)
+                    {
+                        var xTilePosition = enemy.Position.X;
+                        var yTilePosition = enemy.Position.Y;
+                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+                        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                        {
+                            continue;
+                        }
+
+                        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                        var rect = enemy.GetGlobalBounds();
+
+                        if (tileRect.Intersects(rect))
+                        {
+                            gameModel.Enemies.Remove(enemy);
+
+                            var optimalPosition = new Vector2f();
+                            var optimalDistance = float.MaxValue;
+
+                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+                            {
+                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+                                {
+                                    var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
+                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+                                    {
+                                        var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
+                                        var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
+                                        if (distance < optimalDistance)
+                                        {
+                                            optimalDistance = distance;
+                                            optimalPosition = tileWorldPosition;
+                                        }
+                                    }
+                                }
+                            }
+
+                            enemy.Position = optimalPosition;
+                            gameModel.Enemies.Add(enemy);
 
                             return;
                         }
