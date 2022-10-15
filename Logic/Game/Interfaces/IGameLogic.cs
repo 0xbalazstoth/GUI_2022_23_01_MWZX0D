@@ -25,5 +25,6 @@ namespace Logic.Game.Interfaces
         void SpawnItems();
         void SpawnEnemies();
         void CreateSpawnableEnemies();
+        void Music();
     }
 }

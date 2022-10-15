@@ -26,6 +26,6 @@ namespace Logic.Game.Interfaces
         void AddItemToInventory(ICollectibleItem item);
         void RemoveItemToInventory(ICollectibleItem item);
         void HandleInventory();
-
+        void ReloadGun();
     }
 }

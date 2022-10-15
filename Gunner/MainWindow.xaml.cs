@@ -227,6 +227,11 @@ namespace Gunner
                 bulletLogic.Shoot();
             }
 
+            if (IsKeyPressed(Key.R))
+            {
+                playerLogic.ReloadGun();
+            }
+
             playerLogic.HandleMovement(direction);
         }
 

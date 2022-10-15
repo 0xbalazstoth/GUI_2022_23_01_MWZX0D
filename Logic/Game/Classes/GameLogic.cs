@@ -4,6 +4,7 @@ using Model.Game;
 using Model.Game.Classes;
 using Model.Game.Enums;
 using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -65,7 +66,10 @@ namespace Logic.Game.Classes
             CreateSpawnableItems();
             CreateSpawnableEnemies();
             //SpawnItems();
-            
+
+            gameModel.Musics = new List<Music>();
+            gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
+            gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -368,6 +372,35 @@ namespace Logic.Game.Classes
                         }
                     }
                 }
+            }
+        }
+
+        public void Music()
+        {
+            //if (gameModel.Music == null)
+            //{
+            //    gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
+            //    gameModel.Music.Loop = true;
+            //    gameModel.Music.Volume = 50;
+            //    gameModel.Music.Play();
+            //}
+            foreach (var music in gameModel.Musics)
+            {
+                //if (k > 1)
+                //{
+                //    music.Stop();
+                //    gameModel.Musics[k - 1].Play();
+                //}
+                //else
+                //{
+                //    music.Play();
+                //}
+
+                //if (music.Status == SFML.Audio.SoundStatus.Stopped)
+                //{
+                //    music.Volume = 30;
+                //    music.Play();
+                //}
             }
         }
     }

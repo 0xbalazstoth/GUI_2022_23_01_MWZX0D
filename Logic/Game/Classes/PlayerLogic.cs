@@ -36,7 +36,7 @@ namespace Logic.Game.Classes
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
 
-            gameModel.Player.Gun = gameModel.Guns[0];
+            gameModel.Player.Gun = gameModel.Guns[0]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
             
             previousPosition = this.gameModel.Player.Position;
@@ -287,6 +287,14 @@ namespace Logic.Game.Classes
                         }
                     }
                 } 
+            }
+        }
+
+        public void ReloadGun()
+        {
+            if (gameModel.Player.Gun.CurrentAmmo == 0)
+            {
+                gameModel.Player.Gun.CurrentAmmo = gameModel.Player.Gun.MaxAmmo;
             }
         }
     }
