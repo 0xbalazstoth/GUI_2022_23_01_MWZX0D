@@ -300,7 +300,7 @@ namespace Logic.Game.Classes
             {
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                enemy.Speed = 100f;
+                enemy.Speed = 30f;
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
 
                 gameModel.Enemies.Add(enemy);

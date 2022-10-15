@@ -124,7 +124,7 @@ namespace Logic.Game.Classes
             {
                 if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                 {
-                    gameModel.Player.Position = previousPosition;
+                    //gameModel.Player.Position = previousPosition;
                 }
             }
         }

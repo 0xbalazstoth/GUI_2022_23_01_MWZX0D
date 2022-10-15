@@ -11,6 +11,9 @@
     <Reference Include="SFML.System">
       <HintPath>..\Gunner\DLLs\SFML.System.dll</HintPath>
     </Reference>
+	  <Reference Include="SFML.Audio">
+		  <HintPath>..\Gunner\DLLs\SFML.Audio.dll</HintPath>
+	  </Reference>
   </ItemGroup>
 
 </Project>

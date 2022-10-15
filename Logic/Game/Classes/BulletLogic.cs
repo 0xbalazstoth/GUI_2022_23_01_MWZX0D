@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SFML.Audio;
 
 namespace Logic.Game.Classes
 {
@@ -26,9 +27,10 @@ namespace Logic.Game.Classes
             pistol.GunType = GunType.Pistol;
             pistol.Damage = 10;
             pistol.MaxAmmo = 15;
-            pistol.Texture = new Texture("Assets/Textures/pistol.png");
-            pistol.TextureRect = new IntRect(0, 0, 12, 3);
             pistol.Scale = new Vector2f(2, 2);
+            pistol.SoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
+            pistol.Sound = new Sound(pistol.SoundBuffer);
+            pistol.FiringInterval = TimeSpan.FromMilliseconds(500);
 
             gameModel.Guns = new List<GunModel>();
             gameModel.Guns.Add(pistol);
@@ -85,6 +87,7 @@ namespace Logic.Game.Classes
             tempBullet.Speed = 15f;
             tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
             tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
+            tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
             tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
 
             tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
@@ -97,7 +100,17 @@ namespace Logic.Game.Classes
                 Speed = 10f,
             });
 
-            gameModel.Player.Gun.Bullets.Add(tempBullet);
+            // Player can shoot every 1 seconds
+            if (gameModel.Player.Gun.LastFired + gameModel.Player.Gun.FiringInterval < DateTime.Now)
+            {
+                gameModel.Player.Gun.Bullets.Add(tempBullet);
+                gameModel.Player.Gun.LastFired = DateTime.Now;
+                
+                if (gameModel.Player.Gun.Sound.Status == SoundStatus.Stopped)
+                {
+                    gameModel.Player.Gun.Sound.Play();
+                }
+            }
 
             // Shake camera
             gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);

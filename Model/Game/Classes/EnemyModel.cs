@@ -1,5 +1,6 @@
 ﻿using Model.Game.Enums;
 using SFML.Graphics;
+using SFML.System;
 using System.Collections.Generic;
 
 namespace Model.Game.Classes

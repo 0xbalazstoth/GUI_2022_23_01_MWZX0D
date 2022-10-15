@@ -24,6 +24,7 @@ namespace Renderer
         private Texture speedPotionTexture;
         private Dictionary<MovementDirection, Texture> playerTextures;
         private Texture enemyTexture;
+        private Texture pistolTexture;
 
         public GameRenderer(IGameModel gameModel, string path)
         {
@@ -46,6 +47,8 @@ namespace Renderer
             playerTextures.Add(MovementDirection.Right, new Texture("Assets/Textures/move_right.png"));
             playerTextures.Add(MovementDirection.Up, new Texture("Assets/Textures/move_up.png"));
             playerTextures.Add(MovementDirection.Down, new Texture("Assets/Textures/move_down.png"));
+
+            pistolTexture = new Texture("Assets/Textures/pistol.png");
         }
 
         public void Draw(RenderTarget window)
@@ -78,6 +81,12 @@ namespace Renderer
             foreach (ObjectEntityModel chest in gameModel.Objects)
             {
                 window.Draw(chest);
+            }
+
+            foreach (var pistol in gameModel.Guns.Where(x => x.GunType == Model.Game.Enums.GunType.Pistol))
+            {
+                pistol.Texture = new Texture("Assets/Textures/pistol.png");
+                pistol.TextureRect = new IntRect(0, 0, 12, 3);
             }
         }
 

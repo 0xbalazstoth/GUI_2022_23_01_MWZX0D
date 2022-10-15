@@ -1,4 +1,5 @@
 ﻿using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -23,6 +24,5 @@ namespace Model.Game.Classes
         public Vector2f WorldPositionInCamera { get; set; }
         public List<GunModel> Guns { get; set; }
         public List<ICollectibleItem> CollectibleItems { get; set; }
-
     }
 }
