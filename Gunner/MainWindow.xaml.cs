@@ -94,9 +94,9 @@ namespace Gunner
         private IUIModel uiModel;
         private UIRenderer uiRenderer;
 
-        private RectangleShape enemy;
-        private RectangleShape enemy2;
-        private List<RectangleShape> enemies;
+        //private RectangleShape enemy;
+        //private RectangleShape enemy2;
+        //private List<RectangleShape> enemies;
 
         private TimeSpan lastRenderTime;
 
@@ -123,7 +123,6 @@ namespace Gunner
 
             this.animationLogic = new AnimationLogic(gameModel);
 
-            this.gameLogic.SetTilemap("map.tmx", "tilemap.png");
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
             this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
 
@@ -134,32 +133,18 @@ namespace Gunner
         private void InitGameplay()
         {
             enemyLogic = new EnemyLogic(gameModel);
-            enemyLogic.LoadTexture("player.png");
-
+            
             chestLogic = new ObjectEntityLogic(gameModel);
             chestLogic.LoadTexture("chest.png");
 
             (gameModel.Objects[0] as ChestModel).Position = new Vector2f(100, 100);
-
-            enemy = new RectangleShape();
-            enemy.Size = new Vector2f(32, 32);
-            enemy.FillColor = Color.Red;
-
-            enemy2 = new RectangleShape();
-            enemy2.Position = new Vector2f(50, 100);
-            enemy2.Size = new Vector2f(32, 32);
-            enemy2.FillColor = Color.Blue;
-
-            enemies = new List<RectangleShape>();
-            enemies.Add(enemy);
-            enemies.Add(enemy2);
         }
 
         private void InitSystem()
         {
-            window.SetFramerateLimit(144);
+            window.SetFramerateLimit(60);
             //window.SetVerticalSyncEnabled(true);
-            
+
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.CameraView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
@@ -242,6 +227,11 @@ namespace Gunner
                 bulletLogic.Shoot();
             }
 
+            if (IsKeyPressed(Key.R))
+            {
+                playerLogic.ReloadGun();
+            }
+
             playerLogic.HandleMovement(direction);
         }
 
@@ -259,7 +249,7 @@ namespace Gunner
 
             if (isInWindow)
             {
-                EnemyChasePlayer();
+                enemyLogic.ChasePlayer();
 
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
                 animationLogic.Update(gameLogic.GetDeltaTime);
@@ -272,12 +262,12 @@ namespace Gunner
                 // Bullet collision with enemy
                 foreach (var bullet in gameModel.Player.Gun.Bullets.ToList())
                 {
-                    foreach (var enemy in enemies)
+                    foreach (var enemy in gameModel.Enemies)
                     {
                         if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                         {
                             gameModel.Player.Gun.Bullets.Remove(bullet);
-                            enemies.Remove(enemy);
+                            gameModel.Enemies.Remove(enemy);
                             break;
                         }
                     }
@@ -287,50 +277,20 @@ namespace Gunner
                 
                 GamePlayerControl();
                 bulletLogic.UpdateBulletAnimationTextures();
+                
+                gameLogic.SpawnItems();
+                gameLogic.SpawnEnemies();
             }
         }
 
         public void DrawGame()
         {
             gameRenderer.Draw(window);
-
-            foreach (var enemy in enemies)
-            {
-                window.Draw(enemy);
-            }
         }
 
         public void DrawUI()
         {
             uiRenderer.Draw(window);
-        }
-
-        // ENEMY CHASE PLAYER
-        public void EnemyChasePlayer()
-        {
-            // https://github.com/pushbuttonreceivecode/Top-Down-Shooter-Mechanics-Part-1/blob/master/main.cpp
-            // https://code.markrichards.ninja/sfml/top-down-shoot-em-up-mechanics-part-1
-
-            foreach (var enemy in enemies)
-            {
-                if (gameModel.Player.Position.X < enemy.Position.X)
-                {
-                    enemy.Position = new Vector2f(enemy.Position.X - 1, enemy.Position.Y);
-                }
-                else if (gameModel.Player.Position.X > enemy.Position.X)
-                {
-                    enemy.Position = new Vector2f(enemy.Position.X + 1, enemy.Position.Y);
-                }
-
-                if (gameModel.Player.Position.Y < enemy.Position.Y)
-                {
-                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y - 1);
-                }
-                else if (gameModel.Player.Position.Y > enemy.Position.Y)
-                {
-                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
-                }
-            }
         }
     }
 }

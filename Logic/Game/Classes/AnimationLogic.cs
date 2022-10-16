@@ -93,7 +93,71 @@ namespace Logic.Game.Classes
                     Speed = 3f,
                 });
             }
+
+            foreach (CollectibleItemModel speedPotion in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Speed_Potion))
+            {
+                speedPotion.Animations = new Dictionary<ItemType, AnimationModel>();
+                speedPotion.Animations.Add(ItemType.Speed_Potion, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 2,
+                    TotalRows = 1,
+                    TotalColumns = 2,
+                    Speed = 3f,
+                });
+            }
+
             #endregion
+
+            //#region Enemy animation setup
+            //foreach (EnemyModel enemy in gameModel.Enemies)
+            //{
+            //    enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
+            //    enemy.Animations.Add(MovementDirection.Idle, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 5,
+            //        TotalRows = 1,
+            //        TotalColumns = 5,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 4,
+            //        TotalRows = 1,
+            //        TotalColumns = 4,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Right, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 4,
+            //        TotalRows = 1,
+            //        TotalColumns = 4,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Up, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 8,
+            //        TotalRows = 1,
+            //        TotalColumns = 8,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Down, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 8,
+            //        TotalRows = 1,
+            //        TotalColumns = 8,
+            //        Speed = 10f,
+            //    });
+            //}
         }
 
         public void Update(float dt)

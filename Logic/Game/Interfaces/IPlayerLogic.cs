@@ -19,13 +19,13 @@ namespace Logic.Game.Interfaces
         void UpdateWorldPositionByMouse(RenderWindow window);
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
-        void HandleEnemyCollision(EnemyModel enemy);
+        void HandleEnemyCollision();
         void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
         void FlipAndRotateGun();
         void AddItemToInventory(ICollectibleItem item);
         void RemoveItemToInventory(ICollectibleItem item);
         void HandleInventory();
-
+        void ReloadGun();
     }
 }
