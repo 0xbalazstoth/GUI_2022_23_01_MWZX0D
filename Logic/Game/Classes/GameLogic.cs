@@ -67,9 +67,9 @@ namespace Logic.Game.Classes
             CreateSpawnableEnemies();
             //SpawnItems();
 
-            gameModel.Musics = new List<Music>();
-            gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
-            gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
+            //gameModel.Musics = new List<Music>();
+            //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
+            //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
