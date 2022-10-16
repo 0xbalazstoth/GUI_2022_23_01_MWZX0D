@@ -51,5 +51,10 @@ namespace Logic.Game.Classes
                 gameModel.CollectibleItems[i].Item.TextureRect = (gameModel.CollectibleItems[i] as CollectibleItemModel).Animations[gameModel.CollectibleItems[i].ItemType].TextureRect;
             }
         }
+
+        public void Generation()
+        {
+
+        }
     }
 }
