@@ -34,6 +34,8 @@ namespace Logic.Game.Classes
             pistol.EmptySound = new Sound(pistol.EmptySoundBuffer);
             pistol.FiringInterval = TimeSpan.FromMilliseconds(300);
             pistol.CurrentAmmo = pistol.MaxAmmo;
+            pistol.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
+            pistol.ReloadSound = new(pistol.ReloadSoundBuffer);
 
             GunModel shotgun = new GunModel();
             shotgun.GunType = GunType.Shotgun;
@@ -46,6 +48,9 @@ namespace Logic.Game.Classes
             shotgun.EmptySound = new Sound(shotgun.EmptySoundBuffer);
             shotgun.FiringInterval = TimeSpan.FromMilliseconds(750);
             shotgun.CurrentAmmo = shotgun.MaxAmmo;
+            shotgun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
+            shotgun.ReloadSound = new(shotgun.ReloadSoundBuffer);
+
 
             gameModel.Guns = new List<GunModel>();
             gameModel.Guns.Add(pistol);

@@ -295,7 +295,25 @@ namespace Logic.Game.Classes
             if (gameModel.Player.Gun.CurrentAmmo == 0)
             {
                 gameModel.Player.Gun.CurrentAmmo = gameModel.Player.Gun.MaxAmmo;
+
+                if (gameModel.Player.Gun.ReloadSound.Status == SFML.Audio.SoundStatus.Stopped)
+                {
+                    gameModel.Player.Gun.ReloadSound.Play();
+                }
             }
+
+            else if (gameModel.Player.Gun.CurrentAmmo < gameModel.Player.Gun.MaxAmmo)
+            {
+                gameModel.Player.Gun.CurrentAmmo = gameModel.Player.Gun.MaxAmmo;
+
+                if (gameModel.Player.Gun.ReloadSound.Status == SFML.Audio.SoundStatus.Stopped)
+                {
+                    gameModel.Player.Gun.ReloadSound.Play();
+                }
+            }
+
+
+
         }
     }
 }
