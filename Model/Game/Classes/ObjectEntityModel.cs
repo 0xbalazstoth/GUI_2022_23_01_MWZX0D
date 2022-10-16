@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 
 namespace Model.Game.Classes
 {
-    public class ChestModel : ObjectEntityModel
+    public class ObjectEntityModel : Sprite, IObjectEntity
     {
-        public int MaxItemsCount { get; set; }
+        public Vector2i Size { get; set; }
+        public bool IsObjectMovable { get; set; }
+        public Sprite Object { get; set; }
     }
 }

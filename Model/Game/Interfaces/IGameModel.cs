@@ -1,4 +1,5 @@
 ﻿using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -16,13 +17,13 @@ namespace Model.Game.Classes
         public View UIView { get; set; }
         public TilemapModel Map { get; set; }
         public PlayerModel Player { get; set; }
-        public EnemyModel Enemy { get; set; }
+        public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get; set; }
         public Dictionary<MovementDirection, Movement> MovementDirections { get; set; }
         public Vector2f MousePositionWindow { get; set; }
         public Vector2f WorldPositionInCamera { get; set; }
         public List<GunModel> Guns { get; set; }
         public List<ICollectibleItem> CollectibleItems { get; set; }
-
+        public List<Music> Musics { get; set; }
     }
 }

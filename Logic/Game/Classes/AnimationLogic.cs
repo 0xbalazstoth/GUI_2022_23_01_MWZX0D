@@ -108,6 +108,56 @@ namespace Logic.Game.Classes
             }
 
             #endregion
+
+            //#region Enemy animation setup
+            //foreach (EnemyModel enemy in gameModel.Enemies)
+            //{
+            //    enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
+            //    enemy.Animations.Add(MovementDirection.Idle, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 5,
+            //        TotalRows = 1,
+            //        TotalColumns = 5,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 4,
+            //        TotalRows = 1,
+            //        TotalColumns = 4,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Right, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 4,
+            //        TotalRows = 1,
+            //        TotalColumns = 4,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Up, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 8,
+            //        TotalRows = 1,
+            //        TotalColumns = 8,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Down, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 8,
+            //        TotalRows = 1,
+            //        TotalColumns = 8,
+            //        Speed = 10f,
+            //    });
+            //}
         }
 
         public void Update(float dt)

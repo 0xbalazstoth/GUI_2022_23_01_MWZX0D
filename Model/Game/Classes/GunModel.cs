@@ -1,4 +1,5 @@
 ﻿using Model.Game.Enums;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -16,5 +17,11 @@ namespace Model.Game.Classes
         public int Damage { get; set; }
         public GunType GunType { get; set; }
         public List<BulletModel> Bullets { get; set; }
+        public SoundBuffer ShootSoundBuffer { get; set; }
+        public Sound ShootSound { get; set; }
+        public SoundBuffer EmptySoundBuffer { get; set; }
+        public Sound EmptySound { get; set; }
+        public TimeSpan FiringInterval { get; set; }
+        public DateTime LastFired { get; set; }
     }
 }
