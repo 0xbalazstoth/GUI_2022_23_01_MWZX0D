@@ -300,6 +300,9 @@ namespace Logic.Game.Classes
                 {
                     gameModel.Player.Gun.ReloadSound.Play();
                 }
+
+                
+                
             }
 
             else if (gameModel.Player.Gun.CurrentAmmo < gameModel.Player.Gun.MaxAmmo)
@@ -310,6 +313,8 @@ namespace Logic.Game.Classes
                 {
                     gameModel.Player.Gun.ReloadSound.Play();
                 }
+
+                gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo; /*-= gameModel.Player.Gun.MaxAmmo- gameModel.Player.Gun.CurrentAmmo;*/
             }
 
 

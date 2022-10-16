@@ -119,12 +119,12 @@ namespace Gunner
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
-            this.uiLogic = new UILogic(uiModel);
+            this.uiLogic = new UILogic(uiModel, gameModel, "Assets/Fonts", "FreeMono.ttf");
 
             this.animationLogic = new AnimationLogic(gameModel);
 
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
-            this.uiRenderer = new UIRenderer(uiModel, "Assets/Fonts", "FreeMono.ttf");
+            this.uiRenderer = new UIRenderer(uiModel);
 
             InitSystem();
             InitGameplay();
@@ -280,6 +280,7 @@ namespace Gunner
                 
                 gameLogic.SpawnItems();
                 gameLogic.SpawnEnemies();
+                uiLogic.UpdateAmmoText();
             }
         }
 

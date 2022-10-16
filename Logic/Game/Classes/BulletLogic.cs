@@ -36,6 +36,7 @@ namespace Logic.Game.Classes
             pistol.CurrentAmmo = pistol.MaxAmmo;
             pistol.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
             pistol.ReloadSound = new(pistol.ReloadSoundBuffer);
+            pistol.ShootSounds = new List<Sound>();
 
             GunModel shotgun = new GunModel();
             shotgun.GunType = GunType.Shotgun;
@@ -50,6 +51,8 @@ namespace Logic.Game.Classes
             shotgun.CurrentAmmo = shotgun.MaxAmmo;
             shotgun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
             shotgun.ReloadSound = new(shotgun.ReloadSoundBuffer);
+            shotgun.ShootSounds = new List<Sound>();
+
 
 
             gameModel.Guns = new List<GunModel>();
@@ -145,10 +148,18 @@ namespace Logic.Game.Classes
                     gameModel.Player.Gun.Bullets.Add(tempBullet);
                     gameModel.Player.Gun.CurrentAmmo--;
                     gameModel.Player.Gun.LastFired = DateTime.Now;
+                    gameModel.Player.Gun.ShootSounds.Add(gameModel.Player.Gun.ShootSound);
 
-                    if (gameModel.Player.Gun.ShootSound.Status == SoundStatus.Stopped)
+                    foreach (var shootSound in gameModel.Player.Gun.ShootSounds)
                     {
-                        gameModel.Player.Gun.ShootSound.Play();
+                        shootSound.Play();
+
+                        if (shootSound.Status == SoundStatus.Stopped)
+                        {
+                            gameModel.Player.Gun.ShootSounds.Remove(shootSound);
+                            return;
+
+                        }
                     }
 
                     Trace.WriteLine(gameModel.Player.Gun.CurrentAmmo);
@@ -159,6 +170,7 @@ namespace Logic.Game.Classes
                     if (gameModel.Player.Gun.EmptySound.Status == SoundStatus.Stopped)
                     {
                         gameModel.Player.Gun.EmptySound.Play();
+
                     }
                 }
             }

@@ -25,7 +25,8 @@ namespace Model.Game.Classes
         public Sound ReloadSound { get; set; }
         public TimeSpan FiringInterval { get; set; }
         public DateTime LastFired { get; set; }
+        public List<Sound> ShootSounds { get; set; }
 
-        
+
     }
 }
