@@ -295,6 +295,12 @@ namespace Logic.Game.Classes
                         }
                     }
                 }
+
+                // Spawn items inside the map
+                if (item.Item.Position.X < 0 || item.Item.Position.X > gameModel.Map.Size.X * gameModel.Map.TileSize.X || item.Item.Position.Y < 0 || item.Item.Position.Y > gameModel.Map.Size.Y * gameModel.Map.TileSize.Y)
+                {
+                    gameModel.CollectibleItems.Remove(item);
+                }
             }
         }
 
