@@ -317,9 +317,6 @@ namespace Logic.Game.Classes
 
                 gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo; /*-= gameModel.Player.Gun.MaxAmmo- gameModel.Player.Gun.CurrentAmmo;*/
             }
-
-
-
         }
     }
 }

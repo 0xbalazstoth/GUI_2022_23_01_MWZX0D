@@ -94,10 +94,6 @@ namespace Gunner
         private IUIModel uiModel;
         private UIRenderer uiRenderer;
 
-        //private RectangleShape enemy;
-        //private RectangleShape enemy2;
-        //private List<RectangleShape> enemies;
-
         private TimeSpan lastRenderTime;
 
         public MainWindow()
