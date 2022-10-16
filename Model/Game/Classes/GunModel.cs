@@ -27,6 +27,8 @@ namespace Model.Game.Classes
         public DateTime LastFired { get; set; }
         public List<Sound> ShootSounds { get; set; }
 
+        public float Recoil { get; set; }
+
 
     }
 }
