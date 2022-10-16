@@ -1,5 +1,6 @@
 ﻿using Model.Game.Enums;
 using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -16,5 +17,7 @@ namespace Model.Game.Classes
         public Vector2f Velocity { get; set; }
         public float Speed { get; set; }
         public Dictionary<GunType, AnimationModel> Animations { get; set; }
+
+        
     }
 }
