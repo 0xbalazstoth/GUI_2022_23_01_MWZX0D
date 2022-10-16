@@ -159,6 +159,7 @@ namespace Logic.Game.Classes
                     if (gameModel.Player.Gun.EmptySound.Status == SoundStatus.Stopped)
                     {
                         gameModel.Player.Gun.EmptySound.Play();
+
                     }
                 }
             }
