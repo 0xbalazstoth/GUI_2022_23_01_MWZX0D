@@ -17,5 +17,6 @@ namespace Model.Game.Classes
         public Dictionary<MovementDirection, AnimationModel> Animations { get; set; }
         public GunModel Gun { get; set; }
         public InventoryModel Inventory { get; set; }
+        public bool IsFocusedInGame { get; set; } = true;
     }
 }

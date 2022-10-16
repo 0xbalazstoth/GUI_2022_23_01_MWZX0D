@@ -190,6 +190,8 @@ namespace Logic.Game.Classes
                 coinItem.Item = new Sprite();
                 coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
+                coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
+                coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
                 coinItem.Id = (int)coinItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(coinItem);

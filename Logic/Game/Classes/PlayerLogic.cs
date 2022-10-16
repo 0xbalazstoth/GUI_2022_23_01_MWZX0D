@@ -2,6 +2,7 @@
 using Logic.Game.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
@@ -36,7 +37,7 @@ namespace Logic.Game.Classes
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
 
-            gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
+            gameModel.Player.Gun = gameModel.Guns[0]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
             
             previousPosition = this.gameModel.Player.Position;
@@ -257,7 +258,6 @@ namespace Logic.Game.Classes
         {
             foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {
-
                 if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
                 {
                     if (item.ItemType != Model.Game.Enums.ItemType.Coin)
@@ -278,6 +278,15 @@ namespace Logic.Game.Classes
                     }
                     else
                     {
+                        if (item.ItemType == ItemType.Coin)
+                        {
+                            if (item.CoinSound.Status == SFML.Audio.SoundStatus.Stopped)
+                            {
+                                item.CoinSound.Volume = 30;
+                                item.CoinSound.Play();
+                            }
+                        }
+
                         Trace.WriteLine($"{item.ItemType} has been collected");
                         item.IsCollected = true;
                         if (item.IsCollected)
@@ -300,9 +309,6 @@ namespace Logic.Game.Classes
                 {
                     gameModel.Player.Gun.ReloadSound.Play();
                 }
-
-                
-                
             }
 
             else if (gameModel.Player.Gun.CurrentAmmo < gameModel.Player.Gun.MaxAmmo)
@@ -315,7 +321,7 @@ namespace Logic.Game.Classes
 
                 }
 
-                gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo; /*-= gameModel.Player.Gun.MaxAmmo- gameModel.Player.Gun.CurrentAmmo;*/
+                gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo;
             }
         }
     }

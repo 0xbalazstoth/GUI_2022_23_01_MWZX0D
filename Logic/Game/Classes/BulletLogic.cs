@@ -27,7 +27,7 @@ namespace Logic.Game.Classes
             pistol.GunType = GunType.Pistol;
             pistol.Damage = 10;
             pistol.MaxAmmo = 15;
-            pistol.Recoil = 10f;
+            pistol.Recoil = 5f;
             pistol.Scale = new Vector2f(2, 2);
             pistol.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
             pistol.ShootSound = new Sound(pistol.ShootSoundBuffer);
@@ -43,7 +43,7 @@ namespace Logic.Game.Classes
             shotgun.GunType = GunType.Shotgun;
             shotgun.Damage = 20;
             shotgun.MaxAmmo = 5;
-            shotgun.Recoil = 20f;
+            shotgun.Recoil = 10f;
             shotgun.Scale = new Vector2f(2, 2);
             shotgun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
             shotgun.ShootSound = new Sound(shotgun.ShootSoundBuffer);

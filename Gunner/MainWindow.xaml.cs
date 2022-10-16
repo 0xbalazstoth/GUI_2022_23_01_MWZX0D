@@ -138,14 +138,14 @@ namespace Gunner
 
         private void InitSystem()
         {
-            window.SetFramerateLimit(60);
+            window.SetFramerateLimit(144);
             //window.SetVerticalSyncEnabled(true);
 
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.CameraView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
             gameModel.CameraView.Viewport = new FloatRect(0f, 0f, 1f, 1f);
-
+            
             gameModel.UIView = new View();
             gameModel.UIView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.UIView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
@@ -288,6 +288,15 @@ namespace Gunner
         public void DrawUI()
         {
             uiRenderer.Draw(window);
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.I)
+            {
+                InventoryWindow inventoryWindow = new InventoryWindow();
+                inventoryWindow.ShowDialog();
+            }
         }
     }
 }
