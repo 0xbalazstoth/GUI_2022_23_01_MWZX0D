@@ -27,6 +27,7 @@ namespace Logic.Game.Classes
             pistol.GunType = GunType.Pistol;
             pistol.Damage = 10;
             pistol.MaxAmmo = 15;
+            pistol.Recoil = 10f;
             pistol.Scale = new Vector2f(2, 2);
             pistol.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
             pistol.ShootSound = new Sound(pistol.ShootSoundBuffer);
@@ -42,6 +43,7 @@ namespace Logic.Game.Classes
             shotgun.GunType = GunType.Shotgun;
             shotgun.Damage = 20;
             shotgun.MaxAmmo = 5;
+            shotgun.Recoil = 20f;
             shotgun.Scale = new Vector2f(2, 2);
             shotgun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
             shotgun.ShootSound = new Sound(shotgun.ShootSoundBuffer);
@@ -178,7 +180,8 @@ namespace Logic.Game.Classes
             // Shake camera
             if (gameModel.Player.Gun.CurrentAmmo > 0)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil);
+
             }
         }
 
