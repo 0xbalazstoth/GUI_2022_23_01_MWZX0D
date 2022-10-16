@@ -12,5 +12,7 @@ namespace Model.UI.Classes
     {
         public Text FPSText { get; set; }
         public Font Font { get; set; }
+
+        public Text AmmoText { get; set; }
     }
 }

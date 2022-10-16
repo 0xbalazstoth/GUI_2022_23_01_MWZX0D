@@ -1,4 +1,5 @@
 ﻿using Logic.Tools;
+using Model.Game.Classes;
 using Model.UI;
 using Model.UI.Interfaces;
 using SFML.Graphics;
@@ -16,16 +17,21 @@ namespace Model.Tools
         private float fps;
         private float frameTime;
         private float time;
+        private IGameModel gameModel;
 
         public float GetFps { get => fps; }
         public float GetFrameTime { get => frameTime; }
 
-        public UILogic(IUIModel uiModel)
+        public UILogic(IUIModel uiModel, IGameModel gameModel)
         {
             this.uiModel = uiModel;
+            this.gameModel = gameModel;
 
             uiModel.FPSText = new Text();
+            uiModel.AmmoText = new();
+
         }
+
 
         public void UpdateFPS(float dt)
         {
@@ -39,6 +45,11 @@ namespace Model.Tools
             }
 
             uiModel.FPSText.DisplayedString = "FPS: " + fps.ToString();
+        }
+
+        public void UpdateAmmoText()
+        {
+            uiModel.AmmoText.DisplayedString = $"Ammo: {gameModel.Player.Gun.MaxAmmo}/{gameModel.Player.Gun.CurrentAmmo}";
         }
     }
 }
