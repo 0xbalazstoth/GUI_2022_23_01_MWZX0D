@@ -33,6 +33,12 @@ namespace Gunner
             this.gameModel = gameModel;
 
             lstBoxInventory.ItemsSource = gameModel.Player.Inventory.Items;
+            gameModel.Player.IsFocusedInGame = false;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            gameModel.Player.IsFocusedInGame = true;
         }
     }
 }

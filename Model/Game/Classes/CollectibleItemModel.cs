@@ -18,5 +18,7 @@ namespace Model.Game.Classes
         public SoundBuffer CoinSoundBuffer { get; set; }
         public Sound CoinSound { get; set; }
         public int Quantity { get; set; }
+        public string IconFileName { get; set; }
+        public string IconPath { get => $"pack://application:,,,/Assets/Textures/{IconFileName}"; }
     }
 }

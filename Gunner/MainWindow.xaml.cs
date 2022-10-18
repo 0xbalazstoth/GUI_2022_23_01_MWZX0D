@@ -248,7 +248,7 @@ namespace Gunner
                 isInWindow = true;
             }
 
-            if (isInWindow)
+            if (isInWindow && gameModel.Player.IsFocusedInGame)
             {
                 enemyLogic.ChasePlayer();
 

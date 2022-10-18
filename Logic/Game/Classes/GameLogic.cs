@@ -212,6 +212,7 @@ namespace Logic.Game.Classes
                 healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
+                healtPotionItem.IconFileName = "health_potion.png";
                 
                 gameModel.CollectibleItems.Add(healtPotionItem);
                 for (int j = 0; j < i - 1; j++)
@@ -231,7 +232,8 @@ namespace Logic.Game.Classes
                 speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
-                
+                speedPotion.IconFileName = "speed_potion.png";
+
                 gameModel.CollectibleItems.Add(speedPotion);
                 for (int j = 0; j < i - 1; j++)
                 {
