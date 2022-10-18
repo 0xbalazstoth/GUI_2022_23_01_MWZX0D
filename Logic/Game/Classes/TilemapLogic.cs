@@ -25,6 +25,14 @@ namespace Logic.Game.Classes
             gameModel.Map = new TilemapModel();
         }
 
+        public void Generation(int seed = 209323094)
+        {
+            SimplexNoise.Noise.Seed = seed;
+            int length = 10, width = 15;
+            float scale = 0.10f;
+            float[,] noiseValues = SimplexNoise.Noise.Calc2D(length, width, scale);
+        }
+
         public int GetTileID(int layer, int x, int y)
         {
             var paramsAreInvalid = layer < 0 || layer >= gameModel.Map.MapLayers.Count ||

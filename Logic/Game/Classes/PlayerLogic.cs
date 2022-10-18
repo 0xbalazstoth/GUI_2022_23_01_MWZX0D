@@ -81,6 +81,42 @@ namespace Logic.Game.Classes
             previousPosition = gameModel.Player.Position;
             gameModel.Player.Position += movementDirection * gameModel.Player.DeltaTime * gameModel.Player.Speed;
             this.movementDirection = movementDirection;
+
+            // New movement timer
+            //if (gameModel.Player.MovementTimer == null)
+            //{
+            //    gameModel.Player.MovementTimer = new Stopwatch();
+            //    gameModel.Player.MovementTimer.Start();
+            //}
+
+            //// Timer and count how much time since they moved
+            //if (gameModel.Player.MovementTimer.ElapsedMilliseconds > 100)
+            //{
+            //    gameModel.Player.MovementTimer.Stop();
+            //    gameModel.Player.MovementTimer = null;
+            //    gameModel.Player.MovementCount = 0;
+            //}
+            //else
+            //{
+            //    gameModel.Player.MovementCount++;
+            //}
+
+            //if (gameModel.Player.MovementCount > 1)
+            //{
+            //    gameModel.Player.MovementCount = 0;
+            //    gameModel.Player.MovementTimer.Stop();
+            //    gameModel.Player.MovementTimer = null;
+            //    isPlayerIdle = true;
+
+            //    Trace.WriteLine("Player is idle");
+            //}
+            //else
+            //{
+            //    isPlayerIdle = false;
+            //    Trace.WriteLine("Player is moving");
+            //}
+
+            // if it's below a certain amount, then they're moving
         }
 
         public void LoadTexture(Texture texture)
@@ -187,7 +223,6 @@ namespace Logic.Game.Classes
                 return;
             }
 
-            // Change -1,1 if the player is bigger than 32x32
             for (int y = -2; y < 2; y++)
             {
                 for (int x = -2; x < 2; x++)
