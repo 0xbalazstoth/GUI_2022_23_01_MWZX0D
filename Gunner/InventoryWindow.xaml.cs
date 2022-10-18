@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Model.Game.Classes;
+using Model.Game.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,18 @@ namespace Gunner
     /// </summary>
     public partial class InventoryWindow : Window
     {
-        public InventoryWindow()
+        private IGameModel gameModel;
+        private List<ICollectibleItem> items;
+
+        public List<ICollectibleItem> Items { get; }
+
+        public InventoryWindow(IGameModel gameModel)
         {
             InitializeComponent();
+
+            this.gameModel = gameModel;
+
+            lstBoxInventory.ItemsSource = gameModel.Player.Inventory.Items;
         }
     }
 }

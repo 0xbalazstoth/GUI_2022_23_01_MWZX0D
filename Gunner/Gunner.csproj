@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Textures\health_potion.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Textures\health_potion.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logic\Logic.csproj" />
     <ProjectReference Include="..\Renderer\Renderer.csproj" />
   </ItemGroup>

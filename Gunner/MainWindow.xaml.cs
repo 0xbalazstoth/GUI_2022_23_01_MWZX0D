@@ -229,6 +229,11 @@ namespace Gunner
             }
 
             playerLogic.HandleMovement(direction);
+
+            if (IsKeyPressed(Key.M))
+            {
+                tilemapLogic.Generation();
+            }
         }
 
         public void Update()
@@ -294,7 +299,7 @@ namespace Gunner
         {
             if (e.Key == System.Windows.Input.Key.I)
             {
-                InventoryWindow inventoryWindow = new InventoryWindow();
+                InventoryWindow inventoryWindow = new InventoryWindow(gameModel);
                 inventoryWindow.ShowDialog();
             }
         }

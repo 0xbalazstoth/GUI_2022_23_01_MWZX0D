@@ -205,7 +205,7 @@ namespace Logic.Game.Classes
                 }
             }
 
-            for (int i = 0; i < new Random().Next(1, 5); i++)
+            for (int i = 0; i < new Random().Next(1, 50); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
@@ -224,7 +224,7 @@ namespace Logic.Game.Classes
                 }
             }
 
-            for (int i = 0; i < new Random().Next(1, 5); i++)
+            for (int i = 0; i < new Random().Next(1, 20); i++)
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();

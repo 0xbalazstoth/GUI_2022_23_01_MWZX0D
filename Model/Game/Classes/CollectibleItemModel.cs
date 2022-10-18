@@ -17,5 +17,6 @@ namespace Model.Game.Classes
         public bool Spawned { get; set; }
         public SoundBuffer CoinSoundBuffer { get; set; }
         public Sound CoinSound { get; set; }
+        public int Quantity { get; set; }
     }
 }

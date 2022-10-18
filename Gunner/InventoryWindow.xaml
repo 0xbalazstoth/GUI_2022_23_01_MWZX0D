@@ -5,8 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="InventoryWindow" Height="450" Width="800">
+        Title="Inventory" Height="300" Width="400" WindowStyle="None" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <ListBox x:Name="lstBoxInventory">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Margin="3" Source="pack://application:,,,/Assets/Textures/health_potion.png"></Image>
+                        <Label Margin="3" Foreground="Black" Content="{Binding Value.ItemType}" />
+                        <Label Margin="3" Foreground="Black" x:Name="lblQuantity"></Label>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>

@@ -26,6 +26,7 @@ namespace Logic.Game.Classes
 
         private Vector2f movementDirection;
         private Vector2f previousPosition;
+        private int movementCount;
 
         public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IAnimationLogic animationLogic, uint windowWidth, uint windowHeight)
         {
@@ -81,42 +82,6 @@ namespace Logic.Game.Classes
             previousPosition = gameModel.Player.Position;
             gameModel.Player.Position += movementDirection * gameModel.Player.DeltaTime * gameModel.Player.Speed;
             this.movementDirection = movementDirection;
-
-            // New movement timer
-            //if (gameModel.Player.MovementTimer == null)
-            //{
-            //    gameModel.Player.MovementTimer = new Stopwatch();
-            //    gameModel.Player.MovementTimer.Start();
-            //}
-
-            //// Timer and count how much time since they moved
-            //if (gameModel.Player.MovementTimer.ElapsedMilliseconds > 100)
-            //{
-            //    gameModel.Player.MovementTimer.Stop();
-            //    gameModel.Player.MovementTimer = null;
-            //    gameModel.Player.MovementCount = 0;
-            //}
-            //else
-            //{
-            //    gameModel.Player.MovementCount++;
-            //}
-
-            //if (gameModel.Player.MovementCount > 1)
-            //{
-            //    gameModel.Player.MovementCount = 0;
-            //    gameModel.Player.MovementTimer.Stop();
-            //    gameModel.Player.MovementTimer = null;
-            //    isPlayerIdle = true;
-
-            //    Trace.WriteLine("Player is idle");
-            //}
-            //else
-            //{
-            //    isPlayerIdle = false;
-            //    Trace.WriteLine("Player is moving");
-            //}
-
-            // if it's below a certain amount, then they're moving
         }
 
         public void LoadTexture(Texture texture)
@@ -126,18 +91,18 @@ namespace Logic.Game.Classes
 
         public void UpdateAnimationTextures()
         {
-            gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Idle].Texture;
-            gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Idle].TextureRect;
+            gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.IdleRight].Texture;
+            gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect;
             gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
 
-            var movement = GetMovementByDirection(movementDirection);
+            //var movement = GetMovementByDirection(movementDirection);
 
-            if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
-            {
-                gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
-                gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
-                gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            }
+            //if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
+            //{
+            //    gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
+            //    gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
+            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+            //}
         }
 
         public void UpdateDeltaTime(float dt)
@@ -254,17 +219,17 @@ namespace Logic.Game.Classes
                 gameModel.Player.Inventory.Capacity++;
                 if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
                 {
-                    gameModel.Player.Inventory.Quantities[item.Id]+=1;
+                    gameModel.Player.Inventory.Items[item.Id].Quantity++;
                 }
                 else
                 {
                     gameModel.Player.Inventory.Items.Add(item.Id, item);
-                    gameModel.Player.Inventory.Quantities[item.Id] = 1;
+                    gameModel.Player.Inventory.Items[item.Id].Quantity = 1;
                 }
             }
             foreach (var inventoryItem in gameModel.Player.Inventory.Items)
             {
-                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Quantity: {gameModel.Player.Inventory.Items[inventoryItem.Key].Quantity}");
             }
         }
 
@@ -275,17 +240,16 @@ namespace Logic.Game.Classes
                 gameModel.Player.Inventory.Capacity--;
                 if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
                 {
-                    gameModel.Player.Inventory.Quantities[item.Id] -= 1;
-                    if (gameModel.Player.Inventory.Quantities[item.Id] == 0)
+                    gameModel.Player.Inventory.Items[item.Id].Quantity--;
+                    if (gameModel.Player.Inventory.Items[item.Id].Quantity == 0)
                     {
                         gameModel.Player.Inventory.Items.Remove(item.Id);
-                        gameModel.Player.Inventory.Quantities.Remove(item.Id);
                     }
                 }
             }
             foreach (var inventoryItem in gameModel.Player.Inventory.Items)
             {
-                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Quantity: {gameModel.Player.Inventory.Items[inventoryItem.Key].Quantity}");
             }
         }
 
@@ -297,7 +261,7 @@ namespace Logic.Game.Classes
                 {
                     if (item.ItemType != Model.Game.Enums.ItemType.Coin)
                     {
-                        var items = gameModel.Player.Inventory.Quantities.Sum(x => x.Value);
+                        var items = gameModel.Player.Inventory.Items.Sum(x => x.Value.Quantity);
 
                         if (items < gameModel.Player.Inventory.MaxCapacity)
                         {

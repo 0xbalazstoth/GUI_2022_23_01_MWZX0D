@@ -13,5 +13,6 @@ namespace Model.Game.Interfaces
         Sprite Item { get; set; }
 
         bool IsCollected {get;set;}
+        int Quantity { get; set; }
     }
 }
