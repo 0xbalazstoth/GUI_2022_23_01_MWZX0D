@@ -62,7 +62,7 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
 
             
-            SetTilemap("map.tmx", "tilemap.png");
+            SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             CreateSpawnableItems();
             CreateSpawnableEnemies();
             //SpawnItems();

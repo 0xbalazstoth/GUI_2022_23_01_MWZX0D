@@ -131,7 +131,7 @@ namespace Gunner
             enemyLogic = new EnemyLogic(gameModel);
             
             chestLogic = new ObjectEntityLogic(gameModel);
-            chestLogic.LoadTexture("chest.png");
+            chestLogic.LoadTexture("Assets/Textures/chest.png");
 
             (gameModel.Objects[0] as ChestModel).Position = new Vector2f(100, 100);
         }
