@@ -94,10 +94,6 @@ namespace Gunner
         private IUIModel uiModel;
         private UIRenderer uiRenderer;
 
-        //private RectangleShape enemy;
-        //private RectangleShape enemy2;
-        //private List<RectangleShape> enemies;
-
         private TimeSpan lastRenderTime;
 
         public MainWindow()
@@ -135,21 +131,21 @@ namespace Gunner
             enemyLogic = new EnemyLogic(gameModel);
             
             chestLogic = new ObjectEntityLogic(gameModel);
-            chestLogic.LoadTexture("chest.png");
+            chestLogic.LoadTexture("Assets/Textures/chest.png");
 
             (gameModel.Objects[0] as ChestModel).Position = new Vector2f(100, 100);
         }
 
         private void InitSystem()
         {
-            window.SetFramerateLimit(60);
+            window.SetFramerateLimit(144);
             //window.SetVerticalSyncEnabled(true);
 
             gameModel.CameraView = new View();
             gameModel.CameraView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.CameraView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
             gameModel.CameraView.Viewport = new FloatRect(0f, 0f, 1f, 1f);
-
+            
             gameModel.UIView = new View();
             gameModel.UIView.Size = new Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT);
             gameModel.UIView.Center = new Vector2f(window.Size.X / 2f, window.Size.Y / 2f);
@@ -233,6 +229,11 @@ namespace Gunner
             }
 
             playerLogic.HandleMovement(direction);
+
+            if (IsKeyPressed(Key.M))
+            {
+                tilemapLogic.Generation();
+            }
         }
 
         public void Update()
@@ -247,7 +248,7 @@ namespace Gunner
                 isInWindow = true;
             }
 
-            if (isInWindow)
+            if (isInWindow && gameModel.Player.IsFocusedInGame)
             {
                 enemyLogic.ChasePlayer();
 
@@ -292,6 +293,15 @@ namespace Gunner
         public void DrawUI()
         {
             uiRenderer.Draw(window);
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.I)
+            {
+                InventoryWindow inventoryWindow = new InventoryWindow(gameModel);
+                inventoryWindow.ShowDialog();
+            }
         }
     }
 }

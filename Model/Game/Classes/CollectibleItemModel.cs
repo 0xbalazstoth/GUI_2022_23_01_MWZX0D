@@ -1,5 +1,6 @@
 ﻿using Model.Game.Enums;
 using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,10 @@ namespace Model.Game.Classes
         public ItemType ItemType { get; set; } = ItemType.Item;
         public Dictionary<ItemType, AnimationModel> Animations { get; set; }
         public bool Spawned { get; set; }
+        public SoundBuffer CoinSoundBuffer { get; set; }
+        public Sound CoinSound { get; set; }
+        public int Quantity { get; set; }
+        public string IconFileName { get; set; }
+        public string IconPath { get => $"pack://application:,,,/Assets/Textures/{IconFileName}"; }
     }
 }

@@ -62,7 +62,7 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
 
             
-            SetTilemap("map.tmx", "tilemap.png");
+            SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             CreateSpawnableItems();
             CreateSpawnableEnemies();
             //SpawnItems();
@@ -190,6 +190,8 @@ namespace Logic.Game.Classes
                 coinItem.Item = new Sprite();
                 coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
+                coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
+                coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
                 coinItem.Id = (int)coinItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(coinItem);
@@ -203,13 +205,14 @@ namespace Logic.Game.Classes
                 }
             }
 
-            for (int i = 0; i < new Random().Next(1, 5); i++)
+            for (int i = 0; i < new Random().Next(1, 50); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
                 healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
+                healtPotionItem.IconFileName = "health_potion.png";
                 
                 gameModel.CollectibleItems.Add(healtPotionItem);
                 for (int j = 0; j < i - 1; j++)
@@ -222,14 +225,15 @@ namespace Logic.Game.Classes
                 }
             }
 
-            for (int i = 0; i < new Random().Next(1, 5); i++)
+            for (int i = 0; i < new Random().Next(1, 20); i++)
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
                 speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
-                
+                speedPotion.IconFileName = "speed_potion.png";
+
                 gameModel.CollectibleItems.Add(speedPotion);
                 for (int j = 0; j < i - 1; j++)
                 {

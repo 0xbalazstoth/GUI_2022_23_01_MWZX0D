@@ -6,6 +6,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,57 @@ namespace Logic.Game.Classes
             this.gameModel = gameModel;
 
             gameModel.Map = new TilemapModel();
+        }
+
+        public void Generation(int seed = 209323094)
+        {
+            SimplexNoise.Noise.Seed = new Random().Next(1111, 999999);
+            int length = 10, width = 15;
+            float scale = 0.10f;
+            float[,] noiseValues = SimplexNoise.Noise.Calc2D(length, width, scale);
+
+            int grassType1 = 1;
+            int grassType2 = 2;
+            int grassType3 = 3;
+            int wall = 5;
+
+            int[] generatedMap = new int[length * width];
+
+            // Generate map by noise values and set tile textures by percentage
+            for (int x = 0; x < length; x++)
+            {
+                for (int y = 0; y < width; y++)
+                {
+                    if (noiseValues[x, y] < 70f)
+                    {
+                        generatedMap[x + y * length] = grassType1;
+                    }
+                    else if (noiseValues[x, y] < 90f)
+                    {
+                        generatedMap[x + y * length] = grassType2;
+                    }
+                    else if (noiseValues[x, y] < 150f)
+                    {
+                        generatedMap[x + y * length] = wall;
+                    }
+                    else
+                    {
+                        generatedMap[x + y * length] = grassType3;
+                    }
+                }
+            }
+
+            // Print generated map
+            for (int x = 0; x < length; x++)
+            {
+                for (int y = 0; y < width; y++)
+                {
+                    Trace.Write(generatedMap[x + y * length] + " ");
+                }
+                Trace.WriteLine("");
+            }
+
+            var map = gameModel.Map;
         }
 
         public int GetTileID(int layer, int x, int y)
@@ -50,11 +102,6 @@ namespace Logic.Game.Classes
                 gameModel.CollectibleItems[i].Item.Texture = (gameModel.CollectibleItems[i] as CollectibleItemModel).Animations[gameModel.CollectibleItems[i].ItemType].Texture;
                 gameModel.CollectibleItems[i].Item.TextureRect = (gameModel.CollectibleItems[i] as CollectibleItemModel).Animations[gameModel.CollectibleItems[i].ItemType].TextureRect;
             }
-        }
-
-        public void Generation()
-        {
-
         }
     }
 }
