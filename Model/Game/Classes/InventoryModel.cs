@@ -13,5 +13,6 @@ namespace Model.Game.Classes
         public int Capacity { get; set; }
 
         public int MaxCapacity { get; set; } = 10;
+        public int Quantity { get; set; }
     }
 }

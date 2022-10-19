@@ -1,6 +1,7 @@
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,13 @@ namespace Model.Game.Classes
     {
         public string Name { get; set; }
         public int Health { get; set; }
-        public List<BulletModel> Bullets { get; set; }
         public Vector2f Center { get; set; }
         public Vector2f AimDirection { get; set; }
         public Vector2f AimDirectionNormalized { get; set; }
         public Dictionary<MovementDirection, AnimationModel> Animations { get; set; }
         public GunModel Gun { get; set; }
         public InventoryModel Inventory { get; set; }
+        public bool IsFocusedInGame { get; set; } = true;
+        public Stopwatch MovementTimer { get; set; }
     }
 }

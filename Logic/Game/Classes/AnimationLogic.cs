@@ -30,6 +30,24 @@ namespace Logic.Game.Classes
                 Speed = 10f,
             });
 
+            gameModel.Player.Animations.Add(MovementDirection.IdleLeft, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 5,
+                TotalRows = 1,
+                TotalColumns = 5,
+                Speed = 10f,
+            });
+
+            gameModel.Player.Animations.Add(MovementDirection.IdleRight, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 5,
+                TotalRows = 1,
+                TotalColumns = 5,
+                Speed = 10f,
+            });
+
             gameModel.Player.Animations.Add(MovementDirection.Left, new AnimationModel()
             {
                 Row = 0,
@@ -93,7 +111,71 @@ namespace Logic.Game.Classes
                     Speed = 3f,
                 });
             }
+
+            foreach (CollectibleItemModel speedPotion in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Speed_Potion))
+            {
+                speedPotion.Animations = new Dictionary<ItemType, AnimationModel>();
+                speedPotion.Animations.Add(ItemType.Speed_Potion, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 2,
+                    TotalRows = 1,
+                    TotalColumns = 2,
+                    Speed = 3f,
+                });
+            }
+
             #endregion
+
+            //#region Enemy animation setup
+            //foreach (EnemyModel enemy in gameModel.Enemies)
+            //{
+            //    enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
+            //    enemy.Animations.Add(MovementDirection.Idle, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 5,
+            //        TotalRows = 1,
+            //        TotalColumns = 5,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 4,
+            //        TotalRows = 1,
+            //        TotalColumns = 4,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Right, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 4,
+            //        TotalRows = 1,
+            //        TotalColumns = 4,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Up, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 8,
+            //        TotalRows = 1,
+            //        TotalColumns = 8,
+            //        Speed = 10f,
+            //    });
+
+            //    enemy.Animations.Add(MovementDirection.Down, new AnimationModel()
+            //    {
+            //        Row = 0,
+            //        ColumnsInRow = 8,
+            //        TotalRows = 1,
+            //        TotalColumns = 8,
+            //        Speed = 10f,
+            //    });
+            //}
         }
 
         public void Update(float dt)
@@ -111,10 +193,11 @@ namespace Logic.Game.Classes
                 gameModel.Player.Animations[playerAnimation.Key].TextureRect = playerAnimation.Value.TextureRect;
             }
 
-            // Coin animation
-            foreach (CollectibleItemModel coinItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Coin))
+
+            // Item animation
+            foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {
-                foreach (var itemAnimation in coinItem.Animations)
+                foreach (var itemAnimation in item.Animations)
                 {
                     itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
 
@@ -123,23 +206,24 @@ namespace Logic.Game.Classes
                         itemAnimation.Value.Counter = 0f;
                     }
                     itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    coinItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+                    item.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                 }
             }
 
-            // Health potion animation
-            foreach (CollectibleItemModel healthPotionItem in gameModel.CollectibleItems.Where(x => x.ItemType == Model.Game.Enums.ItemType.Health_Potion))
+            // Bullet animation
+            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
-                foreach (var itemAnimation in healthPotionItem.Animations)
+                foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
                 {
-                    itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
+                    bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
 
-                    if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
+                    if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
                     {
-                        itemAnimation.Value.Counter = 0f;
+                        bulletAnimation.Value.Counter = 0f;
                     }
-                    itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    healthPotionItem.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
+
+                    bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+                    gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
                 }
             }
         }

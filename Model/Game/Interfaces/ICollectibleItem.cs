@@ -13,5 +13,8 @@ namespace Model.Game.Interfaces
         Sprite Item { get; set; }
 
         bool IsCollected {get;set;}
+        int Quantity { get; set; }
+        string IconFileName { get; set; }
+        string IconPath { get; }
     }
 }

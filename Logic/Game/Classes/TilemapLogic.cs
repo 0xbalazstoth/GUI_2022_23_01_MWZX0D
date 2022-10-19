@@ -6,6 +6,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,43 +24,57 @@ namespace Logic.Game.Classes
             this.gameModel = gameModel;
 
             gameModel.Map = new TilemapModel();
+        }
 
-            gameModel.CollectibleItems = new List<ICollectibleItem>();
-            for (int i = 0; i < 10; i++)
+        public void Generation(int seed = 209323094)
+        {
+            SimplexNoise.Noise.Seed = new Random().Next(1111, 999999);
+            int length = 10, width = 15;
+            float scale = 0.10f;
+            float[,] noiseValues = SimplexNoise.Noise.Calc2D(length, width, scale);
+
+            int grassType1 = 1;
+            int grassType2 = 2;
+            int grassType3 = 3;
+            int wall = 5;
+
+            int[] generatedMap = new int[length * width];
+
+            // Generate map by noise values and set tile textures by percentage
+            for (int x = 0; x < length; x++)
             {
-                CollectibleItemModel coinItem = new CollectibleItemModel();
-                coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
-                coinItem.Id = (int)coinItem.ItemType;
-                gameModel.CollectibleItems.Add(coinItem);
-                for (int j = 0; j < i - 1; j++)
+                for (int y = 0; y < width; y++)
                 {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    if (noiseValues[x, y] < 70f)
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        j = 0;
+                        generatedMap[x + y * length] = grassType1;
+                    }
+                    else if (noiseValues[x, y] < 90f)
+                    {
+                        generatedMap[x + y * length] = grassType2;
+                    }
+                    else if (noiseValues[x, y] < 150f)
+                    {
+                        generatedMap[x + y * length] = wall;
+                    }
+                    else
+                    {
+                        generatedMap[x + y * length] = grassType3;
                     }
                 }
             }
 
-            for (int i = 0; i < 5; i++)
+            // Print generated map
+            for (int x = 0; x < length; x++)
             {
-                CollectibleItemModel healtPotionItem = new CollectibleItemModel();
-                healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
-                healtPotionItem.Id = (int)healtPotionItem.ItemType;
-                gameModel.CollectibleItems.Add(healtPotionItem);
-                for (int j = 0; j < i - 1; j++)
+                for (int y = 0; y < width; y++)
                 {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                        j = 0;
-                    }
+                    Trace.Write(generatedMap[x + y * length] + " ");
                 }
+                Trace.WriteLine("");
             }
+
+            var map = gameModel.Map;
         }
 
         public int GetTileID(int layer, int x, int y)

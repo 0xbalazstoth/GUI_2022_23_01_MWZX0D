@@ -9,6 +9,141 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Fonts\FreeMono.ttf" />
+    <None Remove="Assets\Sounds\coin.ogg" />
+    <None Remove="Assets\Sounds\gun_empty.ogg" />
+    <None Remove="Assets\Sounds\gun_reload.ogg" />
+    <None Remove="Assets\Sounds\pistol.ogg" />
+    <None Remove="Assets\Textures\bullet_sheet.png" />
+    <None Remove="Assets\Textures\chest.png" />
+    <None Remove="Assets\Textures\coin.png" />
+    <None Remove="Assets\Textures\coin_sheet.png" />
+    <None Remove="Assets\Textures\cursor.png" />
+    <None Remove="Assets\Textures\enemy_move_left.png" />
+    <None Remove="Assets\Textures\enemy_move_right.png" />
+    <None Remove="Assets\Textures\health_potion.png" />
+    <None Remove="Assets\Textures\health_potion_sheet.png" />
+    <None Remove="Assets\Textures\idle_left.png" />
+    <None Remove="Assets\Textures\idle_right.png" />
+    <None Remove="Assets\Textures\map.tmx" />
+    <None Remove="Assets\Textures\menu.png" />
+    <None Remove="Assets\Textures\move_down.png" />
+    <None Remove="Assets\Textures\move_left.png" />
+    <None Remove="Assets\Textures\move_right.png" />
+    <None Remove="Assets\Textures\move_up.png" />
+    <None Remove="Assets\Textures\pistol.png" />
+    <None Remove="Assets\Textures\player.png" />
+    <None Remove="Assets\Textures\shotgun.png" />
+    <None Remove="Assets\Textures\speed_potion.png" />
+    <None Remove="Assets\Textures\speed_potion_sheet.png" />
+    <None Remove="Assets\Textures\tilemap.png" />
+    <None Remove="csfml-Audio.dll" />
+    <None Remove="csfml-Graphics.dll" />
+    <None Remove="csfml-System.dll" />
+    <None Remove="csfml-Window.dll" />
+    <None Remove="openal32.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Fonts\FreeMono.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\coin.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gun_empty.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gun_reload.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\pistol.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\bullet_sheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\chest.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\coin_sheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\cursor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\enemy_move_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\enemy_move_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\health_potion.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\health_potion_sheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\idle_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\idle_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\map.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\menu.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\move_down.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\move_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\move_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\move_up.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\pistol.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\shotgun.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\speed_potion.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\speed_potion_sheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\tilemap.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csfml-Audio.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csfml-Graphics.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csfml-System.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="csfml-Window.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="openal32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logic\Logic.csproj" />
     <ProjectReference Include="..\Renderer\Renderer.csproj" />
   </ItemGroup>
@@ -26,6 +161,18 @@
     <Reference Include="SFML.Window">
       <HintPath>DLLs\SFML.Window.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Textures\coin.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\Textures\minion.aseprite">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

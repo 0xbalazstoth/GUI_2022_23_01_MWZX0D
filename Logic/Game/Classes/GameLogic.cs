@@ -2,7 +2,9 @@
 using Model;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -46,7 +48,7 @@ namespace Logic.Game.Classes
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            gameModel.Enemy = new EnemyModel();
+            gameModel.Enemies = new List<EnemyModel>();
             gameModel.Objects = new List<IObjectEntity>();
             
             gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
@@ -58,6 +60,16 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
+
+            
+            SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
+            CreateSpawnableItems();
+            CreateSpawnableEnemies();
+            //SpawnItems();
+
+            //gameModel.Musics = new List<Music>();
+            //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
+            //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -86,9 +98,9 @@ namespace Logic.Game.Classes
             playerLogic.UpdateDeltaTime(deltaTime);
             playerLogic.UpdateTilePosition(gameModel.Map);
             playerLogic.HandleMapCollision(gameModel.Map);
-            playerLogic.HandleEnemyCollision(gameModel.Enemy);
+            playerLogic.HandleEnemyCollision();
 
-            foreach (ChestModel chest in gameModel.Objects)
+            foreach (ObjectEntityModel chest in gameModel.Objects)
             {
                 playerLogic.HandleObjectCollision(chest);
             }
@@ -104,12 +116,17 @@ namespace Logic.Game.Classes
         {
             bulletLogic.HandleMapCollision(window);
 
-            foreach (ChestModel chest in gameModel.Objects)
+            foreach (ObjectEntityModel chest in gameModel.Objects)
             {
                 bulletLogic.HandleObjectCollision(chest);
             }
 
             bulletLogic.Update();
+        }
+
+        public void UpdateTilemap()
+        {
+            tilemapLogic.UpdateItemAnimationTextures();
         }
 
         public void UpdateDeltaTime()
@@ -145,9 +162,6 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(result.X, result.Y);
             }
-
-            // Shake camera
-            //gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * 10f - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * 10f - 5f);
         }
 
         public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)
@@ -163,6 +177,240 @@ namespace Logic.Game.Classes
             if (viewport != null)
             {
                 view.Viewport = viewport.Value;
+            }
+        }
+
+        public void CreateSpawnableItems()
+        {
+            gameModel.CollectibleItems = new List<ICollectibleItem>();
+
+            for (int i = 0; i < new Random().Next(5, 30); i++)
+            {
+                CollectibleItemModel coinItem = new CollectibleItemModel();
+                coinItem.Item = new Sprite();
+                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
+                coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
+                coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
+                coinItem.Id = (int)coinItem.ItemType;
+                
+                gameModel.CollectibleItems.Add(coinItem);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
+            }
+
+            for (int i = 0; i < new Random().Next(1, 50); i++)
+            {
+                CollectibleItemModel healtPotionItem = new CollectibleItemModel();
+                healtPotionItem.Item = new Sprite();
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
+                healtPotionItem.Id = (int)healtPotionItem.ItemType;
+                healtPotionItem.IconFileName = "health_potion.png";
+                
+                gameModel.CollectibleItems.Add(healtPotionItem);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
+            }
+
+            for (int i = 0; i < new Random().Next(1, 20); i++)
+            {
+                CollectibleItemModel speedPotion = new CollectibleItemModel();
+                speedPotion.Item = new Sprite();
+                speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
+                speedPotion.Id = (int)speedPotion.ItemType;
+                speedPotion.IconFileName = "speed_potion.png";
+
+                gameModel.CollectibleItems.Add(speedPotion);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                    {
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        j = 0;
+                    }
+                }
+            }
+        }
+
+        public void SpawnItems()
+        {
+            foreach (var item in gameModel.CollectibleItems)
+            {
+                for (int y = -3; y < 3; y++)
+                {
+                    for (int x = -3; x < 3; x++)
+                    {
+                        var xTilePosition = item.Item.Position.X;
+                        var yTilePosition = item.Item.Position.Y;
+                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+                        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                        {
+                            continue;
+                        }
+
+                        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                        var rect = item.Item.GetGlobalBounds();
+
+                        if (tileRect.Intersects(rect))
+                        {
+                            gameModel.CollectibleItems.Remove(item);
+
+                            var optimalPosition = new Vector2f(); 
+                            var optimalDistance = float.MaxValue;
+
+                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+                            {
+                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+                                {
+                                    var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
+                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+                                    {
+                                        var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
+                                        var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
+                                        if (distance < optimalDistance)
+                                        {
+                                            optimalDistance = distance;
+                                            optimalPosition = tileWorldPosition;
+                                        }
+                                    }
+                                }
+                            }
+
+                            item.Item.Position = optimalPosition;
+                            gameModel.CollectibleItems.Add(item);
+
+                            return;
+                        }
+                    }
+                }
+
+                // Spawn items inside the map
+                if (item.Item.Position.X < 0 || item.Item.Position.X > gameModel.Map.Size.X * gameModel.Map.TileSize.X || item.Item.Position.Y < 0 || item.Item.Position.Y > gameModel.Map.Size.Y * gameModel.Map.TileSize.Y)
+                {
+                    gameModel.CollectibleItems.Remove(item);
+                }
+            }
+        }
+
+        public void CreateSpawnableEnemies()
+        {
+            for (int i = 0; i < new Random().Next(2, 6); i++)
+            {
+                EnemyModel enemy = new EnemyModel();
+                enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                enemy.Speed = 30f;
+                enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
+
+                gameModel.Enemies.Add(enemy);
+                for (int j = 0; j < i - 1; j++)
+                {
+                    if (gameModel.Enemies[i].GetGlobalBounds().Intersects(gameModel.Enemies[j].GetGlobalBounds()))
+                    {
+                        gameModel.Enemies.RemoveAt(i);
+                        j = 0;
+                    }
+                }
+            }
+        }
+
+        public void SpawnEnemies()
+        {
+            foreach (var enemy in gameModel.Enemies)
+            {
+                for (int y = -3; y < 3; y++)
+                {
+                    for (int x = -3; x < 3; x++)
+                    {
+                        var xTilePosition = enemy.Position.X;
+                        var yTilePosition = enemy.Position.Y;
+                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+                        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                        {
+                            continue;
+                        }
+
+                        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                        var rect = enemy.GetGlobalBounds();
+
+                        if (tileRect.Intersects(rect))
+                        {
+                            gameModel.Enemies.Remove(enemy);
+
+                            var optimalPosition = new Vector2f();
+                            var optimalDistance = float.MaxValue;
+
+                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+                            {
+                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+                                {
+                                    var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
+                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+                                    {
+                                        var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
+                                        var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
+                                        if (distance < optimalDistance)
+                                        {
+                                            optimalDistance = distance;
+                                            optimalPosition = tileWorldPosition;
+                                        }
+                                    }
+                                }
+                            }
+
+                            enemy.Position = optimalPosition;
+                            gameModel.Enemies.Add(enemy);
+
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Music()
+        {
+            //if (gameModel.Music == null)
+            //{
+            //    gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
+            //    gameModel.Music.Loop = true;
+            //    gameModel.Music.Volume = 50;
+            //    gameModel.Music.Play();
+            //}
+            foreach (var music in gameModel.Musics)
+            {
+                //if (k > 1)
+                //{
+                //    music.Stop();
+                //    gameModel.Musics[k - 1].Play();
+                //}
+                //else
+                //{
+                //    music.Play();
+                //}
+
+                //if (music.Status == SFML.Audio.SoundStatus.Stopped)
+                //{
+                //    music.Volume = 30;
+                //    music.Play();
+                //}
             }
         }
     }

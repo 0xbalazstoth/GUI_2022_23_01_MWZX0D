@@ -2,6 +2,7 @@
 using Logic.Game.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.Game.Interfaces;
 using SFML.Graphics;
 using SFML.System;
@@ -25,6 +26,7 @@ namespace Logic.Game.Classes
 
         private Vector2f movementDirection;
         private Vector2f previousPosition;
+        private int movementCount;
 
         public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IAnimationLogic animationLogic, uint windowWidth, uint windowHeight)
         {
@@ -35,11 +37,11 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
-            this.gameModel.Player.Bullets = new List<BulletModel>();
+
+            gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
+            this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
             
             previousPosition = this.gameModel.Player.Position;
-
-            gameModel.Player.Gun = gameModel.Guns[0];
 
             this.gameModel.Player.Inventory = new InventoryModel();
             this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
@@ -89,18 +91,18 @@ namespace Logic.Game.Classes
 
         public void UpdateAnimationTextures()
         {
-            gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.Idle].Texture;
-            gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.Idle].TextureRect;
+            gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.IdleRight].Texture;
+            gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect;
             gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
 
-            var movement = GetMovementByDirection(movementDirection);
+            //var movement = GetMovementByDirection(movementDirection);
 
-            if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
-            {
-                gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
-                gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
-                gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            }
+            //if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
+            //{
+            //    gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
+            //    gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
+            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+            //}
         }
 
         public void UpdateDeltaTime(float dt)
@@ -118,11 +120,14 @@ namespace Logic.Game.Classes
             gameModel.Player.AimDirectionNormalized = gameModel.Player.AimDirection / (float)Math.Sqrt(gameModel.Player.AimDirection.X * gameModel.Player.AimDirection.X + gameModel.Player.AimDirection.Y * gameModel.Player.AimDirection.Y);
         }
 
-        public void HandleEnemyCollision(EnemyModel enemy)
+        public void HandleEnemyCollision()
         {
-            if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+            foreach (var enemy in gameModel.Enemies)
             {
-                gameModel.Player.Position = previousPosition;
+                if (gameModel.Player.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
+                {
+                    //gameModel.Player.Position = previousPosition;
+                }
             }
         }
 
@@ -175,18 +180,6 @@ namespace Logic.Game.Classes
             }
         }
 
-        // Handle bullet collision with tile
-        public void HandleBulletCollisionWithTile(Sprite tile)
-        {
-            for (int i = 0; i < gameModel.Player.Bullets.Count; i++)
-            {
-                if (gameModel.Player.Bullets[i].Shape.GetGlobalBounds().Intersects(tile.GetGlobalBounds()))
-                {
-                    gameModel.Player.Bullets.RemoveAt(i);
-                }
-            }
-        }
-
         public void HandleMapCollision(TilemapModel tilemap)
         {
             if (gameModel.Player.TilePosition.X < 1 || gameModel.Player.TilePosition.X > tilemap.Size.X - 1 || gameModel.Player.TilePosition.Y < 2 || gameModel.Player.TilePosition.Y > tilemap.Size.Y - 0.2)
@@ -195,7 +188,6 @@ namespace Logic.Game.Classes
                 return;
             }
 
-            // Change -1,1 if the player is bigger than 32x32
             for (int y = -2; y < 2; y++)
             {
                 for (int x = -2; x < 2; x++)
@@ -227,17 +219,17 @@ namespace Logic.Game.Classes
                 gameModel.Player.Inventory.Capacity++;
                 if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
                 {
-                    gameModel.Player.Inventory.Quantities[item.Id]+=1;
+                    gameModel.Player.Inventory.Items[item.Id].Quantity++;
                 }
                 else
                 {
                     gameModel.Player.Inventory.Items.Add(item.Id, item);
-                    gameModel.Player.Inventory.Quantities[item.Id] = 1;
+                    gameModel.Player.Inventory.Items[item.Id].Quantity = 1;
                 }
             }
             foreach (var inventoryItem in gameModel.Player.Inventory.Items)
             {
-                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Quantity: {gameModel.Player.Inventory.Items[inventoryItem.Key].Quantity}");
             }
         }
 
@@ -248,17 +240,16 @@ namespace Logic.Game.Classes
                 gameModel.Player.Inventory.Capacity--;
                 if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
                 {
-                    gameModel.Player.Inventory.Quantities[item.Id] -= 1;
-                    if (gameModel.Player.Inventory.Quantities[item.Id] == 0)
+                    gameModel.Player.Inventory.Items[item.Id].Quantity--;
+                    if (gameModel.Player.Inventory.Items[item.Id].Quantity == 0)
                     {
                         gameModel.Player.Inventory.Items.Remove(item.Id);
-                        gameModel.Player.Inventory.Quantities.Remove(item.Id);
                     }
                 }
             }
             foreach (var inventoryItem in gameModel.Player.Inventory.Items)
             {
-                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Item: {gameModel.Player.Inventory.Quantities[inventoryItem.Key]}");
+                Trace.WriteLine($"Id: {inventoryItem.Value.ItemType}, Quantity: {gameModel.Player.Inventory.Items[inventoryItem.Key].Quantity}");
             }
         }
 
@@ -266,15 +257,36 @@ namespace Logic.Game.Classes
         {
             foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {
-
                 if (gameModel.Player.GetGlobalBounds().Intersects(item.Item.GetGlobalBounds()))
                 {
-                    var items = gameModel.Player.Inventory.Quantities.Sum(x => x.Value);
-
-                    if (items < gameModel.Player.Inventory.MaxCapacity)
+                    if (item.ItemType != Model.Game.Enums.ItemType.Coin)
                     {
+                        var items = gameModel.Player.Inventory.Items.Sum(x => x.Value.Quantity);
+
+                        if (items < gameModel.Player.Inventory.MaxCapacity)
+                        {
+                            Trace.WriteLine($"{item.ItemType} has been collected");
+                            AddItemToInventory(item);
+                            item.IsCollected = true;
+                            if (item.IsCollected)
+                            {
+                                gameModel.CollectibleItems.Remove(item);
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (item.ItemType == ItemType.Coin)
+                        {
+                            if (item.CoinSound.Status == SFML.Audio.SoundStatus.Stopped)
+                            {
+                                item.CoinSound.Volume = 30;
+                                item.CoinSound.Play();
+                            }
+                        }
+
                         Trace.WriteLine($"{item.ItemType} has been collected");
-                        AddItemToInventory(item);
                         item.IsCollected = true;
                         if (item.IsCollected)
                         {
@@ -283,6 +295,32 @@ namespace Logic.Game.Classes
                         }
                     }
                 } 
+            }
+        }
+
+        public void ReloadGun()
+        {
+            if (gameModel.Player.Gun.CurrentAmmo == 0)
+            {
+                gameModel.Player.Gun.CurrentAmmo = gameModel.Player.Gun.MaxAmmo;
+
+                if (gameModel.Player.Gun.ReloadSound.Status == SFML.Audio.SoundStatus.Stopped)
+                {
+                    gameModel.Player.Gun.ReloadSound.Play();
+                }
+            }
+
+            else if (gameModel.Player.Gun.CurrentAmmo < gameModel.Player.Gun.MaxAmmo)
+            {
+                gameModel.Player.Gun.CurrentAmmo = gameModel.Player.Gun.MaxAmmo;
+
+                if (gameModel.Player.Gun.ReloadSound.Status == SFML.Audio.SoundStatus.Stopped)
+                {
+                    gameModel.Player.Gun.ReloadSound.Play();
+
+                }
+
+                gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo;
             }
         }
     }
