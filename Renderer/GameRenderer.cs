@@ -155,6 +155,14 @@ namespace Renderer
             gameModel.Player.Animations[MovementDirection.Idle].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.Idle].Texture);
             gameModel.Player.Animations[MovementDirection.Idle].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.Idle].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.Idle].GetSpriteSize.Y);
 
+            gameModel.Player.Animations[MovementDirection.IdleLeft].Texture = playerTextures[MovementDirection.IdleLeft];
+            gameModel.Player.Animations[MovementDirection.IdleLeft].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.IdleLeft].Texture);
+            gameModel.Player.Animations[MovementDirection.IdleLeft].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.IdleLeft].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.IdleLeft].GetSpriteSize.Y);
+
+            gameModel.Player.Animations[MovementDirection.IdleRight].Texture = playerTextures[MovementDirection.IdleRight];
+            gameModel.Player.Animations[MovementDirection.IdleRight].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.IdleRight].Texture);
+            gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.IdleRight].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.IdleRight].GetSpriteSize.Y);
+
             gameModel.Player.Animations[MovementDirection.Left].Texture = playerTextures[MovementDirection.Left];
             gameModel.Player.Animations[MovementDirection.Left].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.Left].Texture);
             gameModel.Player.Animations[MovementDirection.Left].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.Left].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.Left].GetSpriteSize.Y);

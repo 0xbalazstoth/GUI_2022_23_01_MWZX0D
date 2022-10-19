@@ -30,6 +30,24 @@ namespace Logic.Game.Classes
                 Speed = 10f,
             });
 
+            gameModel.Player.Animations.Add(MovementDirection.IdleLeft, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 5,
+                TotalRows = 1,
+                TotalColumns = 5,
+                Speed = 10f,
+            });
+
+            gameModel.Player.Animations.Add(MovementDirection.IdleRight, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 5,
+                TotalRows = 1,
+                TotalColumns = 5,
+                Speed = 10f,
+            });
+
             gameModel.Player.Animations.Add(MovementDirection.Left, new AnimationModel()
             {
                 Row = 0,
