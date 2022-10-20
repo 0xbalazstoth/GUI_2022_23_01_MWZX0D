@@ -315,6 +315,7 @@ namespace Logic.Game.Classes
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 enemy.Speed = 30f;
+                enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
 
                 gameModel.Enemies.Add(enemy);

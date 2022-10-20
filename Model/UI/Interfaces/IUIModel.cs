@@ -10,7 +10,8 @@ namespace Model.UI.Interfaces
     public interface IUIModel
     {
         public Text FPSText { get; set; }
-        public Text AmmoText { get; set; }
+        public Text PlayerAmmoText { get; set; }
+        public Text PlayerXPLevelText { get; set; }
         public Font Font { get; set; }
     }
 }

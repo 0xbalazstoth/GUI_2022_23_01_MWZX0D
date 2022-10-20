@@ -19,6 +19,6 @@ namespace Model.Game.Classes
         public GunModel Gun { get; set; }
         public InventoryModel Inventory { get; set; }
         public bool IsFocusedInGame { get; set; } = true;
-        public Stopwatch MovementTimer { get; set; }
+        public int CurrentXP { get; set; }
     }
 }

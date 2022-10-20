@@ -260,19 +260,7 @@ namespace Gunner
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
 
-                // Bullet collision with enemy
-                foreach (var bullet in gameModel.Player.Gun.Bullets.ToList())
-                {
-                    foreach (var enemy in gameModel.Enemies)
-                    {
-                        if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
-                        {
-                            gameModel.Player.Gun.Bullets.Remove(bullet);
-                            gameModel.Enemies.Remove(enemy);
-                            break;
-                        }
-                    }
-                }
+                enemyLogic.HandleBulletCollision();
 
                 gameLogic.UpdateTilemap();
                 
@@ -281,7 +269,9 @@ namespace Gunner
                 
                 gameLogic.SpawnItems();
                 gameLogic.SpawnEnemies();
+
                 uiLogic.UpdateAmmoText();
+                uiLogic.UpdateXPLevelText();
             }
         }
 

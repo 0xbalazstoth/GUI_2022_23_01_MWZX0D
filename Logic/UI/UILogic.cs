@@ -29,25 +29,28 @@ namespace Model.Tools
             this.uiModel = uiModel;
             this.gameModel = gameModel;
             var font = new Font(Path.Combine(fontPath, fontFile));
+            
             uiModel.FPSText = new Text();
-            uiModel.AmmoText = new();
+            uiModel.PlayerAmmoText = new Text();
+            uiModel.PlayerXPLevelText = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
             uiModel.FPSText.CharacterSize = 16;
             uiModel.FPSText.Font = font;
 
+            uiModel.PlayerAmmoText.FillColor = Color.Green;
+            uiModel.PlayerAmmoText.Position = new Vector2f(10, 50);
+            uiModel.PlayerAmmoText.CharacterSize = 18;
+            uiModel.PlayerAmmoText.Font = font;
 
+            uiModel.PlayerXPLevelText.FillColor = Color.Yellow;
+            uiModel.PlayerXPLevelText.Position = new Vector2f(10, 70);
+            uiModel.PlayerXPLevelText.CharacterSize = 18;
+            uiModel.PlayerXPLevelText.Font = font;
 
-            uiModel.AmmoText.FillColor = Color.Green;
-            uiModel.AmmoText.Position = new Vector2f(10, 50);
-            uiModel.AmmoText.CharacterSize = 20;
-            uiModel.AmmoText.Font = font;
             uiModel.Font = font;
-           
-
         }
-
 
         public void UpdateFPS(float dt)
         {
@@ -65,7 +68,12 @@ namespace Model.Tools
 
         public void UpdateAmmoText()
         {
-            uiModel.AmmoText.DisplayedString = $"Ammo in clip: {gameModel.Player.Gun.MaxAmmo}/{gameModel.Player.Gun.CurrentAmmo}";
+            uiModel.PlayerAmmoText.DisplayedString = $"Ammo in clip: {gameModel.Player.Gun.MaxAmmo}/{gameModel.Player.Gun.CurrentAmmo}";
+        }
+
+        public void UpdateXPLevelText()
+        {
+            uiModel.PlayerXPLevelText.DisplayedString = $"XP Level: {gameModel.Player.CurrentXP}";
         }
     }
 }

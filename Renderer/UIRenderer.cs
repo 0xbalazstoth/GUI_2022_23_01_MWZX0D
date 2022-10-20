@@ -18,14 +18,13 @@ namespace Renderer
         public UIRenderer(IUIModel uiModel)
         {
             this.uiModel = uiModel;
-            
-
         }
 
         public void Draw(RenderTarget window)
         {
             window.Draw(DrawableFPSText());
             window.Draw(DrawableAmmoText());
+            window.Draw(DrawableXPLevelText());
         }
 
         private Drawable DrawableFPSText()
@@ -35,9 +34,12 @@ namespace Renderer
 
         private Drawable DrawableAmmoText()
         {
-            return uiModel.AmmoText;
+            return uiModel.PlayerAmmoText;
         }
 
-
+        private Drawable DrawableXPLevelText()
+        {
+            return uiModel.PlayerXPLevelText;
+        }
     }
 }
