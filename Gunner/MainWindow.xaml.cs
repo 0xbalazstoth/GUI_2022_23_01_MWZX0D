@@ -272,6 +272,7 @@ namespace Gunner
 
                 uiLogic.UpdateAmmoText();
                 uiLogic.UpdateXPLevelText();
+                uiLogic.UpdatePlayerCoinText();
             }
         }
 

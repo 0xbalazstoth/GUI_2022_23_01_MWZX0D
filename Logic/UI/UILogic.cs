@@ -33,6 +33,8 @@ namespace Model.Tools
             uiModel.FPSText = new Text();
             uiModel.PlayerAmmoText = new Text();
             uiModel.PlayerXPLevelText = new Text();
+            uiModel.PlayerCoinText = new Text();
+            uiModel.PlayerCoinSprite = new Sprite();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -48,6 +50,14 @@ namespace Model.Tools
             uiModel.PlayerXPLevelText.Position = new Vector2f(10, 70);
             uiModel.PlayerXPLevelText.CharacterSize = 18;
             uiModel.PlayerXPLevelText.Font = font;
+
+            uiModel.PlayerCoinSprite.Scale = new Vector2f(2f, 2f);
+            uiModel.PlayerCoinSprite.Position = new Vector2f(6, 90);
+
+            uiModel.PlayerCoinText.FillColor = Color.Yellow;
+            uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y + 4);
+            uiModel.PlayerCoinText.CharacterSize = 18;
+            uiModel.PlayerCoinText.Font = font;
 
             uiModel.Font = font;
         }
@@ -74,6 +84,11 @@ namespace Model.Tools
         public void UpdateXPLevelText()
         {
             uiModel.PlayerXPLevelText.DisplayedString = $"XP Level: {gameModel.Player.CurrentXP}";
+        }
+
+        public void UpdatePlayerCoinText()
+        {
+            uiModel.PlayerCoinText.DisplayedString = $"{gameModel.Player.CurrentCoins}";
         }
     }
 }

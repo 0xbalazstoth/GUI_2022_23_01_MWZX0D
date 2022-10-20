@@ -284,6 +284,9 @@ namespace Logic.Game.Classes
                                 item.CoinSound.Volume = 30;
                                 item.CoinSound.Play();
                             }
+
+                            gameModel.Player.CurrentCoins++;
+                            Trace.WriteLine($"Player current coins: {gameModel.Player.CurrentCoins}");
                         }
 
                         Trace.WriteLine($"{item.ItemType} has been collected");

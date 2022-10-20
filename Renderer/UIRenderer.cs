@@ -22,9 +22,13 @@ namespace Renderer
 
         public void Draw(RenderTarget window)
         {
+            uiModel.PlayerCoinSprite.Texture = new Texture(@"Assets\Textures\coin.png");
+
             window.Draw(DrawableFPSText());
             window.Draw(DrawableAmmoText());
             window.Draw(DrawableXPLevelText());
+            window.Draw(DrawablePlayerCoinSprite());
+            window.Draw(DrawablePlayerCoinText());
         }
 
         private Drawable DrawableFPSText()
@@ -40,6 +44,16 @@ namespace Renderer
         private Drawable DrawableXPLevelText()
         {
             return uiModel.PlayerXPLevelText;
+        }
+
+        private Drawable DrawablePlayerCoinSprite()
+        {
+            return uiModel.PlayerCoinSprite;
+        }
+
+        private Drawable DrawablePlayerCoinText()
+        {
+            return uiModel.PlayerCoinText;
         }
     }
 }

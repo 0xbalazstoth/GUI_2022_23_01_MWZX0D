@@ -13,5 +13,6 @@ namespace Logic.Tools
         public void UpdateFPS(float dt);
         public void UpdateAmmoText();
         public void UpdateXPLevelText();
+        public void UpdatePlayerCoinText();
     }
 }

@@ -20,5 +20,6 @@ namespace Model.Game.Classes
         public InventoryModel Inventory { get; set; }
         public bool IsFocusedInGame { get; set; } = true;
         public int CurrentXP { get; set; }
+        public int CurrentCoins { get; set; }
     }
 }
