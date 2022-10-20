@@ -12,5 +12,7 @@ namespace Logic.Tools
         public float GetFrameTime { get; }
         public void UpdateFPS(float dt);
         public void UpdateAmmoText();
+        public void UpdateXPLevelText();
+        public void UpdatePlayerCoinText();
     }
 }

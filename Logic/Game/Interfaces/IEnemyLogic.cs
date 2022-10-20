@@ -15,5 +15,6 @@ namespace Logic.Game.Interfaces
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
         void ChasePlayer();
+        void HandleBulletCollision();
     }
 }
