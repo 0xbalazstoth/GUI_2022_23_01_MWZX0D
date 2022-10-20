@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="Inventory" Height="300" Width="400" Closed="Window_Closed" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <ListBox x:Name="lstBoxInventory">
+        Title="Inventory" LocationChanged="Window_LocationChanged" Background="{x:Null}" Height="300" Width="300" AllowsTransparency="True" WindowStyle="None" Closed="Window_Closed" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid Background="{x:Null}">
+        <Image Source="/menu.png" VerticalAlignment="Center" HorizontalAlignment="Center"></Image>
+        <ListBox x:Name="lstBoxInventory" Background="{x:Null}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">

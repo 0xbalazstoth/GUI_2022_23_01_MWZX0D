@@ -41,6 +41,7 @@
     <None Remove="csfml-Graphics.dll" />
     <None Remove="csfml-System.dll" />
     <None Remove="csfml-Window.dll" />
+    <None Remove="menu.png" />
     <None Remove="openal32.dll" />
   </ItemGroup>
 
@@ -167,6 +168,10 @@
     <Content Include="Assets\Textures\coin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="menu.png" />
   </ItemGroup>
 
   <ItemGroup>

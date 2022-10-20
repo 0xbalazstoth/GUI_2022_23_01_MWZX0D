@@ -22,7 +22,6 @@ namespace Gunner
     public partial class InventoryWindow : Window
     {
         private IGameModel gameModel;
-        private List<ICollectibleItem> items;
 
         public List<ICollectibleItem> Items { get; }
 
@@ -39,6 +38,13 @@ namespace Gunner
         private void Window_Closed(object sender, EventArgs e)
         {
             gameModel.Player.IsFocusedInGame = true;
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            // Move this window by MainWindow's position and center it
+            this.Top = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height / 2) - (this.Height / 2);
+            this.Left = Application.Current.MainWindow.Left + (Application.Current.MainWindow.Width / 2) - (this.Width / 2);
         }
     }
 }
