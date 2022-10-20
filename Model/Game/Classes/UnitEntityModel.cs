@@ -27,5 +27,6 @@ namespace Model.Game.Classes
             }
         }
         public Sprite HPSprite { get; set; }
+        public Text HPText { get; set; }
     }
 }

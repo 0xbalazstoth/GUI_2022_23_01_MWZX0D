@@ -18,6 +18,17 @@ namespace Logic.Game.Classes
         public EnemyLogic(IGameModel gameModel)
         {
             this.gameModel = gameModel;
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                gameModel.Enemies[i].HPSprite = new Sprite();
+                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
+
+                //gameModel.Enemies[i].HPText = new Text();
+                gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
+                gameModel.Enemies[i].HPText.CharacterSize = 16;
+                gameModel.Enemies[i].HPText.FillColor = Color.Red;
+            }
         }
 
         public void ChasePlayer()
@@ -86,6 +97,17 @@ namespace Logic.Game.Classes
         public void UpdateDeltaTile(float dt)
         {
             
+        }
+
+        public void UpdateHP()
+        {
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X - (gameModel.Enemies[i].GetGlobalBounds().Width / 2f), gameModel.Enemies[i].Position.Y - (gameModel.Enemies[i].GetGlobalBounds().Height / 2f));
+                gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].HPSprite.Position.X + 18f, gameModel.Enemies[i].HPSprite.Position.Y - (gameModel.Enemies[i].HPSprite.GetGlobalBounds().Height / 2f) + 4f);
+
+                gameModel.Enemies[i].HPText.DisplayedString = $"{gameModel.Enemies[i].CurrentHP}";
+            }
         }
     }
 }

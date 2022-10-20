@@ -49,6 +49,11 @@ namespace Logic.Game.Classes
 
             this.gameModel.Player.HPSprite = new Sprite();
             this.gameModel.Player.HPSprite.Position = new Vector2f(this.gameModel.Player.Position.X, this.gameModel.Player.Position.Y);
+
+            this.gameModel.Player.HPText = new Text();
+            this.gameModel.Player.HPText.Position = new Vector2f(this.gameModel.Player.Position.X, this.gameModel.Player.Position.Y);
+            this.gameModel.Player.HPText.CharacterSize = 16;
+            this.gameModel.Player.HPText.FillColor = Color.Red;
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -97,8 +102,6 @@ namespace Logic.Game.Classes
             gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.IdleRight].Texture;
             gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect;
             gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-
-            gameModel.Player.HPSprite.Position = new Vector2f(gameModel.Player.Position.X - 16f, gameModel.Player.Position.Y - 50f);
 
             //var movement = GetMovementByDirection(movementDirection);
 
@@ -325,11 +328,18 @@ namespace Logic.Game.Classes
                 if (gameModel.Player.Gun.ReloadSound.Status == SFML.Audio.SoundStatus.Stopped)
                 {
                     gameModel.Player.Gun.ReloadSound.Play();
-
                 }
 
                 gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo;
             }
+        }
+
+        public void UpdateHP()
+        {
+            gameModel.Player.HPSprite.Position = new Vector2f(gameModel.Player.Position.X - 16f, gameModel.Player.Position.Y - 50f);
+            gameModel.Player.HPText.Position = new Vector2f(gameModel.Player.HPSprite.Position.X + 18f, gameModel.Player.HPSprite.Position.Y - (gameModel.Player.HPSprite.GetGlobalBounds().Height / 2f) + 4f);
+
+            gameModel.Player.HPText.DisplayedString = $"{gameModel.Player.CurrentHP}";
         }
     }
 }
