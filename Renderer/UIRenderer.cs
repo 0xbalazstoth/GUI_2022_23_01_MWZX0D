@@ -18,12 +18,12 @@ namespace Renderer
         public UIRenderer(IUIModel uiModel)
         {
             this.uiModel = uiModel;
+
+            uiModel.PlayerCoinSprite.Texture = new Texture(@"Assets\Textures\coin.png");
         }
 
         public void Draw(RenderTarget window)
         {
-            uiModel.PlayerCoinSprite.Texture = new Texture(@"Assets\Textures\coin.png");
-
             window.Draw(DrawableFPSText());
             window.Draw(DrawableAmmoText());
             window.Draw(DrawableXPLevelText());

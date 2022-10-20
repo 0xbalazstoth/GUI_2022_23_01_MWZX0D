@@ -26,6 +26,7 @@ namespace Renderer
         private Texture enemyTexture;
         private Texture pistolTexture;
         private Texture shotgunTexture;
+        private Texture hpTexture;
 
         public GameRenderer(IGameModel gameModel, string path)
         {
@@ -51,6 +52,8 @@ namespace Renderer
 
             pistolTexture = new Texture("Assets/Textures/pistol.png");
             shotgunTexture = new Texture("Assets/Textures/shotgun.png");
+
+            hpTexture = new Texture("Assets/Textures/heart.png");
         }
 
         public void Draw(RenderTarget window)
@@ -181,6 +184,10 @@ namespace Renderer
 
             window.Draw(gameModel.Player);
             window.Draw(gameModel.Player.Gun);
+
+            // Draw HP
+            gameModel.Player.HPSprite.Texture = hpTexture;
+            window.Draw(gameModel.Player.HPSprite);
         }
 
         private void DrawTilemap(RenderTarget window)

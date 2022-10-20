@@ -46,6 +46,9 @@ namespace Logic.Game.Classes
             this.gameModel.Player.Inventory = new InventoryModel();
             this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
             this.gameModel.Player.Inventory.Quantities = new Dictionary<int, int>();
+
+            this.gameModel.Player.HPSprite = new Sprite();
+            this.gameModel.Player.HPSprite.Position = new Vector2f(this.gameModel.Player.Position.X, this.gameModel.Player.Position.Y);
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -94,6 +97,8 @@ namespace Logic.Game.Classes
             gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.IdleRight].Texture;
             gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect;
             gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
+
+            gameModel.Player.HPSprite.Position = new Vector2f(gameModel.Player.Position.X - 16f, gameModel.Player.Position.Y - 50f);
 
             //var movement = GetMovementByDirection(movementDirection);
 

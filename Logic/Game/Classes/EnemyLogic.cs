@@ -23,7 +23,6 @@ namespace Logic.Game.Classes
         public void ChasePlayer()
         {
             // Find path to the player
-
             foreach (var enemy in gameModel.Enemies)
             {
                 if (gameModel.Player.Position.X < enemy.Position.X)
