@@ -7,6 +7,7 @@ using Model.Game.Interfaces;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -65,7 +66,6 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             CreateSpawnableItems();
             CreateSpawnableEnemies();
-            //SpawnItems();
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
@@ -121,7 +121,7 @@ namespace Logic.Game.Classes
                 bulletLogic.HandleObjectCollision(chest);
             }
 
-            bulletLogic.Update();
+            bulletLogic.UpdatePlayerBullets();
         }
 
         public void UpdateTilemap()
@@ -315,6 +315,7 @@ namespace Logic.Game.Classes
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 enemy.Speed = 30f;
+                enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
 
                 gameModel.Enemies.Add(enemy);

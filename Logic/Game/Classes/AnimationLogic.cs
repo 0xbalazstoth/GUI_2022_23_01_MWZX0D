@@ -193,7 +193,6 @@ namespace Logic.Game.Classes
                 gameModel.Player.Animations[playerAnimation.Key].TextureRect = playerAnimation.Value.TextureRect;
             }
 
-
             // Item animation
             foreach (CollectibleItemModel item in gameModel.CollectibleItems)
             {

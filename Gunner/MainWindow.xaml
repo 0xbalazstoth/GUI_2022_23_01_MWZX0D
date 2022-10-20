@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="600" KeyDown="Window_KeyDown" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" MinHeight="1024" MinWidth="1280" KeyDown="Window_KeyDown" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <DockPanel LastChildFill="True">
         <TextBlock Text="GAME TITLE" DockPanel.Dock="Top"/>
         <Button Content="BUTTON" DockPanel.Dock="Top"></Button>

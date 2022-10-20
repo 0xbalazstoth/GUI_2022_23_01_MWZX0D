@@ -11,5 +11,6 @@ namespace Model.Game.Classes
         public int Health { get; set; }
         public EnemyType EnemyType { get; set; } = EnemyType.Basic;
         public Dictionary<EnemyType, AnimationModel> Animations { get; set; }
+        public int RewardXP { get; set; }
     }
 }
