@@ -220,7 +220,7 @@ namespace Gunner
 
             if (Mouse.IsButtonPressed(Mouse.Button.Left))
             {
-                bulletLogic.Shoot();
+                bulletLogic.PlayerShoot();
             }
 
             if (IsKeyPressed(Key.R))
@@ -299,7 +299,7 @@ namespace Gunner
         {
             if (e.Key == System.Windows.Input.Key.I)
             {
-                InventoryWindow inventoryWindow = new InventoryWindow(gameModel);
+                InventoryWindow inventoryWindow = new InventoryWindow(gameModel, playerLogic);
                 inventoryWindow.ShowDialog();
             }
         }

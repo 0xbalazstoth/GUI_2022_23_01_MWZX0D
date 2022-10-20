@@ -233,7 +233,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void RemoveItemToInventory(ICollectibleItem item)
+        public void RemoveItemFromInventory(ICollectibleItem item)
         {
             if (gameModel.Player.Inventory.Capacity > 0)
             {
@@ -241,7 +241,7 @@ namespace Logic.Game.Classes
                 if (gameModel.Player.Inventory.Items.ContainsKey(item.Id))
                 {
                     gameModel.Player.Inventory.Items[item.Id].Quantity--;
-                    if (gameModel.Player.Inventory.Items[item.Id].Quantity == 0)
+                    if (gameModel.Player.Inventory.Items[item.Id].Quantity <= 0)
                     {
                         gameModel.Player.Inventory.Items.Remove(item.Id);
                     }

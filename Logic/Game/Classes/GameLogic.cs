@@ -121,7 +121,7 @@ namespace Logic.Game.Classes
                 bulletLogic.HandleObjectCollision(chest);
             }
 
-            bulletLogic.Update();
+            bulletLogic.UpdatePlayerBullets();
         }
 
         public void UpdateTilemap()

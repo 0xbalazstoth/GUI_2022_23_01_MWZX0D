@@ -55,8 +55,6 @@ namespace Logic.Game.Classes
             shotgun.ReloadSound = new(shotgun.ReloadSoundBuffer);
             shotgun.ShootSounds = new List<Sound>();
 
-
-
             gameModel.Guns = new List<GunModel>();
             gameModel.Guns.Add(pistol);
             gameModel.Guns.Add(shotgun);
@@ -106,7 +104,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void Shoot()
+        public void PlayerShoot()
         {
             BulletModel tempBullet = new BulletModel();
             tempBullet.Bullet = new Sprite();
@@ -185,7 +183,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void Update()
+        public void UpdatePlayerBullets()
         {
             for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
@@ -208,6 +206,11 @@ namespace Logic.Game.Classes
                 gameModel.Player.Gun.Bullets[i].Bullet.Texture = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].Texture;
                 gameModel.Player.Gun.Bullets[i].Bullet.TextureRect = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].TextureRect;
             }
+        }
+
+        public void EnemyShoot()
+        {
+            
         }
     }
 }
