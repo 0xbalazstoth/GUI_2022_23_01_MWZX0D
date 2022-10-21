@@ -15,17 +15,7 @@ namespace Model.Game.Classes
         public Vector2i TilePosition { get; set; }
         public Dictionary<MovementDirection, Movement> MovementDirections { get; set; }
         public int MaxHP { get; set; } = 100;
-        public int CurrentHP
-        {
-            get
-            {
-                return MaxHP;
-            }
-            set
-            {
-                value = CurrentHP;
-            }
-        }
+        public int CurrentHP { get; set; }
         public Sprite HPSprite { get; set; }
         public Text HPText { get; set; }
     }
