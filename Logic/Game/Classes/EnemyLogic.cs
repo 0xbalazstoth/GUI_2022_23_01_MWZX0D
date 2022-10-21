@@ -34,7 +34,7 @@ namespace Logic.Game.Classes
 
         public void ChasePlayer()
         {
-            // Find path to the player
+            //// Find path to the player
             foreach (var enemy in gameModel.Enemies)
             {
                 if (gameModel.Player.Position.X < enemy.Position.X)
@@ -55,6 +55,8 @@ namespace Logic.Game.Classes
                     enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
                 }
             }
+
+            // Path finding to the player (A* algorithm)
         }
 
         public void HandleBulletCollision()
@@ -66,9 +68,19 @@ namespace Logic.Game.Classes
                     if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                     {
                         gameModel.Player.Gun.Bullets.Remove(bullet);
-                        gameModel.Enemies.Remove(enemy);
 
-                        gameModel.Player.CurrentXP += enemy.RewardXP;
+                        // Damage enemy if it is not dead
+                        if (enemy.CurrentHP >= 1)
+                        {
+                            enemy.CurrentHP -= gameModel.Player.Gun.Damage;
+                        }
+                        
+                        if (enemy.CurrentHP == 0)
+                        {
+                            gameModel.Enemies.Remove(enemy);
+                            gameModel.Player.CurrentXP += enemy.RewardXP;
+                        }
+
                         break;
                     }
                 }
