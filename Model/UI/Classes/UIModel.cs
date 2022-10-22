@@ -17,5 +17,6 @@ namespace Model.UI.Classes
         public Text PlayerXPLevelText { get; set; }
         public Sprite PlayerCoinSprite { get; set; }
         public Text PlayerCoinText { get; set; }
+        public Text SpeedPotionTimer { get; set; }
     }
 }
