@@ -21,5 +21,7 @@ namespace Model.Game.Classes
         public Text HPText { get; set; }
         public GunModel Gun { get; set; }
         public Vector2f Center { get; set; }
+        public Vector2f AimDirection { get; set; }
+        public Vector2f AimDirectionNormalized { get; set; }
     }
 }

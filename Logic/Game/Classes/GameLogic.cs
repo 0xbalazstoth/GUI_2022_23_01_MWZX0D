@@ -120,9 +120,11 @@ namespace Logic.Game.Classes
             foreach (ObjectEntityModel obj in gameModel.Objects)
             {
                 bulletLogic.HandlePlayerBulletObjectCollision(obj);
+                bulletLogic.HandleEnemiesBulletObjectCollision(obj);
             }
 
             bulletLogic.UpdatePlayerBullets();
+            bulletLogic.UpdateEnemiesBulletAnimationTextures();
         }
 
         public void UpdateTilemap()
@@ -316,6 +318,8 @@ namespace Logic.Game.Classes
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 enemy.Speed = 30f;
+                enemy.Gun = gameModel.Guns[0];
+                enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
 

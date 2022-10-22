@@ -124,7 +124,6 @@ namespace Logic.Game.Classes
                     Speed = 3f,
                 });
             }
-
             #endregion
 
             //#region Enemy animation setup
@@ -223,6 +222,26 @@ namespace Logic.Game.Classes
 
                     bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
                     gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                }
+            }
+
+            // Enemy bullet animation
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                {
+                    foreach (var bulletAnimation in gameModel.Enemies[i].Gun.Bullets[j].Animations)
+                    {
+                        bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
+
+                        if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
+                        {
+                            bulletAnimation.Value.Counter = 0f;
+                        }
+                        
+                        bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                    }
                 }
             }
         }

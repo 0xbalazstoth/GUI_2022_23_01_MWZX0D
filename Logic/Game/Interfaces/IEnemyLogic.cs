@@ -18,5 +18,6 @@ namespace Logic.Game.Interfaces
         void HandleBulletCollision();
         void UpdateHP();
         void Shoot();
+        void FlipAndRotateGun();
     }
 }

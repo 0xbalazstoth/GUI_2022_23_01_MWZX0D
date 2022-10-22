@@ -272,8 +272,15 @@ namespace Gunner
                 uiLogic.UpdatePlayerCoinText();
                 uiLogic.UpdateSpeedPotionTimeLeftText();
 
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
+                {
+                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
+                    gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
+                }
                 enemyLogic.UpdateHP();
+                enemyLogic.FlipAndRotateGun();
                 enemyLogic.Shoot();
+                bulletLogic.UpdateBulletAnimationTextures();
             }
         }
 

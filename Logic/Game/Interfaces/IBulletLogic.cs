@@ -12,7 +12,10 @@ namespace Logic.Game.Interfaces
     {
         void UpdatePlayerBullets();
         void HandlePlayerBulletMapCollision(RenderWindow window);
+        void HandleEnemiesBulletMapCollision(RenderWindow window);
         void HandlePlayerBulletObjectCollision(Sprite item);
+        void HandleEnemiesBulletObjectCollision(Sprite item);
         void UpdateBulletAnimationTextures();
+        void UpdateEnemiesBulletAnimationTextures();
     }
 }
