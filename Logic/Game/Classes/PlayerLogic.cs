@@ -38,7 +38,7 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
-            this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP;
+            this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP - 20;
 
             gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
@@ -348,15 +348,20 @@ namespace Logic.Game.Classes
         {
             if (item.ItemType == ItemType.Health_Potion)
             {
-                // Increment player HP
-                gameModel.Player.CurrentHP += 10;
+               if (gameModel.Player.CurrentHP < gameModel.Player.MaxHP)
+                {
+                    // Increment player HP
+                    gameModel.Player.CurrentHP += 10;
+
+                    RemoveItemFromInventory(item);
+                }
             }
+                
             else if (item.ItemType == ItemType.Speed_Potion)
             {
                 gameModel.Player.Speed *= 1.3f;
+                RemoveItemFromInventory(item);
             }
-
-            RemoveItemFromInventory(item);
         }
 
         public void Shoot()
@@ -413,7 +418,6 @@ namespace Logic.Game.Classes
                         {
                             gameModel.Player.Gun.ShootSounds.Remove(shootSound);
                             return;
-
                         }
                     }
 
@@ -433,8 +437,7 @@ namespace Logic.Game.Classes
             // Shake camera
             if (gameModel.Player.Gun.CurrentAmmo > 0)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 4f);
-
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f);
             }
         }
     }
