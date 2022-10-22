@@ -15,6 +15,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Logic.Game.Classes
 {
@@ -36,9 +37,10 @@ namespace Logic.Game.Classes
             this.animationLogic = animationLogic;
 
             gameModel.Player = new PlayerModel();
-            this.gameModel.Player.Speed = 180f;
+            this.gameModel.Player.MaxSpeed = 180f;
+            this.gameModel.Player.Speed = gameModel.Player.MaxSpeed;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
-            this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP - 20;
+            this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP;
 
             gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
@@ -356,13 +358,29 @@ namespace Logic.Game.Classes
                     RemoveItemFromInventory(item);
                 }
             }
-                
             else if (item.ItemType == ItemType.Speed_Potion)
             {
-                // Increment player speed
-                gameModel.Player.Speed *= 1.3f;
-                RemoveItemFromInventory(item);
-                
+                if (gameModel.Player.IsSpeedPotionIsInUse == false)
+                {
+                    gameModel.Player.IsSpeedPotionIsInUse = true;
+                    gameModel.Player.LastPotionEffect = DateTime.Now;
+
+                    RemoveItemFromInventory(item);
+                }
+            }
+        }
+        
+        public void UpdateSpeedPotionTimer()
+        {
+            if (DateTime.Now.Subtract(gameModel.Player.LastPotionEffect).TotalSeconds > 10)
+            {
+                gameModel.Player.Speed = gameModel.Player.MaxSpeed;
+                gameModel.Player.IsSpeedPotionIsInUse = false;
+            }
+            else
+            {
+                gameModel.Player.Speed = 300f;
+                gameModel.Player.IsSpeedPotionIsInUse = true;
             }
         }
 
@@ -442,5 +460,6 @@ namespace Logic.Game.Classes
                 gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f);
             }
         }
+
     }
 }
