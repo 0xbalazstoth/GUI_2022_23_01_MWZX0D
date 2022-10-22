@@ -247,7 +247,7 @@ namespace Gunner
 
             if (isInWindow && gameModel.Player.IsFocusedInGame)
             {
-                enemyLogic.ChasePlayer();
+                enemyLogic.PathToPlayer();
 
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
                 animationLogic.Update(gameLogic.GetDeltaTime);
@@ -272,6 +272,7 @@ namespace Gunner
                 uiLogic.UpdatePlayerCoinText();
 
                 enemyLogic.UpdateHP();
+                enemyLogic.Shoot();
             }
         }
 

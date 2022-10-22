@@ -18,5 +18,7 @@ namespace Model.Game.Classes
         public int CurrentHP { get; set; }
         public Sprite HPSprite { get; set; }
         public Text HPText { get; set; }
+        public GunModel Gun { get; set; }
+        public Vector2f Center { get; set; }
     }
 }
