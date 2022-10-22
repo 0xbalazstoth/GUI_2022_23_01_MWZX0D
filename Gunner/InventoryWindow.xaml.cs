@@ -66,7 +66,7 @@ namespace Gunner
                 var selectedItemValue = (ICollectibleItem)selectedItem;
 
                 // Update inventory
-                playerLogic.RemoveItemFromInventory(selectedItemValue);
+                playerLogic.UseItemFromInventory(selectedItemValue);
 
                 // If item's quantity is 0, then remove from list
                 if (selectedItemValue.Quantity == 0)

@@ -4,6 +4,7 @@ using Model.Game;
 using Model.Game.Classes;
 using Model.Game.Enums;
 using Model.Game.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -37,6 +38,7 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.Speed = 180f;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
+            this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP;
 
             gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
@@ -46,6 +48,14 @@ namespace Logic.Game.Classes
             this.gameModel.Player.Inventory = new InventoryModel();
             this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
             this.gameModel.Player.Inventory.Quantities = new Dictionary<int, int>();
+
+            this.gameModel.Player.HPSprite = new Sprite();
+            this.gameModel.Player.HPSprite.Position = new Vector2f(this.gameModel.Player.Position.X, this.gameModel.Player.Position.Y);
+
+            this.gameModel.Player.HPText = new Text();
+            this.gameModel.Player.HPText.Position = new Vector2f(this.gameModel.Player.Position.X, this.gameModel.Player.Position.Y);
+            this.gameModel.Player.HPText.CharacterSize = 16;
+            this.gameModel.Player.HPText.FillColor = Color.Red;
         }
 
         public Vector2f GetDirectionFromInput(Vector2f direction)
@@ -320,10 +330,107 @@ namespace Logic.Game.Classes
                 if (gameModel.Player.Gun.ReloadSound.Status == SFML.Audio.SoundStatus.Stopped)
                 {
                     gameModel.Player.Gun.ReloadSound.Play();
-
                 }
 
                 gameModel.Player.Gun.MaxAmmo = gameModel.Player.Gun.CurrentAmmo;
+            }
+        }
+
+        public void UpdateHP()
+        {
+            gameModel.Player.HPSprite.Position = new Vector2f(gameModel.Player.Position.X - 16f, gameModel.Player.Position.Y - 50f);
+            gameModel.Player.HPText.Position = new Vector2f(gameModel.Player.HPSprite.Position.X + 18f, gameModel.Player.HPSprite.Position.Y - (gameModel.Player.HPSprite.GetGlobalBounds().Height / 2f) + 4f);
+
+            gameModel.Player.HPText.DisplayedString = $"{gameModel.Player.CurrentHP}";
+        }
+
+        public void UseItemFromInventory(ICollectibleItem item)
+        {
+            if (item.ItemType == ItemType.Health_Potion)
+            {
+                // Increment player HP
+                gameModel.Player.CurrentHP += 10;
+            }
+
+            RemoveItemFromInventory(item);
+        }
+
+        public void Shoot()
+        {
+            BulletModel tempBullet = new BulletModel();
+            tempBullet.Bullet = new Sprite();
+            tempBullet.Speed = 15f;
+            tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
+            tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
+            tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
+            tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
+
+            tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+
+            if (gameModel.Player.Gun.GunType == GunType.Pistol)
+            {
+                tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
+            }
+            else if (gameModel.Player.Gun.GunType == GunType.Shotgun)
+            {
+                tempBullet.Animations.Add(GunType.Shotgun, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
+            }
+
+            // Player can shoot every 1 seconds
+            if (gameModel.Player.Gun.LastFired + gameModel.Player.Gun.FiringInterval < DateTime.Now)
+            {
+                // Check if player has ammo based on max ammo
+                if (gameModel.Player.Gun.CurrentAmmo > 0 && (gameModel.Player.Gun.CurrentAmmo <= gameModel.Player.Gun.MaxAmmo))
+                {
+                    gameModel.Player.Gun.Bullets.Add(tempBullet);
+                    gameModel.Player.Gun.CurrentAmmo--;
+                    gameModel.Player.Gun.LastFired = DateTime.Now;
+                    gameModel.Player.Gun.ShootSounds.Add(gameModel.Player.Gun.ShootSound);
+
+                    foreach (var shootSound in gameModel.Player.Gun.ShootSounds)
+                    {
+                        shootSound.Play();
+
+                        if (shootSound.Status == SoundStatus.Stopped)
+                        {
+                            gameModel.Player.Gun.ShootSounds.Remove(shootSound);
+                            return;
+
+                        }
+                    }
+
+                    Trace.WriteLine(gameModel.Player.Gun.CurrentAmmo);
+                }
+                else
+                {
+                    // Reload needed, gun is empty
+                    if (gameModel.Player.Gun.EmptySound.Status == SoundStatus.Stopped)
+                    {
+                        gameModel.Player.Gun.EmptySound.Play();
+
+                    }
+                }
+            }
+
+            // Shake camera
+            if (gameModel.Player.Gun.CurrentAmmo > 0)
+            {
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 4f);
+
             }
         }
     }

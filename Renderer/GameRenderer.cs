@@ -26,6 +26,7 @@ namespace Renderer
         private Texture enemyTexture;
         private Texture pistolTexture;
         private Texture shotgunTexture;
+        private Texture hpTexture;
 
         public GameRenderer(IGameModel gameModel, string path)
         {
@@ -51,6 +52,8 @@ namespace Renderer
 
             pistolTexture = new Texture("Assets/Textures/pistol.png");
             shotgunTexture = new Texture("Assets/Textures/shotgun.png");
+
+            hpTexture = new Texture("Assets/Textures/heart.png");
         }
 
         public void Draw(RenderTarget window)
@@ -112,11 +115,15 @@ namespace Renderer
 
         private void DrawEnemy(RenderTarget window)
         {
-            foreach (var enemy in gameModel.Enemies)
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                enemy.Texture = enemyTexture;
-                
-                window.Draw(enemy);
+                gameModel.Enemies[i].Texture = enemyTexture;
+                window.Draw(gameModel.Enemies[i]);
+
+                // Draw HP
+                gameModel.Enemies[i].HPSprite.Texture = hpTexture;
+                window.Draw(gameModel.Enemies[i].HPSprite);
+                window.Draw(gameModel.Enemies[i].HPText);
             }
         }
 
@@ -181,6 +188,11 @@ namespace Renderer
 
             window.Draw(gameModel.Player);
             window.Draw(gameModel.Player.Gun);
+
+            // Draw HP
+            gameModel.Player.HPSprite.Texture = hpTexture;
+            window.Draw(gameModel.Player.HPSprite);
+            window.Draw(gameModel.Player.HPText);
         }
 
         private void DrawTilemap(RenderTarget window)

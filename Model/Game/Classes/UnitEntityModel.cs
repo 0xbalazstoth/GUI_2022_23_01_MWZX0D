@@ -14,5 +14,9 @@ namespace Model.Game.Classes
         public float DeltaTime { get; set; }
         public Vector2i TilePosition { get; set; }
         public Dictionary<MovementDirection, Movement> MovementDirections { get; set; }
+        public int MaxHP { get; set; } = 100;
+        public int CurrentHP { get; set; }
+        public Sprite HPSprite { get; set; }
+        public Text HPText { get; set; }
     }
 }
