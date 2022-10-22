@@ -23,13 +23,15 @@ namespace Renderer
             this.gameModel = gameModel;
 
             uiModel.PlayerCoinSprite.Texture = new Texture(@"Assets\Textures\coin.png");
+            uiModel.PlayerSpeedSprite.Texture = new Texture(@"Assets\Textures\speed_potion.png");
+            
             uiModel.Font = new Font(Path.Combine(fontPath, fontFile));
 
             uiModel.FPSText.Font = uiModel.Font;
             uiModel.PlayerAmmoText.Font = uiModel.Font;
             uiModel.PlayerXPLevelText.Font = uiModel.Font;
             uiModel.PlayerCoinText.Font = uiModel.Font;
-            uiModel.SpeedPotionTimer.Font = uiModel.Font;
+            uiModel.PlayerSpeedTimerText.Font = uiModel.Font;
 
             gameModel.Player.HPText.Font = uiModel.Font;
 
@@ -49,6 +51,10 @@ namespace Renderer
             window.Draw(DrawablePlayerCoinText());
             window.Draw(DrawableSpeedPotionTimerText());
 
+            if (gameModel.Player.IsSpeedPotionIsInUse)
+            {
+                window.Draw(DrawableSpeedPotionSprite());
+            } 
         }
 
         private Drawable DrawableFPSText()
@@ -76,9 +82,14 @@ namespace Renderer
             return uiModel.PlayerCoinText;
         }
 
+        private Drawable DrawableSpeedPotionSprite()
+        {
+            return uiModel.PlayerSpeedSprite;
+        }
+
         private Drawable DrawableSpeedPotionTimerText()
         {
-            return uiModel.SpeedPotionTimer;
+            return uiModel.PlayerSpeedTimerText;
         }
     }
 }

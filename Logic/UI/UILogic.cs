@@ -34,7 +34,8 @@ namespace Model.Tools
             uiModel.PlayerXPLevelText = new Text();
             uiModel.PlayerCoinText = new Text();
             uiModel.PlayerCoinSprite = new Sprite();
-            uiModel.SpeedPotionTimer = new Text();
+            uiModel.PlayerSpeedTimerText = new Text();
+            uiModel.PlayerSpeedSprite = new Sprite();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -50,15 +51,15 @@ namespace Model.Tools
 
             uiModel.PlayerCoinSprite.Scale = new Vector2f(2f, 2f);
             uiModel.PlayerCoinSprite.Position = new Vector2f(6, 90);
-
             uiModel.PlayerCoinText.FillColor = Color.Yellow;
             uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y + 4);
             uiModel.PlayerCoinText.CharacterSize = 18;
 
-            uiModel.SpeedPotionTimer.FillColor = Color.Blue;
-            uiModel.SpeedPotionTimer.Position = new Vector2f(10, uiModel.PlayerCoinText.Position.Y + 20);
-            uiModel.SpeedPotionTimer.CharacterSize = 18;
-
+            //uiModel.PlayerSpeedSprite.Scale = new Vector2f(2f, 2f);
+            uiModel.PlayerSpeedSprite.Position = new Vector2f(6, 120);
+            uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
+            uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y + 4);
+            uiModel.PlayerSpeedTimerText.CharacterSize = 18;
         }
 
         public void UpdateFPS(float dt)
@@ -92,7 +93,16 @@ namespace Model.Tools
 
         public void UpdateSpeedPotionTimeLeftText()
         {
-            uiModel.SpeedPotionTimer.DisplayedString = $"{gameModel.Player.SpeedPotionTimeLeft} sec";
+            var timeLeft = 11 - (DateTime.Now - gameModel.Player.LastPotionEffect).TotalSeconds;
+
+            if (gameModel.Player.IsSpeedPotionIsInUse)
+            {
+                uiModel.PlayerSpeedTimerText.DisplayedString = $"{timeLeft.ToString("0")} sec";
+            }
+            else
+            {
+                uiModel.PlayerSpeedTimerText.DisplayedString = "";
+            }
         }
     }
 }
