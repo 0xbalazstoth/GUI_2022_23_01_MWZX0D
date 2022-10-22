@@ -110,6 +110,7 @@ namespace Logic.Game.Classes
             playerLogic.FlipAndRotateGun();
             playerLogic.HandleInventory();
             playerLogic.UpdateHP();
+            playerLogic.UpdateSpeedPotionTimer();
         }
         
         public void UpdateBullets(RenderWindow window)
