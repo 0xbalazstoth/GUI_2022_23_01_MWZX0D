@@ -348,7 +348,7 @@ namespace Logic.Game.Classes
         {
             if (item.ItemType == ItemType.Health_Potion)
             {
-                if (gameModel.Player.CurrentHP < gameModel.Player.MaxHP)
+               if (gameModel.Player.CurrentHP < gameModel.Player.MaxHP)
                 {
                     // Increment player HP
                     gameModel.Player.CurrentHP += 10;
@@ -356,8 +356,10 @@ namespace Logic.Game.Classes
                     RemoveItemFromInventory(item);
                 }
             }
+                
             else if (item.ItemType == ItemType.Speed_Potion)
             {
+                gameModel.Player.Speed *= 1.3f;
                 RemoveItemFromInventory(item);
             }
         }
