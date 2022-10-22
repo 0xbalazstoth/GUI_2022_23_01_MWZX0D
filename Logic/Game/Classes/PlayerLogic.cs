@@ -351,6 +351,10 @@ namespace Logic.Game.Classes
                 // Increment player HP
                 gameModel.Player.CurrentHP += 10;
             }
+            else if (item.ItemType == ItemType.Speed_Potion)
+            {
+                gameModel.Player.Speed *= 1.3f;
+            }
 
             RemoveItemFromInventory(item);
         }
