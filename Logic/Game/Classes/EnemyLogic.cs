@@ -1,5 +1,6 @@
 ﻿using Logic.Game.Interfaces;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -21,6 +22,9 @@ namespace Logic.Game.Classes
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
+                gameModel.Enemies[i].Gun = gameModel.Guns[0];
+                gameModel.Enemies[i].Gun.Bullets = new List<BulletModel>();
+
                 gameModel.Enemies[i].HPSprite = new Sprite();
                 gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
                 
@@ -32,9 +36,15 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void ChasePlayer()
+        public void PathToPlayer()
         {
-            //// Find path to the player
+            // Algorithms for pathfinding
+            // 1. Dijkstra's algorithm
+            // 2. A* algorithm
+            // 3. Breadth-first search
+            // 4. Depth-first search
+
+            // Find path to the player
             foreach (var enemy in gameModel.Enemies)
             {
                 if (gameModel.Player.Position.X < enemy.Position.X)
@@ -55,8 +65,6 @@ namespace Logic.Game.Classes
                     enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
                 }
             }
-
-            // Path finding to the player (A* algorithm)
         }
 
         public void HandleBulletCollision()
@@ -121,6 +129,59 @@ namespace Logic.Game.Classes
 
                 gameModel.Enemies[i].HPText.DisplayedString = $"{gameModel.Enemies[i].CurrentHP}";
             }
+        }
+
+        public void Shoot()
+        {
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    BulletModel tempBullet = new BulletModel();
+            //    tempBullet.Bullet = new Sprite();
+            //    tempBullet.Speed = 15f;
+            //    tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
+            //    tempBullet.Velocity = gameModel.Player.Position * tempBullet.Speed;
+            //    tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
+            //    tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
+
+            //    tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+
+            //    if (gameModel.Enemies[i].Gun.GunType == GunType.Pistol)
+            //    {
+            //        tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+            //        {
+            //            Row = 0,
+            //            ColumnsInRow = 8,
+            //            TotalRows = 1,
+            //            TotalColumns = 8,
+            //            Speed = 10f,
+            //        });
+            //    }
+            //    else if (gameModel.Enemies[i].Gun.GunType == GunType.Shotgun)
+            //    {
+            //        tempBullet.Animations.Add(GunType.Shotgun, new AnimationModel()
+            //        {
+            //            Row = 0,
+            //            ColumnsInRow = 8,
+            //            TotalRows = 1,
+            //            TotalColumns = 8,
+            //            Speed = 10f,
+            //        });
+            //    }
+
+            //    //if (gameModel.Enemies[i].Gun.LastFired + gameModel.Enemies[i].Gun.FiringInterval < DateTime.Now)
+            //    //{
+            //    //    if (gameModel.Enemies[i].Gun.CurrentAmmo > 0 && (gameModel.Enemies[i].Gun.CurrentAmmo <= gameModel.Enemies[i].Gun.MaxAmmo))
+            //    //    {
+            //    //        gameModel.Enemies[i].Gun.Bullets.Add(tempBullet);
+            //    //        gameModel.Enemies[i].Gun.CurrentAmmo--;
+            //    //        gameModel.Enemies[i].Gun.LastFired = DateTime.Now;
+            //    //    }
+            //    //}
+
+            //    gameModel.Enemies[i].Gun.Bullets.Add(tempBullet);
+            //    gameModel.Enemies[i].Gun.CurrentAmmo--;
+            //    gameModel.Enemies[i].Gun.LastFired = DateTime.Now;
+            //}
         }
     }
 }

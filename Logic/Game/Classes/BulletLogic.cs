@@ -60,7 +60,7 @@ namespace Logic.Game.Classes
             gameModel.Guns.Add(shotgun);
         }
 
-        public void HandleMapCollision(RenderWindow window)
+        public void HandlePlayerBulletMapCollision(RenderWindow window)
         {
             foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
             {
@@ -92,7 +92,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void HandleObjectCollision(Sprite item)
+        public void HandlePlayerBulletObjectCollision(Sprite item)
         {
             foreach (var bullet in gameModel.Player.Gun.Bullets)
             {

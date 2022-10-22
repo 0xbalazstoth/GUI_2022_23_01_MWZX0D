@@ -14,8 +14,9 @@ namespace Logic.Game.Interfaces
         void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
-        void ChasePlayer();
+        void PathToPlayer();
         void HandleBulletCollision();
         void UpdateHP();
+        void Shoot();
     }
 }
