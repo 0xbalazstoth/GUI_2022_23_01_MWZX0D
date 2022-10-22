@@ -23,6 +23,7 @@
     <None Remove="Assets\Textures\enemy_move_right.png" />
     <None Remove="Assets\Textures\health_potion.png" />
     <None Remove="Assets\Textures\health_potion_sheet.png" />
+    <None Remove="Assets\Textures\heart.png" />
     <None Remove="Assets\Textures\idle_left.png" />
     <None Remove="Assets\Textures\idle_right.png" />
     <None Remove="Assets\Textures\map.tmx" />
@@ -83,6 +84,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\health_potion_sheet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\heart.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\idle_left.png">

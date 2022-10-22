@@ -61,7 +61,6 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.UpRight, new Movement() { MovementDirection = MovementDirection.UpRight, Direction = new Vector2f(1f, -1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownLeft, new Movement() { MovementDirection = MovementDirection.DownLeft, Direction = new Vector2f(-1f, 1f) });
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
-
             
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             CreateSpawnableItems();
@@ -110,15 +109,17 @@ namespace Logic.Game.Classes
 
             playerLogic.FlipAndRotateGun();
             playerLogic.HandleInventory();
+            playerLogic.UpdateHP();
+            playerLogic.UpdateSpeedPotionTimer();
         }
         
         public void UpdateBullets(RenderWindow window)
         {
-            bulletLogic.HandleMapCollision(window);
+            bulletLogic.HandlePlayerBulletMapCollision(window);
 
-            foreach (ObjectEntityModel chest in gameModel.Objects)
+            foreach (ObjectEntityModel obj in gameModel.Objects)
             {
-                bulletLogic.HandleObjectCollision(chest);
+                bulletLogic.HandlePlayerBulletObjectCollision(obj);
             }
 
             bulletLogic.UpdatePlayerBullets();

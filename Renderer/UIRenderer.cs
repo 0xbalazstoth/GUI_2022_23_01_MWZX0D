@@ -1,4 +1,5 @@
-﻿using Model.UI;
+﻿using Model.Game.Classes;
+using Model.UI;
 using Model.UI.Interfaces;
 using SFML.Graphics;
 using SFML.System;
@@ -14,21 +15,46 @@ namespace Renderer
     public class UIRenderer
     {
         private IUIModel uiModel;
+        private IGameModel gameModel;
 
-        public UIRenderer(IUIModel uiModel)
+        public UIRenderer(IUIModel uiModel, IGameModel gameModel, string fontPath, string fontFile)
         {
             this.uiModel = uiModel;
+            this.gameModel = gameModel;
+
+            uiModel.PlayerCoinSprite.Texture = new Texture(@"Assets\Textures\coin.png");
+            uiModel.PlayerSpeedSprite.Texture = new Texture(@"Assets\Textures\speed_potion.png");
+            
+            uiModel.Font = new Font(Path.Combine(fontPath, fontFile));
+
+            uiModel.FPSText.Font = uiModel.Font;
+            uiModel.PlayerAmmoText.Font = uiModel.Font;
+            uiModel.PlayerXPLevelText.Font = uiModel.Font;
+            uiModel.PlayerCoinText.Font = uiModel.Font;
+            uiModel.PlayerSpeedTimerText.Font = uiModel.Font;
+
+            gameModel.Player.HPText.Font = uiModel.Font;
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                gameModel.Enemies[i].HPText = new Text();
+                gameModel.Enemies[i].HPText.Font = uiModel.Font;
+            }
         }
 
         public void Draw(RenderTarget window)
         {
-            uiModel.PlayerCoinSprite.Texture = new Texture(@"Assets\Textures\coin.png");
-
             window.Draw(DrawableFPSText());
             window.Draw(DrawableAmmoText());
             window.Draw(DrawableXPLevelText());
             window.Draw(DrawablePlayerCoinSprite());
             window.Draw(DrawablePlayerCoinText());
+            window.Draw(DrawableSpeedPotionTimerText());
+
+            if (gameModel.Player.IsSpeedPotionIsInUse)
+            {
+                window.Draw(DrawableSpeedPotionSprite());
+            } 
         }
 
         private Drawable DrawableFPSText()
@@ -54,6 +80,16 @@ namespace Renderer
         private Drawable DrawablePlayerCoinText()
         {
             return uiModel.PlayerCoinText;
+        }
+
+        private Drawable DrawableSpeedPotionSprite()
+        {
+            return uiModel.PlayerSpeedSprite;
+        }
+
+        private Drawable DrawableSpeedPotionTimerText()
+        {
+            return uiModel.PlayerSpeedTimerText;
         }
     }
 }

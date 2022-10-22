@@ -24,42 +24,42 @@ namespace Model.Tools
         public float GetFps { get => fps; }
         public float GetFrameTime { get => frameTime; }
 
-        public UILogic(IUIModel uiModel, IGameModel gameModel, string fontPath, string fontFile)
+        public UILogic(IUIModel uiModel, IGameModel gameModel)
         {
             this.uiModel = uiModel;
             this.gameModel = gameModel;
-            var font = new Font(Path.Combine(fontPath, fontFile));
             
             uiModel.FPSText = new Text();
             uiModel.PlayerAmmoText = new Text();
             uiModel.PlayerXPLevelText = new Text();
             uiModel.PlayerCoinText = new Text();
             uiModel.PlayerCoinSprite = new Sprite();
+            uiModel.PlayerSpeedTimerText = new Text();
+            uiModel.PlayerSpeedSprite = new Sprite();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
             uiModel.FPSText.CharacterSize = 16;
-            uiModel.FPSText.Font = font;
 
             uiModel.PlayerAmmoText.FillColor = Color.Green;
             uiModel.PlayerAmmoText.Position = new Vector2f(10, 50);
             uiModel.PlayerAmmoText.CharacterSize = 18;
-            uiModel.PlayerAmmoText.Font = font;
 
             uiModel.PlayerXPLevelText.FillColor = Color.Yellow;
             uiModel.PlayerXPLevelText.Position = new Vector2f(10, 70);
             uiModel.PlayerXPLevelText.CharacterSize = 18;
-            uiModel.PlayerXPLevelText.Font = font;
 
             uiModel.PlayerCoinSprite.Scale = new Vector2f(2f, 2f);
             uiModel.PlayerCoinSprite.Position = new Vector2f(6, 90);
-
             uiModel.PlayerCoinText.FillColor = Color.Yellow;
             uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y + 4);
             uiModel.PlayerCoinText.CharacterSize = 18;
-            uiModel.PlayerCoinText.Font = font;
 
-            uiModel.Font = font;
+            //uiModel.PlayerSpeedSprite.Scale = new Vector2f(2f, 2f);
+            uiModel.PlayerSpeedSprite.Position = new Vector2f(6, 120);
+            uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
+            uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y + 4);
+            uiModel.PlayerSpeedTimerText.CharacterSize = 18;
         }
 
         public void UpdateFPS(float dt)
@@ -89,6 +89,20 @@ namespace Model.Tools
         public void UpdatePlayerCoinText()
         {
             uiModel.PlayerCoinText.DisplayedString = $"{gameModel.Player.CurrentCoins}";
+        }
+
+        public void UpdateSpeedPotionTimeLeftText()
+        {
+            var timeLeft = 11 - (DateTime.Now - gameModel.Player.LastPotionEffect).TotalSeconds;
+
+            if (gameModel.Player.IsSpeedPotionIsInUse)
+            {
+                uiModel.PlayerSpeedTimerText.DisplayedString = $"{timeLeft.ToString("0")} sec";
+            }
+            else
+            {
+                uiModel.PlayerSpeedTimerText.DisplayedString = "";
+            }
         }
     }
 }

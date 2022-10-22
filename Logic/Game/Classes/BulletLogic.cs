@@ -60,7 +60,7 @@ namespace Logic.Game.Classes
             gameModel.Guns.Add(shotgun);
         }
 
-        public void HandleMapCollision(RenderWindow window)
+        public void HandlePlayerBulletMapCollision(RenderWindow window)
         {
             foreach (BulletModel bullet in gameModel.Player.Gun.Bullets)
             {
@@ -92,7 +92,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void HandleObjectCollision(Sprite item)
+        public void HandlePlayerBulletObjectCollision(Sprite item)
         {
             foreach (var bullet in gameModel.Player.Gun.Bullets)
             {
@@ -101,85 +101,6 @@ namespace Logic.Game.Classes
                     gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
-            }
-        }
-
-        public void PlayerShoot()
-        {
-            BulletModel tempBullet = new BulletModel();
-            tempBullet.Bullet = new Sprite();
-            tempBullet.Speed = 15f;
-            tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
-            tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
-            tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
-            tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
-
-            tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
-
-            if (gameModel.Player.Gun.GunType == GunType.Pistol)
-            {
-                tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
-                {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 10f,
-                });
-            }
-            else if (gameModel.Player.Gun.GunType == GunType.Shotgun)
-            {
-                tempBullet.Animations.Add(GunType.Shotgun, new AnimationModel()
-                {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 10f,
-                });
-            }
-
-            // Player can shoot every 1 seconds
-            if (gameModel.Player.Gun.LastFired + gameModel.Player.Gun.FiringInterval < DateTime.Now)
-            {
-                // Check if player has ammo based on max ammo
-                if (gameModel.Player.Gun.CurrentAmmo > 0 && (gameModel.Player.Gun.CurrentAmmo <= gameModel.Player.Gun.MaxAmmo))
-                {
-                    gameModel.Player.Gun.Bullets.Add(tempBullet);
-                    gameModel.Player.Gun.CurrentAmmo--;
-                    gameModel.Player.Gun.LastFired = DateTime.Now;
-                    gameModel.Player.Gun.ShootSounds.Add(gameModel.Player.Gun.ShootSound);
-
-                    foreach (var shootSound in gameModel.Player.Gun.ShootSounds)
-                    {
-                        shootSound.Play();
-
-                        if (shootSound.Status == SoundStatus.Stopped)
-                        {
-                            gameModel.Player.Gun.ShootSounds.Remove(shootSound);
-                            return;
-
-                        }
-                    }
-
-                    Trace.WriteLine(gameModel.Player.Gun.CurrentAmmo);
-                }
-                else
-                {
-                    // Reload needed, gun is empty
-                    if (gameModel.Player.Gun.EmptySound.Status == SoundStatus.Stopped)
-                    {
-                        gameModel.Player.Gun.EmptySound.Play();
-
-                    }
-                }
-            }
-
-            // Shake camera
-            if (gameModel.Player.Gun.CurrentAmmo > 0)
-            {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 4f);
-
             }
         }
 
@@ -206,11 +127,6 @@ namespace Logic.Game.Classes
                 gameModel.Player.Gun.Bullets[i].Bullet.Texture = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].Texture;
                 gameModel.Player.Gun.Bullets[i].Bullet.TextureRect = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].TextureRect;
             }
-        }
-
-        public void EnemyShoot()
-        {
-            
         }
     }
 }

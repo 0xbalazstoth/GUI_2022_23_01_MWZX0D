@@ -11,15 +11,14 @@ namespace Model.Game.Classes
     public class PlayerModel : UnitEntityModel
     {
         public string Name { get; set; }
-        public int Health { get; set; }
-        public Vector2f Center { get; set; }
         public Vector2f AimDirection { get; set; }
         public Vector2f AimDirectionNormalized { get; set; }
         public Dictionary<MovementDirection, AnimationModel> Animations { get; set; }
-        public GunModel Gun { get; set; }
         public InventoryModel Inventory { get; set; }
         public bool IsFocusedInGame { get; set; } = true;
         public int CurrentXP { get; set; }
         public int CurrentCoins { get; set; }
+        public DateTime LastPotionEffect { get; set; }
+        public bool IsSpeedPotionIsInUse { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Logic.Game;
+﻿using Gunner.Controller;
+using Logic.Game;
 using Logic.Game.Classes;
 using Logic.Game.Interfaces;
 using Logic.Tools;
@@ -90,6 +91,8 @@ namespace Gunner
         private IBulletLogic bulletLogic;
         private IAnimationLogic animationLogic;
 
+        private GameController gameController;
+
         private IUILogic uiLogic;
         private IUIModel uiModel;
         private UIRenderer uiRenderer;
@@ -115,15 +118,17 @@ namespace Gunner
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
-            this.uiLogic = new UILogic(uiModel, gameModel, "Assets/Fonts", "FreeMono.ttf");
+            this.uiLogic = new UILogic(uiModel, gameModel);
 
             this.animationLogic = new AnimationLogic(gameModel);
 
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
-            this.uiRenderer = new UIRenderer(uiModel);
+            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "FreeMono.ttf");
 
             InitSystem();
             InitGameplay();
+
+            this.gameController = new GameController(gameModel, playerLogic);
         }
 
         private void InitGameplay()
@@ -199,41 +204,33 @@ namespace Gunner
             window.Display();
         }
 
-        private void GamePlayerControl()
+        private void Control()
         {
-            Dictionary<Key, Vector2f> input = new()
-            {
-               { Key.W, gameModel.MovementDirections[MovementDirection.Up].Direction },
-               { Key.S, gameModel.MovementDirections[MovementDirection.Down].Direction },
-               { Key.A, gameModel.MovementDirections[MovementDirection.Left].Direction },
-               { Key.D, gameModel.MovementDirections[MovementDirection.Right].Direction },
-            };
+            gameController.HandleMovementInput();
+            gameController.HandleShootInput();
+            gameController.HandleReloadInput();
+            //window.MouseWheelScrolled += (s, e) =>
+            //{
+            //    int gunIdx = 0;
+            //    if (e.Delta > 0)
+            //    {
+            //        gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
+            //        if (gunIdx >= gameModel.Guns.Count)
+            //        {
+            //            gunIdx = 0;
+            //        }
+            //    }
+            //    else if (e.Delta < 0)
+            //    {
+            //        gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
+            //        if (gunIdx < 0)
+            //        {
+            //            gunIdx = gameModel.Guns.Count - 1;
+            //        }
+            //    }
 
-            Vector2f direction = new();
-            foreach (var kvp in input)
-            {
-                if (IsKeyPressed(kvp.Key))
-                {
-                    direction += kvp.Value;
-                }
-            }
-
-            if (Mouse.IsButtonPressed(Mouse.Button.Left))
-            {
-                bulletLogic.PlayerShoot();
-            }
-
-            if (IsKeyPressed(Key.R))
-            {
-                playerLogic.ReloadGun();
-            }
-
-            playerLogic.HandleMovement(direction);
-
-            if (IsKeyPressed(Key.M))
-            {
-                tilemapLogic.Generation();
-            }
+            //    //gameModel.Player.Gun = gameModel.Guns[gunIdx];
+            //};
         }
 
         public void Update()
@@ -250,7 +247,7 @@ namespace Gunner
 
             if (isInWindow && gameModel.Player.IsFocusedInGame)
             {
-                enemyLogic.ChasePlayer();
+                enemyLogic.PathToPlayer();
 
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
                 animationLogic.Update(gameLogic.GetDeltaTime);
@@ -264,7 +261,7 @@ namespace Gunner
 
                 gameLogic.UpdateTilemap();
                 
-                GamePlayerControl();
+                Control();
                 bulletLogic.UpdateBulletAnimationTextures();
                 
                 gameLogic.SpawnItems();
@@ -273,6 +270,10 @@ namespace Gunner
                 uiLogic.UpdateAmmoText();
                 uiLogic.UpdateXPLevelText();
                 uiLogic.UpdatePlayerCoinText();
+                uiLogic.UpdateSpeedPotionTimeLeftText();
+
+                enemyLogic.UpdateHP();
+                enemyLogic.Shoot();
             }
         }
 
@@ -288,11 +289,31 @@ namespace Gunner
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.I)
-            {
-                InventoryWindow inventoryWindow = new InventoryWindow(gameModel, playerLogic);
-                inventoryWindow.ShowDialog();
-            }
+            gameController.HandleInventoryInput(e);
+        }
+
+        private void SfmlSurfaceHost_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            //// change gun by mouse wheel from gameModel.Guns list
+            //int gunIdx = 0;
+            //if (e.Delta > 0)
+            //{
+            //    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
+            //    if (gunIdx >= gameModel.Guns.Count)
+            //    {
+            //        gunIdx = 0;
+            //    }
+            //}
+            //else if (e.Delta < 0)
+            //{
+            //    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
+            //    if (gunIdx < 0)
+            //    {
+            //        gunIdx = gameModel.Guns.Count - 1;
+            //    }
+            //}
+
+            //gameModel.Player.Gun = gameModel.Guns[gunIdx];
         }
     }
 }
