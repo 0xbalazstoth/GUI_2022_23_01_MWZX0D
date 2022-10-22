@@ -30,5 +30,6 @@ namespace Logic.Game.Interfaces
         void ReloadGun();
         void UpdateHP();
         void Shoot();
+        void UpdateSpeedPotionTimer();
     }
 }
