@@ -15,5 +15,6 @@ namespace Model.UI.Interfaces
         public Font Font { get; set; }
         public Sprite PlayerCoinSprite { get; set; }
         public Text PlayerCoinText { get; set; }
+        public Text SpeedPotionTimer { get; set; }
     }
 }

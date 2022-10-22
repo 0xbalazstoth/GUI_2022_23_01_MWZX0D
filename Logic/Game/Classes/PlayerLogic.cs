@@ -359,8 +359,10 @@ namespace Logic.Game.Classes
                 
             else if (item.ItemType == ItemType.Speed_Potion)
             {
+                // Increment player speed
                 gameModel.Player.Speed *= 1.3f;
                 RemoveItemFromInventory(item);
+                
             }
         }
 

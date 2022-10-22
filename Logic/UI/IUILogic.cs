@@ -14,5 +14,6 @@ namespace Logic.Tools
         public void UpdateAmmoText();
         public void UpdateXPLevelText();
         public void UpdatePlayerCoinText();
+        public void UpdateSpeedPotionTimeLeftText();
     }
 }

@@ -34,6 +34,7 @@ namespace Model.Tools
             uiModel.PlayerXPLevelText = new Text();
             uiModel.PlayerCoinText = new Text();
             uiModel.PlayerCoinSprite = new Sprite();
+            uiModel.SpeedPotionTimer = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -53,6 +54,11 @@ namespace Model.Tools
             uiModel.PlayerCoinText.FillColor = Color.Yellow;
             uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y + 4);
             uiModel.PlayerCoinText.CharacterSize = 18;
+
+            uiModel.SpeedPotionTimer.FillColor = Color.Blue;
+            uiModel.SpeedPotionTimer.Position = new Vector2f(10, uiModel.PlayerCoinText.Position.Y + 20);
+            uiModel.SpeedPotionTimer.CharacterSize = 18;
+
         }
 
         public void UpdateFPS(float dt)
@@ -82,6 +88,11 @@ namespace Model.Tools
         public void UpdatePlayerCoinText()
         {
             uiModel.PlayerCoinText.DisplayedString = $"{gameModel.Player.CurrentCoins}";
+        }
+
+        public void UpdateSpeedPotionTimeLeftText()
+        {
+            uiModel.SpeedPotionTimer.DisplayedString = $"{gameModel.Player.SpeedPotionTimeLeft} sec";
         }
     }
 }

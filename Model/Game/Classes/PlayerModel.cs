@@ -18,5 +18,6 @@ namespace Model.Game.Classes
         public bool IsFocusedInGame { get; set; } = true;
         public int CurrentXP { get; set; }
         public int CurrentCoins { get; set; }
+        public float SpeedPotionTimeLeft { get; set; }  
     }
 }
