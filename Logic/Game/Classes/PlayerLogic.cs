@@ -360,9 +360,13 @@ namespace Logic.Game.Classes
             }
             else if (item.ItemType == ItemType.Speed_Potion)
             {
-                gameModel.Player.LastPotionEffect = DateTime.Now;
+                if (gameModel.Player.IsSpeedPotionIsInUse == false)
+                {
+                    gameModel.Player.IsSpeedPotionIsInUse = true;
+                    gameModel.Player.LastPotionEffect = DateTime.Now;
 
-                RemoveItemFromInventory(item);
+                    RemoveItemFromInventory(item);
+                }
             }
         }
         
