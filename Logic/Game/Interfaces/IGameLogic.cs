@@ -24,8 +24,6 @@ namespace Logic.Game.Interfaces
         float GetDeltaTime { get; }
         void CreateSpawnableItems();
         void SpawnItems();
-        void SpawnEnemies();
-        void CreateSpawnableEnemies();
         void Music();
     }
 }

@@ -19,5 +19,7 @@ namespace Logic.Game.Interfaces
         void UpdateHP();
         void Shoot(int enemyIdx);
         void FlipAndRotateGun();
+        void CreateEnemies();
+        void SpawnEnemies();
     }
 }

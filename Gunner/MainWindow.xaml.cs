@@ -116,6 +116,7 @@ namespace Gunner
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+            this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
 
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel, gameModel);
@@ -133,8 +134,6 @@ namespace Gunner
 
         private void InitGameplay()
         {
-            enemyLogic = new EnemyLogic(gameModel);
-            
             chestLogic = new ObjectEntityLogic(gameModel);
             chestLogic.LoadTexture("Assets/Textures/chest.png");
 
@@ -247,8 +246,6 @@ namespace Gunner
 
             if (isInWindow && gameModel.Player.IsFocusedInGame)
             {
-                enemyLogic.PathToPlayer();
-
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
                 animationLogic.Update(gameLogic.GetDeltaTime);
 
@@ -257,32 +254,18 @@ namespace Gunner
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
 
-                enemyLogic.HandleBulletCollision();
-
-                for (int i = 0; i < gameModel.Enemies.Count; i++)
-                {
-                    enemyLogic.Shoot(i);
-                }
-
                 gameLogic.UpdateTilemap();
                 
                 Control();
 
                 gameLogic.SpawnItems();
-                gameLogic.SpawnEnemies();
 
                 uiLogic.UpdateAmmoText();
                 uiLogic.UpdateXPLevelText();
                 uiLogic.UpdatePlayerCoinText();
                 uiLogic.UpdateSpeedPotionTimeLeftText();
 
-                for (int i = 0; i < gameModel.Enemies.Count; i++)
-                {
-                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
-                    gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
-                }
-                enemyLogic.UpdateHP();
-                enemyLogic.FlipAndRotateGun(); 
+                gameLogic.UpdateEnemies(window);
             }
         }
 

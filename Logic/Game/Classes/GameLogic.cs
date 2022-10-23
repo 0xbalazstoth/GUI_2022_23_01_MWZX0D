@@ -49,7 +49,6 @@ namespace Logic.Game.Classes
             gameModel.CameraView = new View();
             gameModel.UIView = new View();
 
-            gameModel.Enemies = new List<EnemyModel>();
             gameModel.Objects = new List<IObjectEntity>();
             
             gameModel.MovementDirections = new Dictionary<MovementDirection, Movement>();
@@ -64,7 +63,6 @@ namespace Logic.Game.Classes
             
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             CreateSpawnableItems();
-            CreateSpawnableEnemies();
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
@@ -133,7 +131,23 @@ namespace Logic.Game.Classes
 
         public void UpdateEnemies(RenderWindow window)
         {
-            
+            enemyLogic.PathToPlayer();
+            enemyLogic.HandleBulletCollision();
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                enemyLogic.Shoot(i);
+            }
+
+            enemyLogic.SpawnEnemies();
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
+                gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
+            }
+            enemyLogic.UpdateHP();
+            enemyLogic.FlipAndRotateGun();
         }
 
         public void UpdateTilemap()
@@ -319,104 +333,7 @@ namespace Logic.Game.Classes
                 }
             }
         }
-
-        public void CreateSpawnableEnemies()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                EnemyModel enemy = new EnemyModel();
-                enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
-                enemy.Speed = 30f;
-                enemy.Gun = new GunModel();
-                enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
-                enemy.Gun.Damage = 10;
-                enemy.Gun.MaxAmmo = 15;
-                enemy.Gun.Recoil = 5f;
-                enemy.Gun.Scale = new Vector2f(2, 2);
-                enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
-                enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
-                enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
-                enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
-                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(300);
-                enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
-                enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
-                enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
-                enemy.Gun.ShootSounds = new List<Sound>();
-
-                enemy.Gun.Bullets = new List<BulletModel>();
-                enemy.RewardXP = new Random().Next(2, 11);
-                enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
-                //gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-
-                gameModel.Enemies.Add(enemy);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.Enemies[i].GetGlobalBounds().Intersects(gameModel.Enemies[j].GetGlobalBounds()))
-                    {
-                        gameModel.Enemies.RemoveAt(i);
-                        j = 0;
-                    }
-                }
-            }
-        }
-
-        public void SpawnEnemies()
-        {
-            // ENEMY COLLISION DETECTION WITH WALL!!!
-            foreach (var enemy in gameModel.Enemies)
-            {
-                for (int y = -2; y < 2; y++)
-                {
-                    for (int x = -2; x < 2; x++)
-                    {
-                        var xTilePosition = enemy.Position.X;
-                        var yTilePosition = enemy.Position.Y;
-                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
-                        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
-                        {
-                            continue;
-                        }
-
-                        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
-                        var rect = enemy.GetGlobalBounds();
-
-                        if (tileRect.Intersects(rect))
-                        {
-                            gameModel.Enemies.Remove(enemy);
-
-                            var optimalPosition = new Vector2f();
-                            var optimalDistance = float.MaxValue;
-
-                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
-                            {
-                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
-                                {
-                                    var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
-                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
-                                    {
-                                        var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
-                                        var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
-                                        if (distance < optimalDistance)
-                                        {
-                                            optimalDistance = distance;
-                                            optimalPosition = tileWorldPosition;
-                                        }
-                                    }
-                                }
-                            }
-
-                            enemy.Position = optimalPosition;
-                            gameModel.Enemies.Add(enemy);
-
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-
+        
         public void Music()
         {
             //if (gameModel.Music == null)
