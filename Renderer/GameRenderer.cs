@@ -18,7 +18,7 @@ namespace Renderer
     {
         private IGameModel gameModel;
         private string assetsPath;
-        private Texture pistolBulletTexture;
+        private Texture bulletSheetTexture;
         private Texture coinTexture;
         private Texture healthPotionTexture;
         private Texture speedPotionTexture;
@@ -34,7 +34,7 @@ namespace Renderer
             this.assetsPath = path;
 
             // Note: Shouldn't be creating texture every frame, this is the reason of fps drops!
-            pistolBulletTexture = new Texture("Assets/Textures/bullet_sheet.png");
+            bulletSheetTexture = new Texture("Assets/Textures/bullet_sheet.png");
             
             coinTexture = new Texture("Assets/Textures/coin_sheet.png");
             healthPotionTexture = new Texture("Assets/Textures/health_potion_sheet.png");
@@ -72,7 +72,7 @@ namespace Renderer
             {
                 foreach (var pistolBullet in gameModel.Player.Gun.Bullets)
                 {
-                    pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture = pistolBulletTexture;
+                    pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture = bulletSheetTexture;
                     pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture);
                     pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
                 }
@@ -81,7 +81,7 @@ namespace Renderer
             {
                 foreach (var shotgunBullet in gameModel.Player.Gun.Bullets)
                 {
-                    shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture = pistolBulletTexture;
+                    shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture = bulletSheetTexture;
                     shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture);
                     shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
                 }
@@ -91,21 +91,29 @@ namespace Renderer
             {
                 if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
                 {
-                    foreach (var pistolBullet in gameModel.Enemies[i].Gun.Bullets)
+                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
                     {
-                        pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture = pistolBulletTexture;
-                        pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture);
-                        pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture = bulletSheetTexture;
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
                     }
                 }
                 else if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
                 {
-                    foreach (var shotgunBullet in gameModel.Enemies[i].Gun.Bullets)
+                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
                     {
-                        shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture = pistolBulletTexture;
-                        shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture);
-                        shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture = bulletSheetTexture;
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
                     }
+                }
+            }
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                {
+                    window.Draw(gameModel.Enemies[i].Gun.Bullets[j].Bullet);
                 }
             }
 
@@ -114,13 +122,7 @@ namespace Renderer
                 window.Draw(bullet.Bullet);
             }
 
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
-            {
-                foreach (var bullet in gameModel.Enemies[i].Gun.Bullets)
-                {
-                    window.Draw(bullet.Bullet);
-                }
-            }
+            
         }
 
         private void DrawObjects(RenderTarget window)
@@ -149,6 +151,18 @@ namespace Renderer
             {
                 gameModel.Enemies[i].Texture = enemyTexture;
                 window.Draw(gameModel.Enemies[i]);
+
+                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
+                {
+                    gameModel.Enemies[i].Gun.Texture = pistolTexture;
+                    gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 12, 3);
+                }
+                else if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
+                {
+                    gameModel.Enemies[i].Gun.Texture = shotgunTexture;
+                    gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 16, 6);
+                }
+
                 window.Draw(gameModel.Enemies[i].Gun);
 
                 // Draw HP

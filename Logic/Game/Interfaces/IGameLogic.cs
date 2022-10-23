@@ -12,6 +12,7 @@ namespace Logic.Game.Interfaces
     public interface IGameLogic
     {
         void UpdatePlayer(RenderWindow window);
+        void UpdateEnemies(RenderWindow window);
         void UpdateDeltaTime();
         void UpdateCamera(View cameraView);
         void UpdateBullets(RenderWindow window);

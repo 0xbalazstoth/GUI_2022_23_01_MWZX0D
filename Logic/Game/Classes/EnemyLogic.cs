@@ -25,7 +25,7 @@ namespace Logic.Game.Classes
             {
                 gameModel.Enemies[i].HPSprite = new Sprite();
                 gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-                
+
                 gameModel.Enemies[i].CurrentHP = gameModel.Enemies[i].MaxHP;
 
                 gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
@@ -43,26 +43,26 @@ namespace Logic.Game.Classes
             // 4. Depth-first search
 
             // Find path to the player
-            //foreach (var enemy in gameModel.Enemies)
-            //{
-            //    if (gameModel.Player.Position.X < enemy.Position.X)
-            //    {
-            //        enemy.Position = new Vector2f(enemy.Position.X - 1, enemy.Position.Y);
-            //    }
-            //    else if (gameModel.Player.Position.X > enemy.Position.X)
-            //    {
-            //        enemy.Position = new Vector2f(enemy.Position.X + 1, enemy.Position.Y);
-            //    }
+            foreach (var enemy in gameModel.Enemies)
+            {
+                if (gameModel.Player.Position.X < enemy.Position.X)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X - 1, enemy.Position.Y);
+                }
+                else if (gameModel.Player.Position.X > enemy.Position.X)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X + 1, enemy.Position.Y);
+                }
 
-            //    if (gameModel.Player.Position.Y < enemy.Position.Y)
-            //    {
-            //        enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y - 1);
-            //    }
-            //    else if (gameModel.Player.Position.Y > enemy.Position.Y)
-            //    {
-            //        enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
-            //    }
-            //}
+                if (gameModel.Player.Position.Y < enemy.Position.Y)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y - 1);
+                }
+                else if (gameModel.Player.Position.Y > enemy.Position.Y)
+                {
+                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
+                }
+            }
         }
 
         public void HandleBulletCollision()
@@ -80,7 +80,7 @@ namespace Logic.Game.Classes
                         {
                             enemy.CurrentHP -= gameModel.Player.Gun.Damage;
                         }
-                        
+
                         if (enemy.CurrentHP == 0)
                         {
                             gameModel.Enemies.Remove(enemy);
@@ -95,27 +95,31 @@ namespace Logic.Game.Classes
 
         public void HandleMovement()
         {
-            
+            // Previous positions
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    previousPositions[i] = gameModel.Enemies[i].Position;
+            //}
         }
 
         public void LoadTexture(string filename)
         {
-            
+
         }
 
         public void LoadTexture(Texture texture)
         {
-            
+
         }
 
         public void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect)
         {
-            
+
         }
 
-        public void UpdateDeltaTile(float dt)
+        public void UpdateDeltaTime(float dt)
         {
-            
+
         }
 
         public void UpdateHP()
@@ -129,9 +133,34 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void Shoot()
+        public void Shoot(int enemyIdx)
         {
-            
+            gameModel.Enemies[enemyIdx].AimDirection = new Vector2f(gameModel.Player.Position.X - gameModel.Enemies[enemyIdx].Position.X, gameModel.Player.Position.Y - gameModel.Enemies[enemyIdx].Position.Y);
+            gameModel.Enemies[enemyIdx].AimDirectionNormalized = gameModel.Enemies[enemyIdx].AimDirection / (float)Math.Sqrt(gameModel.Enemies[enemyIdx].AimDirection.X * gameModel.Enemies[enemyIdx].AimDirection.X + gameModel.Enemies[enemyIdx].AimDirection.Y * gameModel.Enemies[enemyIdx].AimDirection.Y);
+
+            if (gameModel.Enemies[enemyIdx].Gun.LastFired + gameModel.Enemies[enemyIdx].Gun.FiringInterval < DateTime.Now)
+            {
+                BulletModel tempBullet = new BulletModel();
+                tempBullet.Bullet = new Sprite();
+                tempBullet.Speed = 4f;
+                tempBullet.Bullet.Position = gameModel.Enemies[enemyIdx].Position;
+                tempBullet.Velocity = gameModel.Enemies[enemyIdx].AimDirectionNormalized * tempBullet.Speed;
+                tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
+                tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
+
+                tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+                tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
+
+                gameModel.Enemies[enemyIdx].Gun.LastFired = DateTime.Now;
+                gameModel.Enemies[enemyIdx].Gun.Bullets.Add(tempBullet);
+            }
         }
 
         public void FlipAndRotateGun()
@@ -154,30 +183,6 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[i].Gun.Rotation = angle;
                     gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + 10, gameModel.Enemies[i].Position.Y + 5);
                 }
-
-                // AimDirection towards to the player
-                gameModel.Enemies[i].AimDirection = new Vector2f(gameModel.Player.Position.X - gameModel.Enemies[i].Position.X, gameModel.Player.Position.Y - gameModel.Enemies[i].Position.Y);
-                gameModel.Enemies[i].AimDirectionNormalized = gameModel.Enemies[i].AimDirection / (float)Math.Sqrt(gameModel.Enemies[i].AimDirection.X * gameModel.Enemies[i].AimDirection.X + gameModel.Enemies[i].AimDirection.Y * gameModel.Enemies[i].AimDirection.Y);
-
-                BulletModel tempBullet = new BulletModel();
-                tempBullet.Bullet = new Sprite();
-                tempBullet.Speed = 15f;
-                tempBullet.Bullet.Position = gameModel.Enemies[i].Position;
-                tempBullet.Velocity = gameModel.Enemies[i].AimDirectionNormalized * tempBullet.Speed;
-                tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
-                tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
-
-                tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
-                tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
-                {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 10f,
-                });
-
-                gameModel.Enemies[i].Gun.Bullets.Add(tempBullet);
             }
         }
     }

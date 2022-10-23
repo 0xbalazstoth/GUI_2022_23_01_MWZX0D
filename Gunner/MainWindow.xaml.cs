@@ -116,7 +116,7 @@ namespace Gunner
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
-            
+
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel, gameModel);
 
@@ -259,11 +259,15 @@ namespace Gunner
 
                 enemyLogic.HandleBulletCollision();
 
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
+                {
+                    enemyLogic.Shoot(i);
+                }
+
                 gameLogic.UpdateTilemap();
                 
                 Control();
-                bulletLogic.UpdateBulletAnimationTextures();
-                
+
                 gameLogic.SpawnItems();
                 gameLogic.SpawnEnemies();
 
@@ -278,9 +282,7 @@ namespace Gunner
                     gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
                 }
                 enemyLogic.UpdateHP();
-                enemyLogic.FlipAndRotateGun();
-                enemyLogic.Shoot();
-                bulletLogic.UpdateBulletAnimationTextures();
+                enemyLogic.FlipAndRotateGun(); 
             }
         }
 

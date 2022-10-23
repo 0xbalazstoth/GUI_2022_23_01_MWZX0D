@@ -9,7 +9,7 @@ namespace Logic.Game.Interfaces
 {
     public interface IEnemyLogic
     {
-        void UpdateDeltaTile(float dt);
+        void UpdateDeltaTime(float dt);
         void HandleMovement();
         void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
         void LoadTexture(string filename);
@@ -17,7 +17,7 @@ namespace Logic.Game.Interfaces
         void PathToPlayer();
         void HandleBulletCollision();
         void UpdateHP();
-        void Shoot();
+        void Shoot(int enemyIdx);
         void FlipAndRotateGun();
     }
 }

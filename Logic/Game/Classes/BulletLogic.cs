@@ -118,8 +118,10 @@ namespace Logic.Game.Classes
                     gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
             }
+        }
 
-            // Enemy bullets
+        public void UpdateEnemiesBullets()
+        {
             foreach (EnemyModel enemy in gameModel.Enemies)
             {
                 for (int i = 0; i < enemy.Gun.Bullets.Count; i++)
@@ -137,7 +139,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void UpdateBulletAnimationTextures()
+        public void UpdatePlayerBulletAnimationTextures()
         {
             for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
@@ -148,7 +150,6 @@ namespace Logic.Game.Classes
 
         public void HandleEnemiesBulletMapCollision(RenderWindow window)
         {
-            // Enemy bullets
             foreach (EnemyModel enemy in gameModel.Enemies)
             {
                 foreach (BulletModel bullet in enemy.Gun.Bullets)
@@ -184,7 +185,6 @@ namespace Logic.Game.Classes
 
         public void HandleEnemiesBulletObjectCollision(Sprite item)
         {
-            // Enemy bullets
             foreach (EnemyModel enemy in gameModel.Enemies)
             {
                 foreach (BulletModel bullet in enemy.Gun.Bullets)
@@ -200,7 +200,6 @@ namespace Logic.Game.Classes
 
         public void UpdateEnemiesBulletAnimationTextures()
         {
-            // Enemy bullets
             foreach (EnemyModel enemy in gameModel.Enemies)
             {
                 for (int i = 0; i < enemy.Gun.Bullets.Count; i++)

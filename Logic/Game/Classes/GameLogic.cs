@@ -116,6 +116,7 @@ namespace Logic.Game.Classes
         public void UpdateBullets(RenderWindow window)
         {
             bulletLogic.HandlePlayerBulletMapCollision(window);
+            bulletLogic.HandleEnemiesBulletMapCollision(window);
 
             foreach (ObjectEntityModel obj in gameModel.Objects)
             {
@@ -124,7 +125,15 @@ namespace Logic.Game.Classes
             }
 
             bulletLogic.UpdatePlayerBullets();
+            bulletLogic.UpdateEnemiesBullets();
+            
             bulletLogic.UpdateEnemiesBulletAnimationTextures();
+            bulletLogic.UpdatePlayerBulletAnimationTextures();
+        }
+
+        public void UpdateEnemies(RenderWindow window)
+        {
+            
         }
 
         public void UpdateTilemap()
@@ -313,15 +322,31 @@ namespace Logic.Game.Classes
 
         public void CreateSpawnableEnemies()
         {
-            for (int i = 0; i < new Random().Next(2, 6); i++)
+            for (int i = 0; i < 4; i++)
             {
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 enemy.Speed = 30f;
-                enemy.Gun = gameModel.Guns[0];
+                enemy.Gun = new GunModel();
+                enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
+                enemy.Gun.Damage = 10;
+                enemy.Gun.MaxAmmo = 15;
+                enemy.Gun.Recoil = 5f;
+                enemy.Gun.Scale = new Vector2f(2, 2);
+                enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
+                enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
+                enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
+                enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
+                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(300);
+                enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
+                enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
+                enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
+                enemy.Gun.ShootSounds = new List<Sound>();
+
                 enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
+                //gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
 
                 gameModel.Enemies.Add(enemy);
                 for (int j = 0; j < i - 1; j++)
@@ -337,11 +362,12 @@ namespace Logic.Game.Classes
 
         public void SpawnEnemies()
         {
+            // ENEMY COLLISION DETECTION WITH WALL!!!
             foreach (var enemy in gameModel.Enemies)
             {
-                for (int y = -3; y < 3; y++)
+                for (int y = -2; y < 2; y++)
                 {
-                    for (int x = -3; x < 3; x++)
+                    for (int x = -2; x < 2; x++)
                     {
                         var xTilePosition = enemy.Position.X;
                         var yTilePosition = enemy.Position.Y;
