@@ -149,26 +149,39 @@ namespace Logic.Game.Classes
 
             if (gameModel.Enemies[enemyIdx].Gun.LastFired + gameModel.Enemies[enemyIdx].Gun.FiringInterval < DateTime.Now)
             {
-                BulletModel tempBullet = new BulletModel();
-                tempBullet.Bullet = new Sprite();
-                tempBullet.Speed = 4f;
-                tempBullet.Bullet.Position = gameModel.Enemies[enemyIdx].Position;
-                tempBullet.Velocity = gameModel.Enemies[enemyIdx].AimDirectionNormalized * tempBullet.Speed;
-                tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
-                tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
-
-                tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
-                tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                if (gameModel.Enemies[enemyIdx].Gun.CurrentAmmo > 0 && (gameModel.Enemies[enemyIdx].Gun.CurrentAmmo <= gameModel.Enemies[enemyIdx].Gun.MaxAmmo))
                 {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 10f,
-                });
+                    BulletModel tempBullet = new BulletModel();
+                    tempBullet.Bullet = new Sprite();
+                    tempBullet.Speed = 4f;
+                    tempBullet.Bullet.Position = gameModel.Enemies[enemyIdx].Position;
+                    tempBullet.Velocity = gameModel.Enemies[enemyIdx].AimDirectionNormalized * tempBullet.Speed;
+                    tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
+                    tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
 
-                gameModel.Enemies[enemyIdx].Gun.LastFired = DateTime.Now;
-                gameModel.Enemies[enemyIdx].Gun.Bullets.Add(tempBullet);
+                    tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+                    tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                    {
+                        Row = 0,
+                        ColumnsInRow = 8,
+                        TotalRows = 1,
+                        TotalColumns = 8,
+                        Speed = 10f,
+                    });
+
+                    gameModel.Enemies[enemyIdx].Gun.CurrentAmmo--;
+                    gameModel.Enemies[enemyIdx].Gun.LastFired = DateTime.Now;
+                    gameModel.Enemies[enemyIdx].Gun.Bullets.Add(tempBullet);
+                }
+                else
+                {
+                    // Reload needed, because ammo is empty, but not yet reloaded (reload time is x seconds)
+                    if (gameModel.Enemies[enemyIdx].Gun.LastReloaded + gameModel.Enemies[enemyIdx].Gun.ReloadTime < DateTime.Now)
+                    {
+                        ReloadGun(enemyIdx);
+                        gameModel.Enemies[enemyIdx].Gun.LastReloaded = DateTime.Now;
+                    }
+                }
             }
         }
 
@@ -207,6 +220,7 @@ namespace Logic.Game.Classes
                 enemy.Gun.Damage = 10;
                 enemy.Gun.MaxAmmo = 15;
                 enemy.Gun.Recoil = 5f;
+                enemy.Gun.ReloadTime = TimeSpan.FromSeconds(15);
                 enemy.Gun.Scale = new Vector2f(2, 2);
                 enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
@@ -260,7 +274,8 @@ namespace Logic.Game.Classes
                         if (tileRect.Intersects(rect))
                         {
                             gameModel.Enemies.Remove(enemy);
-
+                            enemy.IsShooting = true;
+                            
                             var optimalPosition = new Vector2f();
                             var optimalDistance = float.MaxValue;
 
@@ -289,6 +304,18 @@ namespace Logic.Game.Classes
                         }
                     }
                 }
+            }
+        }
+
+        public void ReloadGun(int enemyIdx)
+        {
+            if (gameModel.Enemies[enemyIdx].Gun.CurrentAmmo == 0)
+            {
+                gameModel.Enemies[enemyIdx].Gun.CurrentAmmo = gameModel.Enemies[enemyIdx].Gun.MaxAmmo;
+            }
+            else if (gameModel.Enemies[enemyIdx].Gun.CurrentAmmo < gameModel.Enemies[enemyIdx].Gun.MaxAmmo)
+            {
+                gameModel.Enemies[enemyIdx].Gun.CurrentAmmo = gameModel.Enemies[enemyIdx].Gun.MaxAmmo;
             }
         }
     }

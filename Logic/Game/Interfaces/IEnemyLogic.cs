@@ -21,5 +21,6 @@ namespace Logic.Game.Interfaces
         void FlipAndRotateGun();
         void CreateEnemies();
         void SpawnEnemies();
+        void ReloadGun(int enemyIdx);
     }
 }

@@ -15,6 +15,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using Repository.Interfaces;
+using Repository.Classes;
 
 namespace Logic.Game.Classes
 {
@@ -28,6 +30,7 @@ namespace Logic.Game.Classes
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic objectEntityLogic;
         private IBulletLogic bulletLogic;
+        private ITilemapRepository tilemapRepository;
 
         private Clock deltaTimeClock;
         private float deltaTime;
@@ -43,6 +46,7 @@ namespace Logic.Game.Classes
             this.enemyLogic = enemyLogic;
             this.objectEntityLogic = objectEntityLogic;
             this.bulletLogic = bulletLogic;
+            tilemapRepository = new TilemapRepository();
 
             deltaTimeClock = new Clock();
 
@@ -71,6 +75,7 @@ namespace Logic.Game.Classes
 
         public void SetTilemap(string tmxFile, string tilesetFile)
         {
+            //var tilemapModel = tilemapRepository.LoadTMXFile(tmxFile);
             TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
             tmapLoader.LoadTMXFile(tmxFile);
             tmapLoader.InitializeVertices();
