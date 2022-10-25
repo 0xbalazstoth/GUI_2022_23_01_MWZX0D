@@ -42,6 +42,11 @@ namespace Gunner
 
             lstBoxInventory.ItemsSource = items;
             gameModel.Player.IsFocusedInGame = false;
+
+            if (gameModel.Player.Inventory.Items.Count == 0)
+            { 
+                
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
