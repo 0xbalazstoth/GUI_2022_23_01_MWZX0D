@@ -16,6 +16,7 @@ namespace Model.Game.Classes
         public View CameraView { get; set; }
         public View UIView { get; set; }
         public TilemapModel Map { get; set; }
+        public TilemapModel KillArenaMap { get; set; }
         public PlayerModel Player { get; set; }
         public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get; set; }

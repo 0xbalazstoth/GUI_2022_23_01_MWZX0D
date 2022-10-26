@@ -21,6 +21,9 @@
     <None Remove="Assets\Textures\cursor.png" />
     <None Remove="Assets\Textures\enemy1_move_left.png" />
     <None Remove="Assets\Textures\enemy1_move_right.png" />
+    <None Remove="Assets\Textures\enemy_eye_ball.png" />
+    <None Remove="Assets\Textures\enemy_eye_left.png" />
+    <None Remove="Assets\Textures\enemy_eye_right.png" />
     <None Remove="Assets\Textures\enemy_move_left.png" />
     <None Remove="Assets\Textures\enemy_move_right.png" />
     <None Remove="Assets\Textures\health_potion.png" />
@@ -76,10 +79,10 @@
     <Content Include="Assets\Textures\cursor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Textures\enemy1_move_left.png">
+    <Content Include="Assets\Textures\enemy_eye_left.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Textures\enemy1_move_right.png">
+    <Content Include="Assets\Textures\enemy_eye_right.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\health_potion.png">

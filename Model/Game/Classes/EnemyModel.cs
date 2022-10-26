@@ -8,7 +8,7 @@ namespace Model.Game.Classes
     public class EnemyModel : UnitEntityModel
     {
         public string Name { get; set; }
-        public EnemyType EnemyType { get; set; } = EnemyType.Basic;
+        public EnemyType EnemyType { get; set; } = EnemyType.Eye;
         public Dictionary<MovementDirection, AnimationModel> Animations { get; set; }
         public int RewardXP { get; set; }
         public bool IsShooting { get; set; }

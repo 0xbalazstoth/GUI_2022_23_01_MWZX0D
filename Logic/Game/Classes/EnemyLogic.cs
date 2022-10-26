@@ -104,56 +104,7 @@ namespace Logic.Game.Classes
 
         public void HandleMovement()
         {
-            //for (int i = 0; i < gameModel.Enemies.Count; i++)
-            //{
-            //    Vector2f leftMovement = new Vector2f(-1f, 0);
-            //    Vector2f rightMovement = new Vector2f(1f, 0);
-            //    Vector2f upMovement = new Vector2f(0, -1f);
-            //    Vector2f downMovement = new Vector2f(0, 1f);
-
-            //    // Calculate velocity
-            //    var velocity = new Vector2f(gameModel.Enemies[i].AimDirectionNormalized.X * gameModel.Enemies[i].Speed, gameModel.Enemies[i].AimDirectionNormalized.Y * gameModel.Enemies[i].Speed);
-
-            //    var aimDirectionNormalized = gameModel.Enemies[i].AimDirectionNormalized;
-            //    Vector2i direction = new Vector2i((int)aimDirectionNormalized.X, (int)aimDirectionNormalized.Y);
-            //    gameModel.Enemies[i].MovementDirection = direction;
-
-            //    // -1:0 : left
-            //    // 1:0  : right
-
-            //    // 0:-1 : up
-            //    // -1:1 : up left
-            //    // 1:-1 : up right
-
-            //    // 0:1  : down
-
-            //    //Trace.WriteLine($"{Convert.ToInt32(aimDirectionNormalized.X)}; {Convert.ToInt32(aimDirectionNormalized.Y)}");
-
-            //    //// Normalize velocity
-            //    //var velocityNormalized = new Vector2f(velocity.X / (float)Math.Sqrt(velocity.X * velocity.X + velocity.Y * velocity.Y), velocity.Y / (float)Math.Sqrt(velocity.X * velocity.X + velocity.Y * velocity.Y));
-
-            //    //// Calculate movement direction based on normalized velocity
-            //    //if (velocityNormalized.X > 0 && velocityNormalized.Y == 0)
-            //    //{
-            //    //    //gameModel.Enemies[i].MovementDirection = MovementDirection.Right;
-            //    //    Trace.WriteLine("Enemy right");
-            //    //}
-            //    //else if (velocityNormalized.X < 0 && velocityNormalized.Y == 0)
-            //    //{
-            //    //    //gameModel.Enemies[i].MovementDirection = MovementDirection.Left;
-            //    //    Trace.WriteLine("Enemy left");
-            //    //}
-            //    //else if (velocityNormalized.X == 0 && velocityNormalized.Y > 0)
-            //    //{
-            //    //    //gameModel.Enemies[i].MovementDirection = MovementDirection.Down;
-            //    //    Trace.WriteLine("Enemy down");
-            //    //}
-            //    //else if (velocityNormalized.X == 0 && velocityNormalized.Y < 0)
-            //    //{
-            //    //    //gameModel.Enemies[i].MovementDirection = MovementDirection.Up;
-            //    //    Trace.WriteLine("Enemy up");
-            //    //}
-            //}
+            
         }
 
         public void LoadTexture(string filename)
@@ -248,34 +199,34 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[i].Texture = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Right].Texture;
                     gameModel.Enemies[i].TextureRect = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Right].TextureRect;
                 }
-                //else if (angle > 45 && angle < 135)
-                //{
-                //    gameModel.Enemies[i].Texture = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Down].Texture;
-                //    gameModel.Enemies[i].TextureRect = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Down].TextureRect;
-                //}
                 else if (angle > 135 || angle < -135)
                 {
                     gameModel.Enemies[i].Texture = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Left].Texture;
                     gameModel.Enemies[i].TextureRect = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Left].TextureRect;
                 }
-                //else if (angle < -45 && angle > -135)
-                //{
-                //    gameModel.Enemies[i].Texture = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Up].Texture;
-                //    gameModel.Enemies[i].TextureRect = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Up].TextureRect;
-                //}
 
                 // Flip gun
                 if (angle > 90 || angle < -90)
                 {
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(-2.5f, 2.5f);
                     gameModel.Enemies[i].Gun.Rotation = angle + 180;
-                    gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X - 10, gameModel.Enemies[i].Position.Y + 5);
+
+                    if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
+                    {
+                        // Center gun position by enemy texture
+                        gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
+                    }
                 }
                 else
                 {
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                     gameModel.Enemies[i].Gun.Rotation = angle;
-                    gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + 10, gameModel.Enemies[i].Position.Y + 5);
+
+                    if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
+                    {
+                        // Center gun position by enemy texture
+                        gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
+                    }
                 }
             }
         }
@@ -306,7 +257,7 @@ namespace Logic.Game.Classes
 
                 enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
-                enemy.EnemyType = Model.Game.Enums.EnemyType.Basic;
+                enemy.EnemyType = Model.Game.Enums.EnemyType.Eye;
                 //gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
 
                 gameModel.Enemies.Add(enemy);

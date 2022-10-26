@@ -197,7 +197,7 @@ namespace Logic.Game.Classes
                 return;
             }
 
-            for (int y = -2; y < 2; y++)
+            for (int y = -1; y < 1; y++)
             {
                 for (int x = -2; x < 2; x++)
                 {

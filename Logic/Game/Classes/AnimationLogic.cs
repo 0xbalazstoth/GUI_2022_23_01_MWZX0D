@@ -130,6 +130,7 @@ namespace Logic.Game.Classes
             foreach (EnemyModel enemy in gameModel.Enemies)
             {
                 enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
+                
                 enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
                 {
                     Row = 0,
@@ -147,8 +148,8 @@ namespace Logic.Game.Classes
                     TotalColumns = 8,
                     Speed = 10f,
                 });
-                #endregion
             }
+            #endregion
         }
 
         public void Update(float dt)
@@ -230,6 +231,7 @@ namespace Logic.Game.Classes
                     {
                         enemyAnimation.Value.Counter = 0f;
                     }
+                    
                     enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
                     gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
                 }

@@ -68,29 +68,66 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             CreateSpawnableItems();
 
-            //gameModel.Musics = new List<Music>();
-            //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
-            //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
+            gameModel.Musics = new List<Music>();
+            gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
+            gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
+
+            Music();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
         {
             //var tilemapModel = tilemapRepository.LoadTMXFile(tmxFile);
-            TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
-            tmapLoader.LoadTMXFile(tmxFile);
-            tmapLoader.InitializeVertices();
+            //TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
+            //tmapLoader.LoadTMXFile(tmxFile);
+            //tmapLoader.InitializeVertices();
+
+            //gameModel.Map.CollidableIDs = new List<int>();
+            //gameModel.Map.CollidableIDs.Add(4);
+            //gameModel.Map.TilesetTexture = new Texture(tilesetFile);
+            //gameModel.Map.Vertices = tmapLoader.Vertices;
+            //gameModel.Map.MapLayers = tmapLoader.MapLayers;
+            //gameModel.Map.Width = tmapLoader.Width;
+            //gameModel.Map.Height = tmapLoader.Height;
+            //gameModel.Map.TileWidth = tmapLoader.TileWidth;
+            //gameModel.Map.TileHeight = tmapLoader.TileHeight;
+            //gameModel.Map.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
+            //gameModel.Map.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
 
             gameModel.Map.CollidableIDs = new List<int>();
             gameModel.Map.CollidableIDs.Add(4);
             gameModel.Map.TilesetTexture = new Texture(tilesetFile);
-            gameModel.Map.Vertices = tmapLoader.Vertices;
-            gameModel.Map.MapLayers = tmapLoader.MapLayers;
-            gameModel.Map.Width = tmapLoader.Width;
-            gameModel.Map.Height = tmapLoader.Height;
-            gameModel.Map.TileWidth = tmapLoader.TileWidth;
-            gameModel.Map.TileHeight = tmapLoader.TileHeight;
-            gameModel.Map.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
-            gameModel.Map.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
+
+            // Kill Arena map
+            uint killArenaWidth = 100;
+            uint killArenaHeight = 100;
+            float killArenaScale = 0.20f;
+            uint killArenaTileWidth = 32;
+            uint killArenaTileHeight = 32;
+            int[] collisionLayer = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
+            gameModel.KillArenaMap.CollidableIDs = new List<int>();
+            gameModel.KillArenaMap.CollidableIDs.Add(4);
+            gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
+            gameModel.KillArenaMap.MapLayers = new List<int[]>();
+            gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
+            gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
+            gameModel.KillArenaMap.Width = killArenaWidth;
+            gameModel.KillArenaMap.Height = killArenaHeight;
+            gameModel.KillArenaMap.TileWidth = killArenaTileWidth;
+            gameModel.KillArenaMap.TileHeight = killArenaTileHeight;
+            gameModel.KillArenaMap.Size = new Vector2u(killArenaWidth, killArenaHeight);
+            gameModel.KillArenaMap.TileSize = new Vector2u(killArenaTileWidth, killArenaHeight);
+
+            tilemapLogic.InitializeVertices(gameModel.KillArenaMap);
+
+            gameModel.Map.Vertices = gameModel.KillArenaMap.Vertices;
+            gameModel.Map.MapLayers = gameModel.KillArenaMap.MapLayers;
+            gameModel.Map.Width = gameModel.KillArenaMap.Width;
+            gameModel.Map.Height = gameModel.KillArenaMap.Height;
+            gameModel.Map.TileWidth = gameModel.KillArenaMap.TileWidth;
+            gameModel.Map.TileHeight = gameModel.KillArenaMap.TileHeight;
+            gameModel.Map.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
+            gameModel.Map.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
         }
 
         public void UpdatePlayer(RenderWindow window)
@@ -194,6 +231,9 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(result.X, result.Y);
             }
+
+            // Stop camera movement on the edges of the map
+            CameraEdges();
         }
 
         public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)
@@ -349,23 +389,50 @@ namespace Logic.Game.Classes
             //    gameModel.Music.Volume = 50;
             //    gameModel.Music.Play();
             //}
-            foreach (var music in gameModel.Musics)
-            {
-                //if (k > 1)
-                //{
-                //    music.Stop();
-                //    gameModel.Musics[k - 1].Play();
-                //}
-                //else
-                //{
-                //    music.Play();
-                //}
+            //foreach (var music in gameModel.Musics)
+            //{
+            //    //if (k > 1)
+            //    //{
+            //    //    music.Stop();
+            //    //    gameModel.Musics[k - 1].Play();
+            //    //}
+            //    //else
+            //    //{
+            //    //    music.Play();
+            //    //}
 
-                //if (music.Status == SFML.Audio.SoundStatus.Stopped)
-                //{
-                //    music.Volume = 30;
-                //    music.Play();
-                //}
+            //    //if (music.Status == SFML.Audio.SoundStatus.Stopped)
+            //    //{
+            //    //    music.Volume = 30;
+            //    //    music.Play();
+            //    //}
+            //}
+
+            //if (gameModel.Musics[1].Status == SoundStatus.Stopped)
+            //{ 
+            //    gameModel.Musics[1].Volume = 30;
+            //    gameModel.Musics[1].Play();
+            //}
+        }
+
+        public void CameraEdges()
+        {
+            if (gameModel.CameraView.Center.X < gameModel.CameraView.Size.X / 2f)
+            {
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
+            }
+            if (gameModel.CameraView.Center.X > gameModel.Map.GetMapWidth - gameModel.CameraView.Size.X / 2f)
+            {
+                gameModel.CameraView.Center = new Vector2f(gameModel.Map.GetMapWidth - gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
+            }
+
+            if (gameModel.CameraView.Center.Y < gameModel.CameraView.Size.Y / 2f)
+            {
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.CameraView.Size.Y / 2f);
+            }
+            if (gameModel.CameraView.Center.Y > gameModel.Map.GetMapHeight - gameModel.CameraView.Size.Y / 2f)
+            {
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.Map.GetMapWidth - gameModel.CameraView.Size.Y / 2f);
             }
         }
     }
