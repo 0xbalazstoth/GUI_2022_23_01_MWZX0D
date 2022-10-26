@@ -136,6 +136,7 @@ namespace Logic.Game.Classes
 
         public void UpdateEnemies(RenderWindow window)
         {
+            enemyLogic.UpdateAnimationTextures();
             enemyLogic.PathToPlayer();
             enemyLogic.HandleBulletCollision();
 

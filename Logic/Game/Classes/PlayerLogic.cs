@@ -24,16 +24,14 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        private IAnimationLogic animationLogic;
         
         private Vector2f movementDirection;
         private Vector2f previousPosition;
 
-        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IAnimationLogic animationLogic, uint windowWidth, uint windowHeight)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, uint windowWidth, uint windowHeight)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
-            this.animationLogic = animationLogic;
 
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.MaxSpeed = 180f;

@@ -11,7 +11,7 @@ namespace Logic.Game.Interfaces
     {
         void UpdateDeltaTime(float dt);
         void HandleMovement();
-        void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
+        void UpdateAnimationTextures();
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
         void PathToPlayer();

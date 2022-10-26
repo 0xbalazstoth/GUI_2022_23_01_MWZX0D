@@ -115,7 +115,7 @@ namespace Gunner
 
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
-            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
             this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
 
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
@@ -266,6 +266,7 @@ namespace Gunner
                 uiLogic.UpdateSpeedPotionTimeLeftText();
 
                 gameLogic.UpdateEnemies(window);
+                enemyLogic.HandleMovement();
             }
         }
 
