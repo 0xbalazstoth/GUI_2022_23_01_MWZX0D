@@ -20,7 +20,7 @@ namespace Logic.Game.Interfaces
         void Shoot(int enemyIdx);
         void FlipAndRotateGun();
         void CreateEnemies();
-        void SpawnEnemies();
+        void SpawnEnemies(float dt);
         void ReloadGun(int enemyIdx);
     }
 }

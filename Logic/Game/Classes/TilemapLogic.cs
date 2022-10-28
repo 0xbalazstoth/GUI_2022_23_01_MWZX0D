@@ -51,26 +51,26 @@ namespace Logic.Game.Classes
             {
                 for (int y = 0; y < width; y++)
                 {
-                    if (noiseValues[x, y] < 70f)
+                    if (noiseValues[x, y] < 10f)
                     {
                         generatedMap[x + y * height] = grassType1;
                     }
-                    else if (noiseValues[x, y] < 90f)
+                    else if (noiseValues[x, y] < 20f)
                     {
                         generatedMap[x + y * height] = grassType2;
                     }
-                    else if (noiseValues[x, y] < 180f)
+                    else if (noiseValues[x, y] < 30f)
+                    {
+                        generatedMap[x + y * height] = grassType3;
+                    }
+                    else if (noiseValues[x, y] < 40f)
+                    {
+                        generatedMap[x + y * height] = grassType3;
+                    }
+                    else
                     {
                         generatedMap[x + y * height] = wall;
                     }
-                    //else if (noiseValues[x, y] < 190f)
-                    //{
-                    //    generatedMap[x + y * height] = grassType3;
-                    //}
-                    //else
-                    //{
-                    //    generatedMap[x + y * height] = grassType4;
-                    //}
                 }
             }
 

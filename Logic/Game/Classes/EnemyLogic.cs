@@ -19,6 +19,7 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
+        List<Vector2i> path;
 
         public EnemyLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
@@ -41,36 +42,111 @@ namespace Logic.Game.Classes
                 gameModel.Enemies[i].HPText.CharacterSize = 16;
                 gameModel.Enemies[i].HPText.FillColor = Color.Red;
             }
+
+            path = new List<Vector2i>();
         }
 
         public void PathToPlayer()
         {
-            // Algorithms for pathfinding
-            // 1. Dijkstra's algorithm
-            // 2. A* algorithm
-            // 3. Breadth-first search
-            // 4. Depth-first search
+            // Enemy stay inside the map
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    if (gameModel.Enemies[i].Position.X < 0)
+            //    {
+            //        gameModel.Enemies[i].Position = new Vector2f(0, gameModel.Enemies[i].Position.Y);
+            //    }
+            //    if (gameModel.Enemies[i].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
+            //    {
+            //        gameModel.Enemies[i].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[i].Position.Y);
+            //    }
+            //    if (gameModel.Enemies[i].Position.Y < 0)
+            //    {
+            //        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, 0);
+            //    }
+            //    if (gameModel.Enemies[i].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
+            //    {
+            //        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
+            //    }
+            //}
 
-            // Find path to the player
-            foreach (var enemy in gameModel.Enemies)
+            // A* algorithm
+            int[] grid = gameModel.Map.MapLayers[1];
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                if (gameModel.Player.Position.X < enemy.Position.X)
+                Vector2i start = new Vector2i((int)gameModel.Player.Position.X / 32, (int)gameModel.Player.Position.Y / 32);
+                Vector2i end = new Vector2i((int)gameModel.Enemies[i].Position.X / 32, (int)gameModel.Enemies[i].Position.Y / 32);
+
+                // add the start point to the list
+                path.Add(start);
+
+                if (path[path.Count - 1] != end)
                 {
-                    enemy.Position = new Vector2f(enemy.Position.X - 1, enemy.Position.Y);
-                }
-                else if (gameModel.Player.Position.X > enemy.Position.X)
-                {
-                    enemy.Position = new Vector2f(enemy.Position.X + 1, enemy.Position.Y);
+                    // get the last point in the list
+                    Vector2i last = path[path.Count - 1];
+
+                    // get the adjacent points
+                    List<Vector2i> adjacent = new List<Vector2i>();
+                    adjacent.Add(new Vector2i(last.X, last.Y - 1));
+                    adjacent.Add(new Vector2i(last.X + 1, last.Y));
+                    adjacent.Add(new Vector2i(last.X, last.Y + 1));
+                    adjacent.Add(new Vector2i(last.X - 1, last.Y));
+
+                    // for each adjacent point
+                    foreach (Vector2i point in adjacent)
+                    {
+                        // check if the point is in the grid
+                        if (point.X >= 0 && point.X < gameModel.Map.Width && point.Y >= 0 && point.Y < gameModel.Map.Height)
+                        {
+                            // check if the point is not a wall
+                            if (grid[point.X + point.Y * gameModel.Map.Width] != 4)
+                            {
+                                // check if the point is not already in the list
+                                if (!path.Contains(point))
+                                {
+                                    // add the point to the list
+                                    path.Add(point);
+                                }
+                            }
+                        }
+                    }
                 }
 
-                if (gameModel.Player.Position.Y < enemy.Position.Y)
+                // Create copy of the path
+                List<Vector2i> pathCopy = new List<Vector2i>();
+
+                for (int j = 0; j < path.Count; j++)
                 {
-                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y - 1);
+                    pathCopy.Add(path[j]);
                 }
-                else if (gameModel.Player.Position.Y > enemy.Position.Y)
+
+                // Remove the first point in the path
+                pathCopy.RemoveAt(0);
+
+                // Move the enemy
+                if (pathCopy.Count > 0)
                 {
-                    enemy.Position = new Vector2f(enemy.Position.X, enemy.Position.Y + 1);
+                    if (pathCopy[0].X < gameModel.Enemies[i].Position.X / 32)
+                    {
+                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X - 1, gameModel.Enemies[i].Position.Y);
+                    }
+                    else if (pathCopy[0].X > gameModel.Enemies[i].Position.X / 32)
+                    {
+                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X + 1, gameModel.Enemies[i].Position.Y);
+                    }
+
+                    if (pathCopy[0].Y < gameModel.Enemies[i].Position.Y / 32)
+                    {
+                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y - 1);
+                    }
+                    else if (pathCopy[0].Y > gameModel.Enemies[i].Position.Y / 32)
+                    {
+                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y + 1);
+                    }
                 }
+
+                // Clear the path
+                path.Clear();
             }
         }
 
@@ -272,62 +348,84 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void SpawnEnemies()
+        public void SpawnEnemies(float dt)
         {
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    // Check if colliding with an other enemy
+            //    for (int j = 0; j < gameModel.Enemies.Count; j++)
+            //    {
+            //        if (i != j)
+            //        {
+            //            if (gameModel.Enemies[i].GetGlobalBounds().Intersects(gameModel.Enemies[j].GetGlobalBounds()))
+            //            {
+            //                // Calculate optimal new position with delta time
+            //                var optimalPosition = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].Speed * dt), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].Speed * dt));
+            //                gameModel.Enemies[i].Position = optimalPosition;
+            //                //var optimalPosition = new Vector2f(gameModel.Enemies[j].Position.X + (gameModel.Enemies[j].Speed * (float)Math.Cos(gameModel.Enemies[j].Rotation * Math.PI / 180)), gameModel.Enemies[j].Position.Y + (gameModel.Enemies[j].Speed * (float)Math.Sin(gameModel.Enemies[j].Rotation * Math.PI / 180)));
+            //                //gameModel.Enemies[j].Position = optimalPosition;
+
+            //                j = 0;
+            //            }
+            //        }
+            //    }
+            //}
+
             // ENEMY COLLISION DETECTION WITH WALL!!!
-            foreach (var enemy in gameModel.Enemies)
-            {
-                for (int y = -2; y < 2; y++)
-                {
-                    for (int x = -2; x < 2; x++)
-                    {
-                        var xTilePosition = enemy.Position.X;
-                        var yTilePosition = enemy.Position.Y;
-                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
-                        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
-                        {
-                            continue;
-                        }
 
-                        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
-                        var rect = enemy.GetGlobalBounds();
+            //foreach (var enemy in gameModel.Enemies)
+            //{
+            //    for (int y = -2; y < 2; y++)
+            //    {
+            //        for (int x = -2; x < 2; x++)
+            //        {
+            //            var xTilePosition = enemy.Position.X;
+            //            var yTilePosition = enemy.Position.Y;
+            //            var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+            //            var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+            //            if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+            //            {
+            //                continue;
+            //            }
 
-                        if (tileRect.Intersects(rect))
-                        {
-                            gameModel.Enemies.Remove(enemy);
-                            enemy.IsShooting = true;
-                            
-                            var optimalPosition = new Vector2f();
-                            var optimalDistance = float.MaxValue;
+            //            var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+            //            var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+            //            var rect = enemy.GetGlobalBounds();
 
-                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
-                            {
-                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
-                                {
-                                    var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
-                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
-                                    {
-                                        var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
-                                        var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
-                                        if (distance < optimalDistance)
-                                        {
-                                            optimalDistance = distance;
-                                            optimalPosition = tileWorldPosition;
-                                        }
-                                    }
-                                }
-                            }
+            //            if (tileRect.Intersects(rect))
+            //            {
+            //                gameModel.Enemies.Remove(enemy);
+            //                enemy.IsShooting = true;
 
-                            enemy.Position = optimalPosition;
-                            gameModel.Enemies.Add(enemy);
+            //                var optimalPosition = new Vector2f();
+            //                var optimalDistance = float.MaxValue;
 
-                            return;
-                        }
-                    }
-                }
-            }
+            //                for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+            //                {
+            //                    for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+            //                    {
+            //                        var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
+            //                        if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+            //                        {
+            //                            var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
+            //                            var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
+            //                            if (distance < optimalDistance)
+            //                            {
+            //                                optimalDistance = distance;
+            //                                optimalPosition = tileWorldPosition;
+            //                            }
+            //                        }
+            //                    }
+            //                }
+
+            //                enemy.Position = optimalPosition;
+            //                gameModel.Enemies.Add(enemy);
+
+            //                return;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         public void ReloadGun(int enemyIdx)

@@ -66,6 +66,7 @@ namespace Logic.Game.Classes
             gameModel.MovementDirections.Add(MovementDirection.DownRight, new Movement() { MovementDirection = MovementDirection.DownRight, Direction = new Vector2f(1f, 1f) });
             
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
+            
             CreateSpawnableItems();
 
             gameModel.Musics = new List<Music>();
@@ -101,7 +102,7 @@ namespace Logic.Game.Classes
             // Kill Arena map
             uint killArenaWidth = 100;
             uint killArenaHeight = 100;
-            float killArenaScale = 0.20f;
+            float killArenaScale = 1f;
             uint killArenaTileWidth = 32;
             uint killArenaTileHeight = 32;
             int[] collisionLayer = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
@@ -182,7 +183,7 @@ namespace Logic.Game.Classes
                 enemyLogic.Shoot(i);
             }
 
-            enemyLogic.SpawnEnemies();
+            enemyLogic.SpawnEnemies(deltaTime);
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
@@ -256,11 +257,11 @@ namespace Logic.Game.Classes
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < new Random().Next(5, 30); i++)
+            for (int i = 0; i < new Random().Next(30, 80); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
                 coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
@@ -271,17 +272,17 @@ namespace Logic.Game.Classes
                 {
                     if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                         j = 0;
                     }
                 }
             }
 
-            for (int i = 0; i < new Random().Next(1, 50); i++)
+            for (int i = 0; i < new Random().Next(15, 40); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
                 healtPotionItem.IconFileName = "health_potion.png";
@@ -291,17 +292,17 @@ namespace Logic.Game.Classes
                 {
                     if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                         j = 0;
                     }
                 }
             }
 
-            for (int i = 0; i < new Random().Next(1, 20); i++)
+            for (int i = 0; i < new Random().Next(15, 40); i++)
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
-                speedPotion.Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
                 speedPotion.IconFileName = "speed_potion.png";
@@ -311,7 +312,7 @@ namespace Logic.Game.Classes
                 {
                     if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                         j = 0;
                     }
                 }
