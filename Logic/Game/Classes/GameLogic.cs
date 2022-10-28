@@ -175,12 +175,17 @@ namespace Logic.Game.Classes
         public void UpdateEnemies(RenderWindow window)
         {
             enemyLogic.UpdateAnimationTextures();
-            enemyLogic.PathToPlayer();
             enemyLogic.HandleBulletCollision();
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                enemyLogic.Shoot(i);
+                float distance = enemyLogic.DistanceBetweenPlayer(i);
+
+                if (distance < gameModel.Enemies[i].SightDistance)
+                {
+                    enemyLogic.Shoot(i);
+                    enemyLogic.PathToPlayer();
+                }
             }
 
             enemyLogic.SpawnEnemies(deltaTime);

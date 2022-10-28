@@ -22,5 +22,6 @@ namespace Logic.Game.Interfaces
         void CreateEnemies();
         void SpawnEnemies(float dt);
         void ReloadGun(int enemyIdx);
+        float DistanceBetweenPlayer(int enemyIdx);
     }
 }

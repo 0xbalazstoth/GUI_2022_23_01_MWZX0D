@@ -49,25 +49,25 @@ namespace Logic.Game.Classes
         public void PathToPlayer()
         {
             // Enemy stay inside the map
-            //for (int i = 0; i < gameModel.Enemies.Count; i++)
-            //{
-            //    if (gameModel.Enemies[i].Position.X < 0)
-            //    {
-            //        gameModel.Enemies[i].Position = new Vector2f(0, gameModel.Enemies[i].Position.Y);
-            //    }
-            //    if (gameModel.Enemies[i].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
-            //    {
-            //        gameModel.Enemies[i].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[i].Position.Y);
-            //    }
-            //    if (gameModel.Enemies[i].Position.Y < 0)
-            //    {
-            //        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, 0);
-            //    }
-            //    if (gameModel.Enemies[i].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
-            //    {
-            //        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
-            //    }
-            //}
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                if (gameModel.Enemies[i].Position.X < 0)
+                {
+                    gameModel.Enemies[i].Position = new Vector2f(0, gameModel.Enemies[i].Position.Y);
+                }
+                if (gameModel.Enemies[i].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
+                {
+                    gameModel.Enemies[i].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[i].Position.Y);
+                }
+                if (gameModel.Enemies[i].Position.Y < 0)
+                {
+                    gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, 0);
+                }
+                if (gameModel.Enemies[i].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
+                {
+                    gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
+                }
+            }
 
             // A* algorithm
             int[] grid = gameModel.Map.MapLayers[1];
@@ -99,13 +99,16 @@ namespace Logic.Game.Classes
                         if (point.X >= 0 && point.X < gameModel.Map.Width && point.Y >= 0 && point.Y < gameModel.Map.Height)
                         {
                             // check if the point is not a wall
-                            if (grid[point.X + point.Y * gameModel.Map.Width] != 4)
+                            foreach (var collidibleId in gameModel.Map.CollidableIDs)
                             {
-                                // check if the point is not already in the list
-                                if (!path.Contains(point))
+                                if (grid[point.X + point.Y * gameModel.Map.Width] != collidibleId)
                                 {
-                                    // add the point to the list
-                                    path.Add(point);
+                                    // check if the point is not already in the list
+                                    if (!path.Contains(point))
+                                    {
+                                        // add the point to the list
+                                        path.Add(point);
+                                    }
                                 }
                             }
                         }
@@ -126,20 +129,20 @@ namespace Logic.Game.Classes
                 // Move the enemy
                 if (pathCopy.Count > 0)
                 {
-                    if (pathCopy[0].X < gameModel.Enemies[i].Position.X / 32)
+                    if (pathCopy[0].X < gameModel.Enemies[i].Position.X / gameModel.Map.TileWidth)
                     {
                         gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X - 1, gameModel.Enemies[i].Position.Y);
                     }
-                    else if (pathCopy[0].X > gameModel.Enemies[i].Position.X / 32)
+                    else if (pathCopy[0].X > gameModel.Enemies[i].Position.X / gameModel.Map.TileWidth)
                     {
                         gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X + 1, gameModel.Enemies[i].Position.Y);
                     }
 
-                    if (pathCopy[0].Y < gameModel.Enemies[i].Position.Y / 32)
+                    if (pathCopy[0].Y < gameModel.Enemies[i].Position.Y / gameModel.Map.TileHeight)
                     {
                         gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y - 1);
                     }
-                    else if (pathCopy[0].Y > gameModel.Enemies[i].Position.Y / 32)
+                    else if (pathCopy[0].Y > gameModel.Enemies[i].Position.Y / gameModel.Map.TileHeight)
                     {
                         gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y + 1);
                     }
@@ -266,7 +269,7 @@ namespace Logic.Game.Classes
         {
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                // Rotate fun
+                // Rotate gun
                 var angle = (float)(Math.Atan2(gameModel.Player.Position.Y - gameModel.Enemies[i].Position.Y, gameModel.Player.Position.X - gameModel.Enemies[i].Position.X) * 180 / Math.PI);
 
                 // Change enemy animation texture by aim direction
@@ -314,6 +317,7 @@ namespace Logic.Game.Classes
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
                 enemy.Speed = 30f;
+                enemy.SightDistance = 300f;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
                 enemy.Gun.Damage = 10;
@@ -350,29 +354,7 @@ namespace Logic.Game.Classes
 
         public void SpawnEnemies(float dt)
         {
-            //for (int i = 0; i < gameModel.Enemies.Count; i++)
-            //{
-            //    // Check if colliding with an other enemy
-            //    for (int j = 0; j < gameModel.Enemies.Count; j++)
-            //    {
-            //        if (i != j)
-            //        {
-            //            if (gameModel.Enemies[i].GetGlobalBounds().Intersects(gameModel.Enemies[j].GetGlobalBounds()))
-            //            {
-            //                // Calculate optimal new position with delta time
-            //                var optimalPosition = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].Speed * dt), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].Speed * dt));
-            //                gameModel.Enemies[i].Position = optimalPosition;
-            //                //var optimalPosition = new Vector2f(gameModel.Enemies[j].Position.X + (gameModel.Enemies[j].Speed * (float)Math.Cos(gameModel.Enemies[j].Rotation * Math.PI / 180)), gameModel.Enemies[j].Position.Y + (gameModel.Enemies[j].Speed * (float)Math.Sin(gameModel.Enemies[j].Rotation * Math.PI / 180)));
-            //                //gameModel.Enemies[j].Position = optimalPosition;
-
-            //                j = 0;
-            //            }
-            //        }
-            //    }
-            //}
-
             // ENEMY COLLISION DETECTION WITH WALL!!!
-
             //foreach (var enemy in gameModel.Enemies)
             //{
             //    for (int y = -2; y < 2; y++)
@@ -438,6 +420,14 @@ namespace Logic.Game.Classes
             {
                 gameModel.Enemies[enemyIdx].Gun.CurrentAmmo = gameModel.Enemies[enemyIdx].Gun.MaxAmmo;
             }
+        }
+
+        public float DistanceBetweenPlayer(int enemyIdx)
+        {
+            // Calculate distance between enemy and player
+            float distance = (float)Math.Sqrt(Math.Pow(gameModel.Enemies[enemyIdx].Position.X - gameModel.Player.Position.X, 2) + Math.Pow(gameModel.Enemies[enemyIdx].Position.Y - gameModel.Player.Position.Y, 2));
+
+            return distance;
         }
     }
 }

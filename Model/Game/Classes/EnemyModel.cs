@@ -12,5 +12,6 @@ namespace Model.Game.Classes
         public Dictionary<MovementDirection, AnimationModel> Animations { get; set; }
         public int RewardXP { get; set; }
         public bool IsShooting { get; set; }
+        public float SightDistance { get; set; }
     }
 }
