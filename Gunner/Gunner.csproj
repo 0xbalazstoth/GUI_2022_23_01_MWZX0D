@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="Assets\Fonts\FreeMono.ttf" />
+    <None Remove="Assets\Fonts\VT323.ttf" />
     <None Remove="Assets\Sounds\coin.ogg" />
     <None Remove="Assets\Sounds\gun_empty.ogg" />
     <None Remove="Assets\Sounds\gun_reload.ogg" />
@@ -54,6 +55,9 @@
 
   <ItemGroup>
     <Content Include="Assets\Fonts\FreeMono.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Fonts\VT323.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\coin.ogg">
