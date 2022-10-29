@@ -26,5 +26,6 @@ namespace Logic.Game.Interfaces
         void SpawnItems();
         void Music();
         void CameraEdges();
+        void DebugMode();
     }
 }

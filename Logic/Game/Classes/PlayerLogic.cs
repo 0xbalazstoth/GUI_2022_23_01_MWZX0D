@@ -38,6 +38,8 @@ namespace Logic.Game.Classes
             this.gameModel.Player.Speed = gameModel.Player.MaxSpeed;
             this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
             this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP;
+            
+            this.gameModel.Player.Hitbox = new RectangleShape();
 
             gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
@@ -197,7 +199,7 @@ namespace Logic.Game.Classes
                 return;
             }
 
-            for (int y = -1; y < 1; y++)
+            for (int y = -2; y < 2; y++)
             {
                 for (int x = -2; x < 2; x++)
                 {
@@ -210,7 +212,7 @@ namespace Logic.Game.Classes
 
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
                     var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
-                    var rect = gameModel.Player.GetGlobalBounds();
+                    var rect = new FloatRect(gameModel.Player.GetGlobalBounds().Left, gameModel.Player.GetGlobalBounds().Top, gameModel.Player.Hitbox.Size.X, gameModel.Player.Hitbox.Size.Y);
 
                     if (rect.Intersects(tileRect))
                     {

@@ -133,6 +133,10 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer(RenderWindow window)
         {
+            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 1f, gameModel.Player.GetGlobalBounds().Height - 1f);
+            gameModel.Player.Hitbox.Position = new Vector2f(gameModel.Player.Position.X, gameModel.Player.Position.Y);
+            gameModel.Player.Hitbox.Origin = new Vector2f(gameModel.Player.Origin.X, gameModel.Player.Origin.Y);
+
             playerLogic.UpdateAnimationTextures();
             playerLogic.UpdateWorldPositionByMouse(window);
             playerLogic.UpdateDeltaTime(deltaTime);
@@ -179,6 +183,10 @@ namespace Logic.Game.Classes
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
+                gameModel.Enemies[i].Hitbox.Size = new Vector2f(gameModel.Enemies[i].GetGlobalBounds().Width - 1f, gameModel.Enemies[i].GetGlobalBounds().Height - 1f);
+                gameModel.Enemies[i].Hitbox.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
+                gameModel.Enemies[i].Hitbox.Origin = new Vector2f(gameModel.Enemies[i].Origin.X, gameModel.Enemies[i].Origin.Y);
+
                 float distance = enemyLogic.DistanceBetweenPlayer(i);
 
                 if (distance < gameModel.Enemies[i].SightDistance)
@@ -440,6 +448,11 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.Map.GetMapWidth - gameModel.CameraView.Size.Y / 2f);
             }
+        }
+
+        public void DebugMode()
+        {
+            
         }
     }
 }

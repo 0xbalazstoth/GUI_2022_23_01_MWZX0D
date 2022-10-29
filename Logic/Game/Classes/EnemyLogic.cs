@@ -19,7 +19,7 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        List<Vector2i> path;
+        //List<Vector2i> path;
 
         public EnemyLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
@@ -43,7 +43,7 @@ namespace Logic.Game.Classes
                 gameModel.Enemies[i].HPText.FillColor = Color.Red;
             }
 
-            path = new List<Vector2i>();
+            //path = new List<Vector2i>();
         }
 
         public void PathToPlayer()
@@ -74,16 +74,18 @@ namespace Logic.Game.Classes
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
+                gameModel.Enemies[i].Path = new List<Vector2i>();
+
                 Vector2i start = new Vector2i((int)gameModel.Player.Position.X / 32, (int)gameModel.Player.Position.Y / 32);
                 Vector2i end = new Vector2i((int)gameModel.Enemies[i].Position.X / 32, (int)gameModel.Enemies[i].Position.Y / 32);
 
                 // add the start point to the list
-                path.Add(start);
+                gameModel.Enemies[i].Path.Add(start);
 
-                if (path[path.Count - 1] != end)
+                if (gameModel.Enemies[i].Path[gameModel.Enemies[i].Path.Count - 1] != end)
                 {
                     // get the last point in the list
-                    Vector2i last = path[path.Count - 1];
+                    Vector2i last = gameModel.Enemies[i].Path[gameModel.Enemies[i].Path.Count - 1];
 
                     // get the adjacent points
                     List<Vector2i> adjacent = new List<Vector2i>();
@@ -104,10 +106,10 @@ namespace Logic.Game.Classes
                                 if (grid[point.X + point.Y * gameModel.Map.Width] != collidibleId)
                                 {
                                     // check if the point is not already in the list
-                                    if (!path.Contains(point))
+                                    if (!gameModel.Enemies[i].Path.Contains(point))
                                     {
                                         // add the point to the list
-                                        path.Add(point);
+                                        gameModel.Enemies[i].Path.Add(point);
                                     }
                                 }
                             }
@@ -118,9 +120,9 @@ namespace Logic.Game.Classes
                 // Create copy of the path
                 List<Vector2i> pathCopy = new List<Vector2i>();
 
-                for (int j = 0; j < path.Count; j++)
+                for (int j = 0; j < gameModel.Enemies[i].Path.Count; j++)
                 {
-                    pathCopy.Add(path[j]);
+                    pathCopy.Add(gameModel.Enemies[i].Path[j]);
                 }
 
                 // Remove the first point in the path
@@ -147,9 +149,8 @@ namespace Logic.Game.Classes
                         gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y + 1);
                     }
                 }
-
                 // Clear the path
-                path.Clear();
+                gameModel.Enemies[i].Path.Clear();
             }
         }
 
@@ -323,6 +324,7 @@ namespace Logic.Game.Classes
                 enemy.Gun.Damage = 10;
                 enemy.Gun.MaxAmmo = 15;
                 enemy.Gun.Recoil = 5f;
+                enemy.Hitbox = new RectangleShape();
                 enemy.Gun.ReloadTime = TimeSpan.FromSeconds(15);
                 enemy.Gun.Scale = new Vector2f(2, 2);
                 enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
@@ -339,7 +341,7 @@ namespace Logic.Game.Classes
                 enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Eye;
                 //gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-
+                
                 gameModel.Enemies.Add(enemy);
                 for (int j = 0; j < i - 1; j++)
                 {

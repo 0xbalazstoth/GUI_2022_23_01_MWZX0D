@@ -22,5 +22,6 @@ namespace Model.Game.Classes
         public List<GunModel> Guns { get; set; }
         public List<ICollectibleItem> CollectibleItems { get; set; }
         public List<Music> Musics { get; set; }
+        public bool DebugMode { get; set; }
     }
 }

@@ -172,6 +172,14 @@ namespace Renderer
                     gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 16, 6);
                 }
 
+                if (gameModel.DebugMode)
+                {
+                    gameModel.Enemies[i].Hitbox.FillColor = Color.Transparent;
+                    gameModel.Enemies[i].Hitbox.OutlineColor = Color.Red;
+                    gameModel.Enemies[i].Hitbox.OutlineThickness = 1.0f;
+                    window.Draw(gameModel.Enemies[i].Hitbox);
+                }
+
                 window.Draw(gameModel.Enemies[i]);
                 window.Draw(gameModel.Enemies[i].Gun);
 
@@ -240,6 +248,14 @@ namespace Renderer
             gameModel.Player.Animations[MovementDirection.Down].Texture = playerTextures[MovementDirection.Down];
             gameModel.Player.Animations[MovementDirection.Down].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.Down].Texture);
             gameModel.Player.Animations[MovementDirection.Down].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.Y);
+
+            if (gameModel.DebugMode)
+            {
+                gameModel.Player.Hitbox.FillColor = Color.Transparent;
+                gameModel.Player.Hitbox.OutlineColor = Color.Red;
+                gameModel.Player.Hitbox.OutlineThickness = 1.0f;
+                window.Draw(gameModel.Player.Hitbox);
+            }
 
             window.Draw(gameModel.Player);
             window.Draw(gameModel.Player.Gun);

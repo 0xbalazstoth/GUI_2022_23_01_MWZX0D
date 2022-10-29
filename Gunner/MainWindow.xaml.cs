@@ -208,6 +208,7 @@ namespace Gunner
             gameController.HandleMovementInput();
             gameController.HandleShootInput();
             gameController.HandleReloadInput();
+            gameController.HandleDebugMode();
             //window.MouseWheelScrolled += (s, e) =>
             //{
             //    int gunIdx = 0;
