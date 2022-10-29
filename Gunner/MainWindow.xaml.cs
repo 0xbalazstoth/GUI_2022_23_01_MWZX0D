@@ -104,20 +104,10 @@ namespace Gunner
         public MainWindow()
         {
             InitializeComponent();
-            host = new WindowsFormsHost();
-            host.Name = "SfmlSurfaceHost";
-
-            WindowsFormsHost host = new WindowsFormsHost();
-            host.Name = "SfmlSurfaceHost";
 
             sfmlSurface = new SFMLSurface();
-            host.Child = sfmlSurface;
+            SfmlSurfaceHost.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
-
-
-            //sfmlSurface = new SFMLSurface();
-            //SfmlSurfaceHost.Child = sfmlSurface;
-            //window = new RenderWindow(sfmlSurface.Handle);
 
             //CompositionTarget.Rendering += RunGame;
             CompositionTargetEx.Rendering += RunGame;
@@ -142,11 +132,6 @@ namespace Gunner
             InitGameplay();
 
             this.gameController = new GameController(gameModel, playerLogic);
-        }
-
-        private void HostGame()
-        {
-            dockPanel.Children.Add(host);
         }
 
         private void InitGameplay()
@@ -325,22 +310,6 @@ namespace Gunner
             //}
 
             //gameModel.Player.Gun = gameModel.Guns[gunIdx];
-        }
-
-        private void btnNewGame_Click(object sender, RoutedEventArgs e)
-        {
-            HostGame();
-            dockPanel.Children.Remove(gridMainMenu);
-        }
-
-        private void btnLoadGame_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnQuitGame_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
         }
     }
 }

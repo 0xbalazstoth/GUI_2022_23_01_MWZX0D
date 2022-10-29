@@ -7,26 +7,6 @@
         mc:Ignorable="d"
         Title="Gunner" MinHeight="1024" MinWidth="1280" KeyDown="Window_KeyDown" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <DockPanel x:Name="dockPanel" LastChildFill="True">
-        <!--<TextBlock Text="GAME TITLE" DockPanel.Dock="Top"/>
-        <Button Content="BUTTON" DockPanel.Dock="Top"></Button>-->
-        <!--<WindowsFormsHost PreviewMouseWheel="SfmlSurfaceHost_PreviewMouseWheel" x:Name="SfmlSurfaceHost" />-->
-        <Grid x:Name="gridMainMenu" Margin="100">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-
-            <Button Grid.Row="0" x:Name="btnNewGame" Click="btnNewGame_Click" Margin="80">
-                New
-            </Button>
-            <Button Grid.Row="1" x:Name="btnLoadGame" Click="btnLoadGame_Click" Margin="80">
-                Load
-            </Button>
-            <Button Grid.Row="2" x:Name="btnQuitGame" Click="btnQuitGame_Click" Margin="80">
-                Quit
-            </Button>
-        </Grid>
-
+        <WindowsFormsHost PreviewMouseWheel="SfmlSurfaceHost_PreviewMouseWheel" x:Name="SfmlSurfaceHost" />
     </DockPanel>
 </Window>
