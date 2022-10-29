@@ -71,5 +71,17 @@ namespace Gunner.Controller
                 inventoryWindow.ShowDialog();
             }
         }
+
+        public void HandleDebugMode()
+        {
+            if (IsKeyPressed(Key.F1))
+            {
+                gameModel.DebugMode = true;
+            }
+            else if (IsKeyPressed(Key.F2))
+            {
+                gameModel.DebugMode = false;
+            }
+        }
     }
 }
