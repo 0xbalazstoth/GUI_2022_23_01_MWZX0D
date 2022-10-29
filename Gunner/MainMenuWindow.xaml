@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainMenuWindow" Height="450" Width="800">
     <Window.Background>
-        <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill"/>
+        <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"/>
     </Window.Background>
     <Grid x:Name="gridMainMenu" Height="100" Width="100">
         <Grid.RowDefinitions>

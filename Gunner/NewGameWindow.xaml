@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="NewGameWindow" Height="450" Width="800">
+        Title="NewGameWindow" Height="300" Width="300">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
@@ -15,8 +15,8 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
-            <TextBox x:Name="txtBoxUsername" Grid.Row="0" Margin="50" FontSize="20"></TextBox>
-            <Button x:Name="btnCreateNewGame" Grid.Row="1" Margin="50" Content="New game" FontSize="20"></Button>
+            <TextBox x:Name="txtBoxUsername" Grid.Row="0" Height="50" Margin="5" FontSize="20"></TextBox>
+            <Button x:Name="btnCreateNewGame" Grid.Row="1" Margin="5" Content="New game" FontSize="20"></Button>
         </Grid>
     </Grid>
 </Window>

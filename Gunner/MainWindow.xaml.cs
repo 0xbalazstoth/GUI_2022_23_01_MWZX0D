@@ -126,7 +126,7 @@ namespace Gunner
             this.animationLogic = new AnimationLogic(gameModel);
 
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
-            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "FreeMono.ttf");
+            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "VT323.ttf");
 
             InitSystem();
             InitGameplay();
