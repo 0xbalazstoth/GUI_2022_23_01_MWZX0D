@@ -26,6 +26,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -73,6 +74,7 @@ namespace Gunner
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+        private WindowsFormsHost host;
         private SFMLSurface sfmlSurface;
 
         private const uint WINDOW_WIDTH = 600;
@@ -102,10 +104,17 @@ namespace Gunner
         public MainWindow()
         {
             InitializeComponent();
+            host = new WindowsFormsHost();
+            host.Name = "SfmlSurfaceHost";
 
             sfmlSurface = new SFMLSurface();
-            SfmlSurfaceHost.Child = sfmlSurface;
+            host.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
+
+
+            //sfmlSurface = new SFMLSurface();
+            //SfmlSurfaceHost.Child = sfmlSurface;
+            //window = new RenderWindow(sfmlSurface.Handle);
 
             //CompositionTarget.Rendering += RunGame;
             CompositionTargetEx.Rendering += RunGame;
@@ -130,6 +139,11 @@ namespace Gunner
             InitGameplay();
 
             this.gameController = new GameController(gameModel, playerLogic);
+        }
+
+        private void HostGame()
+        {
+            dockPanel.Children.Add(host);
         }
 
         private void InitGameplay()
@@ -308,6 +322,22 @@ namespace Gunner
             //}
 
             //gameModel.Player.Gun = gameModel.Guns[gunIdx];
+        }
+
+        private void btnNewGame_Click(object sender, RoutedEventArgs e)
+        {
+            HostGame();
+            dockPanel.Children.Remove(gridMainMenu);
+        }
+
+        private void btnLoadGame_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnQuitGame_Click(object sender, RoutedEventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
