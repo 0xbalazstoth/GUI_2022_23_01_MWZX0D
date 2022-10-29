@@ -67,13 +67,18 @@ namespace Logic.Game.Classes
             
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             
-            CreateSpawnableItems();
+            CreateItems();
 
             gameModel.Musics = new List<Music>();
             gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
             gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
 
             Music();
+
+            var spawnPoints = GetSafeSpawnPoints();
+            Random rnd = new Random();
+            int spawnPointIndex = rnd.Next(0, spawnPoints.Count);
+            gameModel.Player.Position = spawnPoints[spawnPointIndex];
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -192,7 +197,7 @@ namespace Logic.Game.Classes
                 if (distance < gameModel.Enemies[i].SightDistance)
                 {
                     enemyLogic.Shoot(i);
-                    enemyLogic.PathToPlayer();
+                    enemyLogic.PathToPlayer(i);
                 }
             }
 
@@ -266,7 +271,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void CreateSpawnableItems()
+        public void CreateItems()
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
@@ -453,6 +458,34 @@ namespace Logic.Game.Classes
         public void DebugMode()
         {
             
+        }
+
+        public List<Vector2f> GetSafeSpawnPoints()
+        {
+            // Find spawn points in map
+            var spawnPoints = new List<Vector2f>();
+            for (int i = 0; i < gameModel.Map.MapLayers[0].Length; i++)
+            {
+                if (gameModel.Map.MapLayers[0][i] == 0)
+                {
+                    // Check if its not outside the map
+                    if (i % gameModel.Map.Width != 0 && i % gameModel.Map.Width != gameModel.Map.Width - 5)
+                    {
+                        // Check if its not on the edge of the map
+                        if (i > gameModel.Map.Width && i < gameModel.Map.MapLayers[0].Length - gameModel.Map.Width - 5)
+                        {
+                            // Check if its not on the edge of the map
+                            //spawnPoints.Add(new Vector2f((i % gameModel.Map.Width) * gameModel.Map.TileWidth, (i / gameModel.Map.Width) * gameModel.Map.TileHeight));
+
+                            int x = i % (int)gameModel.Map.Width;
+                            int y = i / (int)gameModel.Map.Width;
+                            spawnPoints.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+                        }
+                    }
+                }
+            }
+
+            return spawnPoints;
         }
     }
 }

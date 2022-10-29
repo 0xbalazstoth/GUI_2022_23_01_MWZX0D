@@ -22,10 +22,11 @@ namespace Logic.Game.Interfaces
         void SetTilemap(string tmxFile, string tilesetFile);
         Clock GetDeltaTimeClock { get; }
         float GetDeltaTime { get; }
-        void CreateSpawnableItems();
+        void CreateItems();
         void SpawnItems();
         void Music();
         void CameraEdges();
         void DebugMode();
+        List<Vector2f> GetSafeSpawnPoints();
     }
 }

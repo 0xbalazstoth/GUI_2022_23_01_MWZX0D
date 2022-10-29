@@ -46,112 +46,106 @@ namespace Logic.Game.Classes
             //path = new List<Vector2i>();
         }
 
-        public void PathToPlayer()
+        public void PathToPlayer(int enemyIdx)
         {
             // Enemy stay inside the map
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            if (gameModel.Enemies[enemyIdx].Position.X < 0)
             {
-                if (gameModel.Enemies[i].Position.X < 0)
-                {
-                    gameModel.Enemies[i].Position = new Vector2f(0, gameModel.Enemies[i].Position.Y);
-                }
-                if (gameModel.Enemies[i].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
-                {
-                    gameModel.Enemies[i].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[i].Position.Y);
-                }
-                if (gameModel.Enemies[i].Position.Y < 0)
-                {
-                    gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, 0);
-                }
-                if (gameModel.Enemies[i].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
-                {
-                    gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
-                }
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(0, gameModel.Enemies[enemyIdx].Position.Y);
+            }
+            if (gameModel.Enemies[enemyIdx].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
+            {
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[enemyIdx].Position.Y);
+            }
+            if (gameModel.Enemies[enemyIdx].Position.Y < 0)
+            {
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, 0);
+            }
+            if (gameModel.Enemies[enemyIdx].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
+            {
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
             }
 
-            // A* algorithm
             int[] grid = gameModel.Map.MapLayers[1];
 
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            gameModel.Enemies[enemyIdx].Path = new List<Vector2i>();
+
+            Vector2i start = new Vector2i((int)gameModel.Player.Position.X / 32, (int)gameModel.Player.Position.Y / 32);
+            Vector2i end = new Vector2i((int)gameModel.Enemies[enemyIdx].Position.X / 32, (int)gameModel.Enemies[enemyIdx].Position.Y / 32);
+
+            // add the start point to the list
+            gameModel.Enemies[enemyIdx].Path.Add(start);
+
+            if (gameModel.Enemies[enemyIdx].Path[gameModel.Enemies[enemyIdx].Path.Count - 1] != end)
             {
-                gameModel.Enemies[i].Path = new List<Vector2i>();
+                // get the last point in the list
+                Vector2i last = gameModel.Enemies[enemyIdx].Path[gameModel.Enemies[enemyIdx].Path.Count - 1];
 
-                Vector2i start = new Vector2i((int)gameModel.Player.Position.X / 32, (int)gameModel.Player.Position.Y / 32);
-                Vector2i end = new Vector2i((int)gameModel.Enemies[i].Position.X / 32, (int)gameModel.Enemies[i].Position.Y / 32);
+                // get the adjacent points
+                List<Vector2i> adjacent = new List<Vector2i>();
+                adjacent.Add(new Vector2i(last.X, last.Y - 1));
+                adjacent.Add(new Vector2i(last.X + 1, last.Y));
+                adjacent.Add(new Vector2i(last.X, last.Y + 1));
+                adjacent.Add(new Vector2i(last.X - 1, last.Y));
 
-                // add the start point to the list
-                gameModel.Enemies[i].Path.Add(start);
-
-                if (gameModel.Enemies[i].Path[gameModel.Enemies[i].Path.Count - 1] != end)
+                // for each adjacent point
+                foreach (Vector2i point in adjacent)
                 {
-                    // get the last point in the list
-                    Vector2i last = gameModel.Enemies[i].Path[gameModel.Enemies[i].Path.Count - 1];
-
-                    // get the adjacent points
-                    List<Vector2i> adjacent = new List<Vector2i>();
-                    adjacent.Add(new Vector2i(last.X, last.Y - 1));
-                    adjacent.Add(new Vector2i(last.X + 1, last.Y));
-                    adjacent.Add(new Vector2i(last.X, last.Y + 1));
-                    adjacent.Add(new Vector2i(last.X - 1, last.Y));
-
-                    // for each adjacent point
-                    foreach (Vector2i point in adjacent)
+                    // check if the point is in the grid
+                    if (point.X >= 0 && point.X < gameModel.Map.Width && point.Y >= 0 && point.Y < gameModel.Map.Height)
                     {
-                        // check if the point is in the grid
-                        if (point.X >= 0 && point.X < gameModel.Map.Width && point.Y >= 0 && point.Y < gameModel.Map.Height)
+                        // check if the point is not a wall
+                        foreach (var collidibleId in gameModel.Map.CollidableIDs)
                         {
-                            // check if the point is not a wall
-                            foreach (var collidibleId in gameModel.Map.CollidableIDs)
+                            if (grid[point.X + point.Y * gameModel.Map.Width] != collidibleId)
                             {
-                                if (grid[point.X + point.Y * gameModel.Map.Width] != collidibleId)
+                                // check if the point is not already in the list
+                                if (!gameModel.Enemies[enemyIdx].Path.Contains(point))
                                 {
-                                    // check if the point is not already in the list
-                                    if (!gameModel.Enemies[i].Path.Contains(point))
-                                    {
-                                        // add the point to the list
-                                        gameModel.Enemies[i].Path.Add(point);
-                                    }
+                                    // add the point to the list
+                                    gameModel.Enemies[enemyIdx].Path.Add(point);
                                 }
                             }
                         }
                     }
                 }
-
-                // Create copy of the path
-                List<Vector2i> pathCopy = new List<Vector2i>();
-
-                for (int j = 0; j < gameModel.Enemies[i].Path.Count; j++)
-                {
-                    pathCopy.Add(gameModel.Enemies[i].Path[j]);
-                }
-
-                // Remove the first point in the path
-                pathCopy.RemoveAt(0);
-
-                // Move the enemy
-                if (pathCopy.Count > 0)
-                {
-                    if (pathCopy[0].X < gameModel.Enemies[i].Position.X / gameModel.Map.TileWidth)
-                    {
-                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X - 1, gameModel.Enemies[i].Position.Y);
-                    }
-                    else if (pathCopy[0].X > gameModel.Enemies[i].Position.X / gameModel.Map.TileWidth)
-                    {
-                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X + 1, gameModel.Enemies[i].Position.Y);
-                    }
-
-                    if (pathCopy[0].Y < gameModel.Enemies[i].Position.Y / gameModel.Map.TileHeight)
-                    {
-                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y - 1);
-                    }
-                    else if (pathCopy[0].Y > gameModel.Enemies[i].Position.Y / gameModel.Map.TileHeight)
-                    {
-                        gameModel.Enemies[i].Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y + 1);
-                    }
-                }
-                // Clear the path
-                gameModel.Enemies[i].Path.Clear();
             }
+
+            // Create copy of the path
+            List<Vector2i> pathCopy = new List<Vector2i>();
+
+            for (int j = 0; j < gameModel.Enemies[enemyIdx].Path.Count; j++)
+            {
+                pathCopy.Add(gameModel.Enemies[enemyIdx].Path[j]);
+            }
+
+            // Remove the first point in the path
+            pathCopy.RemoveAt(0);
+
+            // Move the enemy
+            if (pathCopy.Count > 0)
+            {
+                if (pathCopy[0].X < gameModel.Enemies[enemyIdx].Position.X / gameModel.Map.TileWidth)
+                {
+                    gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X - 1, gameModel.Enemies[enemyIdx].Position.Y);
+                }
+                else if (pathCopy[0].X > gameModel.Enemies[enemyIdx].Position.X / gameModel.Map.TileWidth)
+                {
+                    gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X + 1, gameModel.Enemies[enemyIdx].Position.Y);
+                }
+
+                if (pathCopy[0].Y < gameModel.Enemies[enemyIdx].Position.Y / gameModel.Map.TileHeight)
+                {
+                    gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y - 1);
+                }
+                else if (pathCopy[0].Y > gameModel.Enemies[enemyIdx].Position.Y / gameModel.Map.TileHeight)
+                {
+                    gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y + 1);
+                }
+            }
+            
+            // Clear the path
+            gameModel.Enemies[enemyIdx].Path.Clear();
         }
 
         public void HandleBulletCollision()
@@ -313,7 +307,7 @@ namespace Logic.Game.Classes
 
         public void CreateEnemies()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 3; i++)
             {
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
@@ -325,7 +319,7 @@ namespace Logic.Game.Classes
                 enemy.Gun.MaxAmmo = 15;
                 enemy.Gun.Recoil = 5f;
                 enemy.Hitbox = new RectangleShape();
-                enemy.Gun.ReloadTime = TimeSpan.FromSeconds(15);
+                enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
                 enemy.Gun.Scale = new Vector2f(2, 2);
                 enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);

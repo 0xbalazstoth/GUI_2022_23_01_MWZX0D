@@ -28,7 +28,7 @@ namespace Logic.Game.Classes
         private Vector2f movementDirection;
         private Vector2f previousPosition;
 
-        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, uint windowWidth, uint windowHeight)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
@@ -36,12 +36,11 @@ namespace Logic.Game.Classes
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.MaxSpeed = 180f;
             this.gameModel.Player.Speed = gameModel.Player.MaxSpeed;
-            this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
             this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP;
             
             this.gameModel.Player.Hitbox = new RectangleShape();
 
-            gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
+            gameModel.Player.Gun = gameModel.Guns[0]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
             
             previousPosition = this.gameModel.Player.Position;
