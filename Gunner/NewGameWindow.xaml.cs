@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Repository.Classes;
+using Repository.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,38 @@ namespace Gunner
         public NewGameWindow()
         {
             InitializeComponent();
+        }
+
+        private void btnCreateNewGame_Click(object sender, RoutedEventArgs e)
+        {
+            // Create new game
+            SaveHandler saveHandler = new SaveHandler();
+
+            try
+            {
+                saveHandler.NewGame(txtBoxUsername.Text);
+
+                // Run game
+                MainWindow mainWindow = new MainWindow(txtBoxUsername.Text);
+                mainWindow.Show();
+
+                // Close this window
+                Close();
+
+                // Get MainMenuWindow and close it
+                MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
+                mainMenuWindow.Close();
+            }
+            catch (SaveAlreadyExistsException error)
+            {
+                lblError.Visibility = Visibility.Visible;
+                lblError.Text = error.Message;
+            }
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="MainMenuWindow" Height="450" Width="800">
+        Title="MainMenuWindow" WindowState="Normal" WindowStyle="None" ResizeMode="NoResize" Height="450" WindowStartupLocation="CenterScreen" Width="800" KeyDown="Window_KeyDown">
     <Window.Background>
         <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"/>
     </Window.Background>

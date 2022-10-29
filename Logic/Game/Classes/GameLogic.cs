@@ -30,7 +30,6 @@ namespace Logic.Game.Classes
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic objectEntityLogic;
         private IBulletLogic bulletLogic;
-        private ITilemapRepository tilemapRepository;
 
         private Clock deltaTimeClock;
         private float deltaTime;
@@ -46,7 +45,6 @@ namespace Logic.Game.Classes
             this.enemyLogic = enemyLogic;
             this.objectEntityLogic = objectEntityLogic;
             this.bulletLogic = bulletLogic;
-            tilemapRepository = new TilemapRepository();
 
             deltaTimeClock = new Clock();
 
