@@ -11,8 +11,12 @@ namespace Logic.Game.Interfaces
     public interface IBulletLogic
     {
         void UpdatePlayerBullets();
+        void UpdateEnemiesBullets();
         void HandlePlayerBulletMapCollision(RenderWindow window);
+        void HandleEnemiesBulletMapCollision(RenderWindow window);
         void HandlePlayerBulletObjectCollision(Sprite item);
-        void UpdateBulletAnimationTextures();
+        void HandleEnemiesBulletObjectCollision(Sprite item);
+        void UpdatePlayerBulletAnimationTextures();
+        void UpdateEnemiesBulletAnimationTextures();
     }
 }

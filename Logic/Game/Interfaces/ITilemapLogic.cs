@@ -1,4 +1,5 @@
-﻿using SFML.System;
+﻿using Model.Game.Classes;
+using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ namespace Logic.Game.Interfaces
         int GetTileID(int layer, int x, int y);
         Vector2f GetTileWorldPosition(int x, int y);
         void UpdateItemAnimationTextures();
-        void Generation(int seed = 209323094);
+        int[] MapGeneration(uint height, uint width, float scale, int seed = 209323094);
+        int[] CollisionMapGeneration(uint height, uint width, float scale, int seed = 209323094);
+        void InitializeVertices(TilemapModel map);
+        Vector2f GetTextureCoordinatesByTileID(TilemapModel map, int id);
     }
 }

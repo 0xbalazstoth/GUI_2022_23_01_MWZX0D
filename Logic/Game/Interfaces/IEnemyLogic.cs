@@ -9,14 +9,19 @@ namespace Logic.Game.Interfaces
 {
     public interface IEnemyLogic
     {
-        void UpdateDeltaTile(float dt);
+        void UpdateDeltaTime(float dt);
         void HandleMovement();
-        void UpdateAnimationTextures(float dt, Texture[] texture, IntRect[] textureRect);
+        void UpdateAnimationTextures();
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
-        void PathToPlayer();
+        void PathToPlayer(int enemyIdx);
         void HandleBulletCollision();
         void UpdateHP();
-        void Shoot();
+        void Shoot(int enemyIdx);
+        void FlipAndRotateGun();
+        void CreateEnemies();
+        void SpawnEnemies(float dt);
+        void ReloadGun(int enemyIdx);
+        float DistanceBetweenPlayer(int enemyIdx);
     }
 }

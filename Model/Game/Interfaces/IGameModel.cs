@@ -16,6 +16,7 @@ namespace Model.Game.Classes
         public View CameraView { get; set; }
         public View UIView { get; set; }
         public TilemapModel Map { get; set; }
+        public TilemapModel KillArenaMap { get; set; }
         public PlayerModel Player { get; set; }
         public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get; set; }
@@ -25,5 +26,6 @@ namespace Model.Game.Classes
         public List<GunModel> Guns { get; set; }
         public List<ICollectibleItem> CollectibleItems { get; set; }
         public List<Music> Musics { get; set; }
+        public bool DebugMode { get; set; }
     }
 }
