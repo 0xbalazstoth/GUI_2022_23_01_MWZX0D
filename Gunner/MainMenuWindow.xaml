@@ -1,0 +1,25 @@
+﻿<Window x:Class="Gunner.MainMenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gunner"
+        mc:Ignorable="d"
+        Title="MainMenuWindow" Height="450" Width="800">
+    <Window.Background>
+        <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill"/>
+    </Window.Background>
+    <Grid x:Name="gridMainMenu">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" x:Name="btnNewGame" Click="btnNewGame_Click" Content="New"></Button>
+        <Button Grid.Row="1" x:Name="btnLoadGame" Click="btnLoadGame_Click" Content="Load"></Button>
+        <Button Grid.Row="2" x:Name="btnHighscore" Click="btnHighscore_Click" Content="Highscore"></Button>
+        <Button Grid.Row="3" x:Name="btnQuitGame" Click="btnQuitGame_Click" Content="Quit"></Button>
+
+    </Grid>
+</Window>

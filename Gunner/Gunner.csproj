@@ -49,6 +49,7 @@
     <None Remove="csfml-Window.dll" />
     <None Remove="menu.png" />
     <None Remove="openal32.dll" />
+    <None Remove="splash_screen.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -181,6 +182,7 @@
 
   <ItemGroup>
     <Resource Include="menu.png" />
+    <Resource Include="splash_screen.png" />
   </ItemGroup>
 
   <ItemGroup>
