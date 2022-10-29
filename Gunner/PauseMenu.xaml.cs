@@ -23,5 +23,30 @@ namespace Gunner
         {
             InitializeComponent();
         }
+
+        private void btnResume_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void btnSaveGame_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnExitToMainMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MainMenuWindow mainMenuWindow = new MainMenuWindow();
+            //Save();
+            mainMenuWindow.ShowDialog();
+            Close();
+            
+        }
+
+        private void btnQuitGame_Click(object sender, RoutedEventArgs e)
+        {
+            //Save();
+            Environment.Exit(0);
+        }
     }
 }
