@@ -455,11 +455,6 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void DebugMode()
-        {
-            
-        }
-
         public List<Vector2f> GetSafeSpawnPoints()
         {
             // Find spawn points in map

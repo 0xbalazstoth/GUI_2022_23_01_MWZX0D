@@ -26,7 +26,6 @@ namespace Logic.Game.Interfaces
         void SpawnItems();
         void Music();
         void CameraEdges();
-        void DebugMode();
         List<Vector2f> GetSafeSpawnPoints();
     }
 }

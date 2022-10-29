@@ -16,7 +16,6 @@ namespace Logic.Game.Classes
 {
     // Possible tiles:
     // - https://mportorodrigo.itch.io/the-lost-dungeon-tileset
-    // 
 
     public class TilemapLogic : ITilemapLogic
     {
@@ -42,7 +41,6 @@ namespace Logic.Game.Classes
             int grassType2 = 2;
             int grassType3 = 3;
             int wall = 4;
-            int grassType4 = 5;
 
             int[] generatedMap = new int[height * width];
 
