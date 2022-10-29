@@ -124,58 +124,32 @@ namespace Logic.Game.Classes
                     Speed = 3f,
                 });
             }
-
             #endregion
 
-            //#region Enemy animation setup
-            //foreach (EnemyModel enemy in gameModel.Enemies)
-            //{
-            //    enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
-            //    enemy.Animations.Add(MovementDirection.Idle, new AnimationModel()
-            //    {
-            //        Row = 0,
-            //        ColumnsInRow = 5,
-            //        TotalRows = 1,
-            //        TotalColumns = 5,
-            //        Speed = 10f,
-            //    });
+            #region Enemy animation setup
+            foreach (EnemyModel enemy in gameModel.Enemies)
+            {
+                enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
+                
+                enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
 
-            //    enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
-            //    {
-            //        Row = 0,
-            //        ColumnsInRow = 4,
-            //        TotalRows = 1,
-            //        TotalColumns = 4,
-            //        Speed = 10f,
-            //    });
-
-            //    enemy.Animations.Add(MovementDirection.Right, new AnimationModel()
-            //    {
-            //        Row = 0,
-            //        ColumnsInRow = 4,
-            //        TotalRows = 1,
-            //        TotalColumns = 4,
-            //        Speed = 10f,
-            //    });
-
-            //    enemy.Animations.Add(MovementDirection.Up, new AnimationModel()
-            //    {
-            //        Row = 0,
-            //        ColumnsInRow = 8,
-            //        TotalRows = 1,
-            //        TotalColumns = 8,
-            //        Speed = 10f,
-            //    });
-
-            //    enemy.Animations.Add(MovementDirection.Down, new AnimationModel()
-            //    {
-            //        Row = 0,
-            //        ColumnsInRow = 8,
-            //        TotalRows = 1,
-            //        TotalColumns = 8,
-            //        Speed = 10f,
-            //    });
-            //}
+                enemy.Animations.Add(MovementDirection.Right, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
+            }
+            #endregion
         }
 
         public void Update(float dt)
@@ -223,6 +197,43 @@ namespace Logic.Game.Classes
 
                     bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
                     gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                }
+            }
+
+            // Enemy bullet animation
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                {
+                    foreach (var bulletAnimation in gameModel.Enemies[i].Gun.Bullets[j].Animations)
+                    {
+                        bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
+
+                        if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
+                        {
+                            bulletAnimation.Value.Counter = 0f;
+                        }
+                        
+                        bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                    }
+                }
+            }
+
+            // Enemy animation
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                foreach (var enemyAnimation in gameModel.Enemies[i].Animations)
+                {
+                    enemyAnimation.Value.Counter += enemyAnimation.Value.Speed * dt;
+
+                    if (enemyAnimation.Value.Counter >= (float)enemyAnimation.Value.ColumnsInRow)
+                    {
+                        enemyAnimation.Value.Counter = 0f;
+                    }
+                    
+                    enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
+                    gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
                 }
             }
         }

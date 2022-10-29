@@ -120,12 +120,93 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void UpdateBulletAnimationTextures()
+        public void UpdateEnemiesBullets()
+        {
+            foreach (EnemyModel enemy in gameModel.Enemies)
+            {
+                for (int i = 0; i < enemy.Gun.Bullets.Count; i++)
+                {
+                    enemy.Gun.Bullets[i].Bullet.Position += enemy.Gun.Bullets[i].Velocity;
+
+                    float distX = enemy.Gun.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
+                    float distY = enemy.Gun.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
+
+                    if (Math.Sqrt(distX * distX + distY * distY) > 600)
+                    {
+                        enemy.Gun.Bullets.RemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        public void UpdatePlayerBulletAnimationTextures()
         {
             for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
             {
                 gameModel.Player.Gun.Bullets[i].Bullet.Texture = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].Texture;
                 gameModel.Player.Gun.Bullets[i].Bullet.TextureRect = gameModel.Player.Gun.Bullets[i].Animations[gameModel.Player.Gun.GunType].TextureRect;
+            }
+        }
+
+        public void HandleEnemiesBulletMapCollision(RenderWindow window)
+        {
+            foreach (EnemyModel enemy in gameModel.Enemies)
+            {
+                foreach (BulletModel bullet in enemy.Gun.Bullets)
+                {
+                    var xTileposition = bullet.Bullet.Position.X;
+                    var yTileposition = bullet.Bullet.Position.Y;
+                    var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
+
+                    if (tilePosition.X < 0 || tilePosition.X > gameModel.Map.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.Map.Size.Y)
+                    {
+                        enemy.Gun.Bullets.Remove(bullet);
+                        return;
+                    }
+
+                    var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
+                    if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                    {
+                        continue;
+                    }
+
+                    var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
+                    var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                    var rect = bullet.Bullet.GetGlobalBounds();
+
+                    if (rect.Intersects(tileRect))
+                    {
+                        enemy.Gun.Bullets.Remove(bullet);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void HandleEnemiesBulletObjectCollision(Sprite item)
+        {
+            foreach (EnemyModel enemy in gameModel.Enemies)
+            {
+                foreach (BulletModel bullet in enemy.Gun.Bullets)
+                {
+                    if (bullet.Bullet.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
+                    {
+                        enemy.Gun.Bullets.Remove(bullet);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void UpdateEnemiesBulletAnimationTextures()
+        {
+            foreach (EnemyModel enemy in gameModel.Enemies)
+            {
+                for (int i = 0; i < enemy.Gun.Bullets.Count; i++)
+                {
+                    enemy.Gun.Bullets[i].Bullet.Texture = enemy.Gun.Bullets[i].Animations[enemy.Gun.GunType].Texture;
+                    enemy.Gun.Bullets[i].Bullet.TextureRect = enemy.Gun.Bullets[i].Animations[enemy.Gun.GunType].TextureRect;
+                }
             }
         }
     }

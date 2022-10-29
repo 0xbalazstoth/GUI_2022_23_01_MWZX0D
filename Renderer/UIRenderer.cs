@@ -37,7 +37,6 @@ namespace Renderer
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].HPText = new Text();
                 gameModel.Enemies[i].HPText.Font = uiModel.Font;
             }
         }

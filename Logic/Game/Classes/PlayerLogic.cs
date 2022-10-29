@@ -24,25 +24,23 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        private IAnimationLogic animationLogic;
-
+        
         private Vector2f movementDirection;
         private Vector2f previousPosition;
-        private int movementCount;
 
-        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IAnimationLogic animationLogic, uint windowWidth, uint windowHeight)
+        public PlayerLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
-            this.animationLogic = animationLogic;
 
             gameModel.Player = new PlayerModel();
             this.gameModel.Player.MaxSpeed = 180f;
             this.gameModel.Player.Speed = gameModel.Player.MaxSpeed;
-            this.gameModel.Player.Position = new Vector2f(windowWidth / 2f, windowHeight - 100f);
             this.gameModel.Player.CurrentHP = this.gameModel.Player.MaxHP;
+            
+            this.gameModel.Player.Hitbox = new RectangleShape();
 
-            gameModel.Player.Gun = gameModel.Guns[1]; // Default gun
+            gameModel.Player.Gun = gameModel.Guns[0]; // Default gun
             this.gameModel.Player.Gun.Bullets = new List<BulletModel>();
             
             previousPosition = this.gameModel.Player.Position;
@@ -213,7 +211,7 @@ namespace Logic.Game.Classes
 
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
                     var tileRect = new FloatRect(currentTileWorldPosition, new(tilemap.TileSize.X, tilemap.TileSize.Y));
-                    var rect = gameModel.Player.GetGlobalBounds();
+                    var rect = new FloatRect(gameModel.Player.GetGlobalBounds().Left, gameModel.Player.GetGlobalBounds().Top, gameModel.Player.Hitbox.Size.X, gameModel.Player.Hitbox.Size.Y);
 
                     if (rect.Intersects(tileRect))
                     {
@@ -386,46 +384,23 @@ namespace Logic.Game.Classes
 
         public void Shoot()
         {
-            BulletModel tempBullet = new BulletModel();
-            tempBullet.Bullet = new Sprite();
-            tempBullet.Speed = 15f;
-            tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
-            tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
-            tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
-            tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
-
-            tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
-
-            if (gameModel.Player.Gun.GunType == GunType.Pistol)
-            {
-                tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
-                {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 10f,
-                });
-            }
-            else if (gameModel.Player.Gun.GunType == GunType.Shotgun)
-            {
-                tempBullet.Animations.Add(GunType.Shotgun, new AnimationModel()
-                {
-                    Row = 0,
-                    ColumnsInRow = 8,
-                    TotalRows = 1,
-                    TotalColumns = 8,
-                    Speed = 10f,
-                });
-            }
-
             // Player can shoot every 1 seconds
             if (gameModel.Player.Gun.LastFired + gameModel.Player.Gun.FiringInterval < DateTime.Now)
             {
                 // Check if player has ammo based on max ammo
                 if (gameModel.Player.Gun.CurrentAmmo > 0 && (gameModel.Player.Gun.CurrentAmmo <= gameModel.Player.Gun.MaxAmmo))
                 {
-                    gameModel.Player.Gun.Bullets.Add(tempBullet);
+                    if (gameModel.Player.Gun.GunType == GunType.Shotgun)
+                    {
+                        CreateTemporaryShotgunBullet();
+                        PushbackByRecoil(30f);
+                    }
+                    else if (gameModel.Player.Gun.GunType == GunType.Pistol)
+                    {
+                        CreateTemporaryPistolBullet();
+                        PushbackByRecoil(10f);
+                    }
+
                     gameModel.Player.Gun.CurrentAmmo--;
                     gameModel.Player.Gun.LastFired = DateTime.Now;
                     gameModel.Player.Gun.ShootSounds.Add(gameModel.Player.Gun.ShootSound);
@@ -454,6 +429,16 @@ namespace Logic.Game.Classes
                 }
             }
 
+            ShakeCameraByRecoil();
+        }
+
+        public void PushbackByRecoil(float pushbackValue)
+        {
+            gameModel.Player.Position -= gameModel.Player.AimDirectionNormalized * pushbackValue;
+        }
+
+        public void ShakeCameraByRecoil()
+        {
             // Shake camera
             if (gameModel.Player.Gun.CurrentAmmo > 0)
             {
@@ -461,5 +446,63 @@ namespace Logic.Game.Classes
             }
         }
 
+        private void CreateTemporaryShotgunBullet()
+        {
+            List<BulletModel> shotgunBullets = new List<BulletModel>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                BulletModel tempShotgunBullet = new BulletModel();
+                tempShotgunBullet.Bullet = new Sprite();
+                tempShotgunBullet.Speed = 15f;
+                tempShotgunBullet.Bullet.Position = gameModel.Player.Gun.Position;
+                tempShotgunBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempShotgunBullet.Speed;
+                tempShotgunBullet.Bullet.Origin = new Vector2f(tempShotgunBullet.Bullet.TextureRect.Width / 2, tempShotgunBullet.Bullet.TextureRect.Height / 2);
+                tempShotgunBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
+
+                tempShotgunBullet.Animations = new Dictionary<GunType, AnimationModel>();
+                tempShotgunBullet.Animations.Add(GunType.Shotgun, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
+
+                shotgunBullets.Add(tempShotgunBullet);
+            }
+
+            shotgunBullets[0].Bullet.Position = new Vector2f(gameModel.Player.Gun.Position.X - 30f, gameModel.Player.Gun.Position.Y - 15f);
+            shotgunBullets[1].Bullet.Position = new Vector2f(gameModel.Player.Gun.Position.X + 30f, gameModel.Player.Gun.Position.Y + 15f);
+            shotgunBullets[2].Bullet.Position = new Vector2f(gameModel.Player.Gun.Position.X, gameModel.Player.Gun.Position.Y);
+
+            gameModel.Player.Gun.Bullets.Add(shotgunBullets[0]);
+            gameModel.Player.Gun.Bullets.Add(shotgunBullets[1]);
+            gameModel.Player.Gun.Bullets.Add(shotgunBullets[2]);
+        }
+
+        private void CreateTemporaryPistolBullet()
+        {
+            BulletModel tempBullet = new BulletModel();
+            tempBullet.Bullet = new Sprite();
+            tempBullet.Speed = 15f;
+            tempBullet.Bullet.Position = gameModel.Player.Gun.Position;
+            tempBullet.Velocity = gameModel.Player.AimDirectionNormalized * tempBullet.Speed;
+            tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
+            tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
+
+            tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
+            tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+            {
+                Row = 0,
+                ColumnsInRow = 8,
+                TotalRows = 1,
+                TotalColumns = 8,
+                Speed = 10f,
+            });
+
+            gameModel.Player.Gun.Bullets.Add(tempBullet);
+        }
     }
 }

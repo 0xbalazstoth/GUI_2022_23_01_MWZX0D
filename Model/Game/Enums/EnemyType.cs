@@ -2,7 +2,7 @@
 {
     public enum EnemyType
     {
-        Basic,
+        Eye,
         Boss
     }
 }

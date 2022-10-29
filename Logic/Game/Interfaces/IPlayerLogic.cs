@@ -31,5 +31,7 @@ namespace Logic.Game.Interfaces
         void UpdateHP();
         void Shoot();
         void UpdateSpeedPotionTimer();
+        void PushbackByRecoil(float pushbackValue);
+        void ShakeCameraByRecoil();
     }
 }

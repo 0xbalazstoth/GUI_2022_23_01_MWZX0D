@@ -18,12 +18,12 @@ namespace Renderer
     {
         private IGameModel gameModel;
         private string assetsPath;
-        private Texture pistolBulletTexture;
+        private Texture bulletSheetTexture;
         private Texture coinTexture;
         private Texture healthPotionTexture;
         private Texture speedPotionTexture;
         private Dictionary<MovementDirection, Texture> playerTextures;
-        private Texture enemyTexture;
+        private Dictionary<MovementDirection, Texture> enemyTextures;
         private Texture pistolTexture;
         private Texture shotgunTexture;
         private Texture hpTexture;
@@ -34,12 +34,11 @@ namespace Renderer
             this.assetsPath = path;
 
             // Note: Shouldn't be creating texture every frame, this is the reason of fps drops!
-            pistolBulletTexture = new Texture("Assets/Textures/bullet_sheet.png");
+            bulletSheetTexture = new Texture("Assets/Textures/bullet_sheet.png");
             
             coinTexture = new Texture("Assets/Textures/coin_sheet.png");
             healthPotionTexture = new Texture("Assets/Textures/health_potion_sheet.png");
             speedPotionTexture = new Texture("Assets/Textures/speed_potion_sheet.png");
-            enemyTexture = new Texture("Assets/Textures/player.png");
             
             playerTextures = new Dictionary<MovementDirection, Texture>();
             playerTextures.Add(MovementDirection.IdleRight, new Texture("Assets/Textures/idle_right.png"));
@@ -50,6 +49,10 @@ namespace Renderer
             playerTextures.Add(MovementDirection.Up, new Texture("Assets/Textures/move_up.png"));
             playerTextures.Add(MovementDirection.Down, new Texture("Assets/Textures/move_down.png"));
 
+            enemyTextures = new Dictionary<MovementDirection, Texture>();
+            enemyTextures.Add(MovementDirection.Left, new Texture("Assets/Textures/enemy_eye_left.png"));
+            enemyTextures.Add(MovementDirection.Right, new Texture("Assets/Textures/enemy_eye_right.png"));
+
             pistolTexture = new Texture("Assets/Textures/pistol.png");
             shotgunTexture = new Texture("Assets/Textures/shotgun.png");
 
@@ -59,10 +62,10 @@ namespace Renderer
         public void Draw(RenderTarget window)
         {
             DrawTilemap(window);
-            DrawCollectibleItems(window);
-            DrawPlayer(window);
-            DrawEnemy(window);
             DrawObjects(window);
+            DrawCollectibleItems(window);
+            DrawEnemy(window);
+            DrawPlayer(window);
             DrawBullets(window);
         }
 
@@ -72,18 +75,50 @@ namespace Renderer
             {
                 foreach (var pistolBullet in gameModel.Player.Gun.Bullets)
                 {
-                    pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture = pistolBulletTexture;
+                    pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture = bulletSheetTexture;
                     pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].Texture);
                     pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, pistolBullet.Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
                 }
             }
-            else if (gameModel.Player.Gun.GunType == Model.Game.Enums.GunType.Shotgun)
+            
+            if (gameModel.Player.Gun.GunType == Model.Game.Enums.GunType.Shotgun)
             {
                 foreach (var shotgunBullet in gameModel.Player.Gun.Bullets)
                 {
-                    shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture = pistolBulletTexture;
+                    shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture = bulletSheetTexture;
                     shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].Texture);
                     shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, shotgunBullet.Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
+                }
+            }
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
+                {
+                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                    {
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture = bulletSheetTexture;
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
+                    }
+                }
+                
+                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
+                {
+                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                    {
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture = bulletSheetTexture;
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture);
+                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
+                    }
+                }
+            }
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                {
+                    window.Draw(gameModel.Enemies[i].Gun.Bullets[j].Bullet);
                 }
             }
 
@@ -102,13 +137,13 @@ namespace Renderer
 
             foreach (var pistol in gameModel.Guns.Where(x => x.GunType == Model.Game.Enums.GunType.Pistol))
             {
-                pistol.Texture = new Texture("Assets/Textures/pistol.png");
+                pistol.Texture = pistolTexture;
                 pistol.TextureRect = new IntRect(0, 0, 12, 3);
             }
 
             foreach (var shotgun in gameModel.Guns.Where(x => x.GunType == Model.Game.Enums.GunType.Shotgun))
             {
-                shotgun.Texture = new Texture("Assets/Textures/shotgun.png");
+                shotgun.Texture = shotgunTexture;
                 shotgun.TextureRect = new IntRect(0, 0, 16, 6);
             }
         }
@@ -117,8 +152,36 @@ namespace Renderer
         {
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].Texture = enemyTexture;
+                gameModel.Enemies[i].Animations[MovementDirection.Left].Texture = enemyTextures[MovementDirection.Left];
+                gameModel.Enemies[i].Animations[MovementDirection.Left].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Left].Texture);
+                gameModel.Enemies[i].Animations[MovementDirection.Left].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.Y);
+
+                gameModel.Enemies[i].Animations[MovementDirection.Right].Texture = enemyTextures[MovementDirection.Right];
+                gameModel.Enemies[i].Animations[MovementDirection.Right].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Right].Texture);
+                gameModel.Enemies[i].Animations[MovementDirection.Right].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.Y);
+
+                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
+                {
+                    gameModel.Enemies[i].Gun.Texture = pistolTexture;
+                    gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 12, 3);
+                }
+                
+                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
+                {
+                    gameModel.Enemies[i].Gun.Texture = shotgunTexture;
+                    gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 16, 6);
+                }
+
+                if (gameModel.DebugMode)
+                {
+                    gameModel.Enemies[i].Hitbox.FillColor = Color.Transparent;
+                    gameModel.Enemies[i].Hitbox.OutlineColor = Color.Red;
+                    gameModel.Enemies[i].Hitbox.OutlineThickness = 1.0f;
+                    window.Draw(gameModel.Enemies[i].Hitbox);
+                }
+
                 window.Draw(gameModel.Enemies[i]);
+                window.Draw(gameModel.Enemies[i].Gun);
 
                 // Draw HP
                 gameModel.Enemies[i].HPSprite.Texture = hpTexture;
@@ -185,6 +248,14 @@ namespace Renderer
             gameModel.Player.Animations[MovementDirection.Down].Texture = playerTextures[MovementDirection.Down];
             gameModel.Player.Animations[MovementDirection.Down].Sprite = new Sprite(gameModel.Player.Animations[MovementDirection.Down].Texture);
             gameModel.Player.Animations[MovementDirection.Down].TextureRect = new IntRect(0, 0, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.X, gameModel.Player.Animations[MovementDirection.Down].GetSpriteSize.Y);
+
+            if (gameModel.DebugMode)
+            {
+                gameModel.Player.Hitbox.FillColor = Color.Transparent;
+                gameModel.Player.Hitbox.OutlineColor = Color.Red;
+                gameModel.Player.Hitbox.OutlineThickness = 1.0f;
+                window.Draw(gameModel.Player.Hitbox);
+            }
 
             window.Draw(gameModel.Player);
             window.Draw(gameModel.Player.Gun);

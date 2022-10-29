@@ -12,6 +12,7 @@ namespace Logic.Game.Interfaces
     public interface IGameLogic
     {
         void UpdatePlayer(RenderWindow window);
+        void UpdateEnemies(RenderWindow window);
         void UpdateDeltaTime();
         void UpdateCamera(View cameraView);
         void UpdateBullets(RenderWindow window);
@@ -21,10 +22,10 @@ namespace Logic.Game.Interfaces
         void SetTilemap(string tmxFile, string tilesetFile);
         Clock GetDeltaTimeClock { get; }
         float GetDeltaTime { get; }
-        void CreateSpawnableItems();
+        void CreateItems();
         void SpawnItems();
-        void SpawnEnemies();
-        void CreateSpawnableEnemies();
         void Music();
+        void CameraEdges();
+        List<Vector2f> GetSafeSpawnPoints();
     }
 }

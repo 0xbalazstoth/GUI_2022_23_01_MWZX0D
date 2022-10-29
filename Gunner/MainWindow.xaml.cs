@@ -26,6 +26,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -73,6 +74,7 @@ namespace Gunner
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+        private WindowsFormsHost host;
         private SFMLSurface sfmlSurface;
 
         private const uint WINDOW_WIDTH = 600;
@@ -115,8 +117,9 @@ namespace Gunner
 
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
-            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic, animationLogic, WINDOW_WIDTH, WINDOW_HEIGHT);
-            
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic);
+            this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
+
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
             this.uiLogic = new UILogic(uiModel, gameModel);
 
@@ -133,8 +136,6 @@ namespace Gunner
 
         private void InitGameplay()
         {
-            enemyLogic = new EnemyLogic(gameModel);
-            
             chestLogic = new ObjectEntityLogic(gameModel);
             chestLogic.LoadTexture("Assets/Textures/chest.png");
 
@@ -209,6 +210,7 @@ namespace Gunner
             gameController.HandleMovementInput();
             gameController.HandleShootInput();
             gameController.HandleReloadInput();
+            gameController.HandleDebugMode();
             //window.MouseWheelScrolled += (s, e) =>
             //{
             //    int gunIdx = 0;
@@ -247,8 +249,6 @@ namespace Gunner
 
             if (isInWindow && gameModel.Player.IsFocusedInGame)
             {
-                enemyLogic.PathToPlayer();
-
                 uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
                 animationLogic.Update(gameLogic.GetDeltaTime);
 
@@ -257,23 +257,19 @@ namespace Gunner
                 gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
                 gameLogic.UpdatePlayer(window);
 
-                enemyLogic.HandleBulletCollision();
-
                 gameLogic.UpdateTilemap();
                 
                 Control();
-                bulletLogic.UpdateBulletAnimationTextures();
-                
+
                 gameLogic.SpawnItems();
-                gameLogic.SpawnEnemies();
 
                 uiLogic.UpdateAmmoText();
                 uiLogic.UpdateXPLevelText();
                 uiLogic.UpdatePlayerCoinText();
                 uiLogic.UpdateSpeedPotionTimeLeftText();
 
-                enemyLogic.UpdateHP();
-                enemyLogic.Shoot();
+                gameLogic.UpdateEnemies(window);
+                enemyLogic.HandleMovement();
             }
         }
 
