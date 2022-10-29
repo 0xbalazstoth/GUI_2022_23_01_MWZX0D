@@ -107,6 +107,9 @@ namespace Gunner
             host = new WindowsFormsHost();
             host.Name = "SfmlSurfaceHost";
 
+            WindowsFormsHost host = new WindowsFormsHost();
+            host.Name = "SfmlSurfaceHost";
+
             sfmlSurface = new SFMLSurface();
             host.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
