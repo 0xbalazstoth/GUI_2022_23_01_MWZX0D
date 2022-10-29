@@ -83,5 +83,14 @@ namespace Gunner.Controller
                 gameModel.DebugMode = false;
             }
         }
+
+        public void HandlePauseMenuInput(KeyEventArgs eventKey)
+        {
+            if (eventKey.Key == System.Windows.Input.Key.Escape)
+            {
+                PauseMenu pauseMenu = new PauseMenu();
+                pauseMenu.Show();
+            }
+        }
     }
 }

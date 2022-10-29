@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="PauseMenu" Height="450" Width="800">
-    <Grid>
-        
+        Title="PauseMenu" Height="450" Width="800" ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen" WindowStyle="None">
+    <Window.Background>
+        <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" Opacity="0.5"/>
+    </Window.Background>
+    <Grid x:Name="gridMainMenu" HorizontalAlignment="Center" VerticalAlignment="Center" Height="200" Width="200" Margin="20,30,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" x:Name="btnResume" Click="btnResume_Click" Content="Resume" Margin="0,0,0,20"></Button>
+        <Button Grid.Row="1" x:Name="btnSaveGame" Click="btnSaveGame_Click" Content="Save" Margin="0,0,0,20"></Button>
+        <Button Grid.Row="2" x:Name="btnExitToMainMenu" Click="btnExitToMainMenu_Click" Content="Exit to main menu" Margin="0,0,0,20"></Button>
+        <Button Grid.Row="3" x:Name="btnQuitGame" Click="btnQuitGame_Click" Content="Quit" Margin="0,0,0,20"></Button>
     </Grid>
 </Window>
