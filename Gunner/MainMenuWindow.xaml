@@ -9,7 +9,7 @@
     <Window.Background>
         <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill"/>
     </Window.Background>
-    <Grid x:Name="gridMainMenu">
+    <Grid x:Name="gridMainMenu" Height="100" Width="100">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
