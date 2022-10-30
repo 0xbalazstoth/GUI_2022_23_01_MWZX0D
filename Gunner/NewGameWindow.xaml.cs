@@ -44,9 +44,9 @@ namespace Gunner
                 Close();
 
                 // Get MainMenuWindow and close it
-                MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
-                mainMenuWindow.Hide();
-                mainMenuWindow.sound.Stop();
+                //MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
+                //mainMenuWindow.Hide();
+                //mainMenuWindow.sound.Stop();
             }
             catch (SaveAlreadyExistsException error)
             {

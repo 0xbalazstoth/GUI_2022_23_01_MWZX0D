@@ -3,6 +3,7 @@ using Logic.UI.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
 using Model.UI.Interfaces;
+using Repository.Classes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -116,6 +117,20 @@ namespace Gunner.Controller
             {
                 var selectedMenu = menuUILogic.GetSelectedOption();
                 menuUIModel.SelectedMenuOption = selectedMenu;
+
+                if (menuUIModel.SelectedMenuOption == Model.Game.Enums.MenuOptions.NewGame)
+                {
+                    window.Clear(Color.Black);
+                    NewGameWindow newGameWindow = new NewGameWindow();
+                    newGameWindow.ShowDialog();
+                }
+                else if (menuUIModel.SelectedMenuOption == Model.Game.Enums.MenuOptions.LoadGame)
+                {
+                    SaveHandler saveHandler = new SaveHandler();
+                    var saves = saveHandler.LoadSaves();
+                    LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
+                    loadSavedGameWindow.ShowDialog();
+                }
             }
         }
         

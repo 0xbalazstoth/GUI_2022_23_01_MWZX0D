@@ -10,6 +10,7 @@ using Model.Game.Enums;
 using Model.UI.Classes;
 using Model.UI.Interfaces;
 using Renderer;
+using Repository.Classes;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -198,7 +199,7 @@ namespace Gunner
             gameLogic.UpdateDeltaTime();
 
             window.DispatchEvents();
-            window.SetActive(true);
+            //window.SetActive(true);
             window.Size = new Vector2u((uint)sfmlSurface.Size.Width, (uint)sfmlSurface.Size.Height);
             window.SetView(new View(new FloatRect(0, 0, sfmlSurface.Size.Width, sfmlSurface.Size.Height)));
 
@@ -212,7 +213,7 @@ namespace Gunner
             window.SetView(gameModel.UIView);
             DrawGameUI();
 
-            if (menuUIModel.SelectedMenuOption == MenuOptions.Nothing)
+            if (menuUIModel.SelectedMenuOption == MenuOptions.Nothing || menuUIModel.SelectedMenuOption == MenuOptions.NewGame)
             {
                 window.Clear(Color.Black);
                 DrawMenuUI();
@@ -243,7 +244,7 @@ namespace Gunner
                 window.Close();
                 this.Close();
             }
-            else
+            else if (menuUIModel.SelectedMenuOption == MenuOptions.LoadGame)
             {
                 bool isInWindow = true;
                 if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)
