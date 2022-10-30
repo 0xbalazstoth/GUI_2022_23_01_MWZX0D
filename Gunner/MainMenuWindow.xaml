@@ -9,16 +9,39 @@
     <Window.Background>
         <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"/>
     </Window.Background>
-    <Grid x:Name="gridMainMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Height="200" Width="200" Margin="20,30,0,0" >
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" x:Name="btnNewGame" Click="btnNewGame_Click" Content="New" Margin="0,0,0,20"></Button>
-        <Button Grid.Row="1" x:Name="btnLoadGame" Click="btnLoadGame_Click" Content="Load" Margin="0,0,0,20"></Button>
-        <Button Grid.Row="2" x:Name="btnHighscore" Click="btnHighscore_Click" Content="Highscore" Margin="0,0,0,20"></Button>
-        <Button Grid.Row="3" x:Name="btnQuitGame" Click="btnQuitGame_Click" Content="Quit" Margin="0,0,0,20"></Button>
+        <Grid Grid.Row="0" x:Name="gridMainMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Height="200" Width="200" Margin="20,30,0,0" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" x:Name="btnNewGame" Click="btnNewGame_Click" Content="New" Margin="0,0,0,20"></Button>
+            <Button Grid.Row="1" x:Name="btnLoadGame" Click="btnLoadGame_Click" Content="Load" Margin="0,0,0,20"></Button>
+            <Button Grid.Row="2" x:Name="btnHighscore" Click="btnHighscore_Click" Content="Highscore" Margin="0,0,0,20"></Button>
+            <Button Grid.Row="3" x:Name="btnQuitGame" Click="btnQuitGame_Click" Content="Quit" Margin="0,0,0,20"></Button>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="gridMultiMediaControll" HorizontalAlignment="Left" VerticalAlignment="Bottom" Height="50" Width="180"  Margin="20,0,0,30" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Style="{StaticResource multimedia}" Grid.Row="0" Grid.Column="1" x:Name="btnMultiMediaControll" Click="btnMultiMediaControll_Click">
+                <Button.Background>
+                    <ImageBrush ImageSource="/mute.png"/>
+                </Button.Background>
+
+            </Button>
+        </Grid>
     </Grid>
+    
 </Window>

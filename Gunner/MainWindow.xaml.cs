@@ -104,7 +104,6 @@ namespace Gunner
         public MainWindow(string playerUsername)
         {
             InitializeComponent();
-
             host = new WindowsFormsHost();
             host.Name = "SfmlSurfaceHost";
             sfmlSurface = new SFMLSurface();
