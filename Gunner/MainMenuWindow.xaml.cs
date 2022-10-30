@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Gunner.Controller;
+using Model.Game.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,15 +21,16 @@ namespace Gunner
     /// </summary>
     public partial class MainMenuWindow : Window
     {
+        GameController gameController;
+
         public MainMenuWindow()
         {
             InitializeComponent();
         }
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-            Close();
+            NewGameWindow newGameWindow = new NewGameWindow();
+            newGameWindow.ShowDialog();
         }
 
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
@@ -43,6 +46,27 @@ namespace Gunner
         private void btnQuitGame_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Check if F11 is pressed
+            if (e.Key == Key.F11)
+            {
+                // Check if window is in fullscreen mode
+                if (WindowState == WindowState.Maximized)
+                {
+                    // Set window to normal mode
+                    WindowState = WindowState.Normal;
+                    WindowStyle = WindowStyle.None;
+                }
+                else
+                {
+                    // Set window to fullscreen mode
+                    WindowState = WindowState.Maximized;
+                    WindowStyle = WindowStyle.None;
+                }
+            }
         }
     }
 }

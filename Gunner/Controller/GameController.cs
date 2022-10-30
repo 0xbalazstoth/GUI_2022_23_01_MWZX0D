@@ -1,12 +1,14 @@
 ﻿using Logic.Game.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using static SFML.Window.Keyboard;
 using Key = SFML.Window.Keyboard.Key;
@@ -91,6 +93,34 @@ namespace Gunner.Controller
                 PauseMenu pauseMenu = new PauseMenu();
                 pauseMenu.Show();
             }
+        }
+        
+        public void HandleGunSwitchInput(RenderWindow window)
+        {
+            window.MouseWheelScrolled += (s, e) =>
+            {
+                int gunIdx = 0;
+                gameModel.Player.Gun.Bullets = new List<BulletModel>();
+
+                if (e.Delta > 0)
+                {
+                    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
+                    if (gunIdx >= gameModel.Guns.Count)
+                    {
+                        gunIdx = 0;
+                    }
+                }
+                else if (e.Delta < 0)
+                {
+                    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
+                    if (gunIdx < 0)
+                    {
+                        gunIdx = gameModel.Guns.Count - 1;
+                    }
+                }
+
+                gameModel.Player.Gun = gameModel.Guns[gunIdx];
+            };
         }
     }
 }

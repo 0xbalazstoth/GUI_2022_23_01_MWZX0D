@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Repository.Interfaces
 {
-    public interface ITilemapRepository
+    public interface ISaveHandler
     {
-        TilemapModel LoadTMXFile(string tmxFile);
+        void Save(string saveName, GameModel gameModel);
+        void NewGame(string saveName);
+        void LoadSaves();
     }
 }

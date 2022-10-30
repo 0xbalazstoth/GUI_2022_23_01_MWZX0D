@@ -30,7 +30,6 @@ namespace Logic.Game.Classes
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic objectEntityLogic;
         private IBulletLogic bulletLogic;
-        private ITilemapRepository tilemapRepository;
 
         private Clock deltaTimeClock;
         private float deltaTime;
@@ -46,7 +45,6 @@ namespace Logic.Game.Classes
             this.enemyLogic = enemyLogic;
             this.objectEntityLogic = objectEntityLogic;
             this.bulletLogic = bulletLogic;
-            tilemapRepository = new TilemapRepository();
 
             deltaTimeClock = new Clock();
 
@@ -138,7 +136,7 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer(RenderWindow window)
         {
-            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 1f, gameModel.Player.GetGlobalBounds().Height - 1f);
+            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 2f, gameModel.Player.GetGlobalBounds().Height - 2f);
             gameModel.Player.Hitbox.Position = new Vector2f(gameModel.Player.Position.X, gameModel.Player.Position.Y);
             gameModel.Player.Hitbox.Origin = new Vector2f(gameModel.Player.Origin.X, gameModel.Player.Origin.Y);
 
