@@ -21,6 +21,7 @@ namespace Gunner
     /// </summary>
     public partial class NewGameWindow : Window
     {
+
         public NewGameWindow()
         {
             InitializeComponent();

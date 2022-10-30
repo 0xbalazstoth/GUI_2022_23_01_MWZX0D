@@ -1,4 +1,6 @@
 ﻿using Gunner.Controller;
+using Repository.Classes;
+using Repository.Exceptions;
 using SFML.Audio;
 using System;
 using System.Diagnostics;
@@ -15,6 +17,8 @@ namespace Gunner
     /// <summary>
     /// Interaction logic for MainMenuWindow.xaml
     /// </summary>
+    
+
     public partial class MainMenuWindow : Window
     {
         bool isMuted;
@@ -47,6 +51,22 @@ namespace Gunner
 
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
         {
+            SaveHandler saveHandler = new SaveHandler();
+            
+
+            try
+            {
+                string[] saves = saveHandler.LoadSaves();
+
+                LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
+                loadSavedGameWindow.ShowDialog();
+            }
+            catch (NoSaveException error)
+            {
+                lblErrorLoad.Visibility = Visibility.Visible;
+                lblErrorLoad.Text = error.Message;
+            }
+
 
         }
 

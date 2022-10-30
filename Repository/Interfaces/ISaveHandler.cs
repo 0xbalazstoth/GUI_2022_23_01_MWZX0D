@@ -11,6 +11,6 @@ namespace Repository.Interfaces
     {
         void Save(string saveName, GameModel gameModel);
         void NewGame(string saveName);
-        void LoadSaves();
+        string[] LoadSaves();
     }
 }
