@@ -9,17 +9,16 @@
     <Window.Background>
         <ImageBrush ImageSource="/splash_screen.png" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"/>
     </Window.Background>
-    <Grid x:Name="gridMainMenu" Height="100" Width="100">
+    <Grid x:Name="gridMainMenu" HorizontalAlignment="Left" VerticalAlignment="Top" Height="200" Width="200" Margin="20,30,0,0" >
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" x:Name="btnNewGame" Click="btnNewGame_Click" Content="New"></Button>
-        <Button Grid.Row="1" x:Name="btnLoadGame" Click="btnLoadGame_Click" Content="Load"></Button>
-        <Button Grid.Row="2" x:Name="btnHighscore" Click="btnHighscore_Click" Content="Highscore"></Button>
-        <Button Grid.Row="3" x:Name="btnQuitGame" Click="btnQuitGame_Click" Content="Quit"></Button>
-
+        <Button Grid.Row="0" x:Name="btnNewGame" Click="btnNewGame_Click" Content="New" Margin="0,0,0,20"></Button>
+        <Button Grid.Row="1" x:Name="btnLoadGame" Click="btnLoadGame_Click" Content="Load" Margin="0,0,0,20"></Button>
+        <Button Grid.Row="2" x:Name="btnHighscore" Click="btnHighscore_Click" Content="Highscore" Margin="0,0,0,20"></Button>
+        <Button Grid.Row="3" x:Name="btnQuitGame" Click="btnQuitGame_Click" Content="Quit" Margin="0,0,0,20"></Button>
     </Grid>
 </Window>

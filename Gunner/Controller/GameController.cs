@@ -86,6 +86,15 @@ namespace Gunner.Controller
             }
         }
 
+        public void HandlePauseMenuInput(KeyEventArgs eventKey)
+        {
+            if (eventKey.Key == System.Windows.Input.Key.Escape)
+            {
+                PauseMenu pauseMenu = new PauseMenu();
+                pauseMenu.Show();
+            }
+        }
+        
         public void HandleGunSwitchInput(RenderWindow window)
         {
             window.MouseWheelScrolled += (s, e) =>

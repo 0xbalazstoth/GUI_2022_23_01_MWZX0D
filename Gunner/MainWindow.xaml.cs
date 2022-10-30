@@ -332,6 +332,7 @@ namespace Gunner
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             gameController.HandleInventoryInput(e);
+            gameController.HandlePauseMenuInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)
