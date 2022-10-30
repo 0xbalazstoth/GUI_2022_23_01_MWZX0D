@@ -67,9 +67,16 @@ namespace Logic.Game.Classes
             
             CreateItems();
 
-            //gameModel.Musics = new List<Music>();
-            //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
-            //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
+            gameModel.Songs = new List<Music>();
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic1.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic2.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic3.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic4.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic5.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic6.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic7.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic8.ogg"));
+            gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic9.ogg"));
 
             Music();
 
@@ -399,14 +406,8 @@ namespace Logic.Game.Classes
         
         public void Music()
         {
-            //if (gameModel.Music == null)
-            //{
-            //    gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
-            //    gameModel.Music.Loop = true;
-            //    gameModel.Music.Volume = 50;
-            //    gameModel.Music.Play();
-            //}
-            //foreach (var music in gameModel.Musics)
+
+            //foreach (var music in gameModel.Songs)
             //{
             //    //if (k > 1)
             //    //{
@@ -425,11 +426,11 @@ namespace Logic.Game.Classes
             //    //}
             //}
 
-            //if (gameModel.Musics[1].Status == SoundStatus.Stopped)
-            //{ 
-            //    gameModel.Musics[1].Volume = 30;
-            //    gameModel.Musics[1].Play();
-            //}
+            if (gameModel.Songs[0].Status == SoundStatus.Stopped)
+            {
+                gameModel.Songs[0].Volume = 25;
+                gameModel.Songs[0].Play();
+            }
         }
 
         public void CameraEdges()

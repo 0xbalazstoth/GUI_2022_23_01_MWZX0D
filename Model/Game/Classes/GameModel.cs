@@ -21,7 +21,7 @@ namespace Model.Game.Classes
         public Vector2f WorldPositionInCamera { get; set; }
         public List<GunModel> Guns { get; set; }
         public List<ICollectibleItem> CollectibleItems { get; set; }
-        public List<Music> Musics { get; set; }
+        public List<Music> Songs { get; set; }
         public bool DebugMode { get; set; }
     }
 }

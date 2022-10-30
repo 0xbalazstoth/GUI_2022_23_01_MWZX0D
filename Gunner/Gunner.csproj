@@ -12,6 +12,15 @@
     <None Remove="Assets\Fonts\FreeMono.ttf" />
     <None Remove="Assets\Fonts\VT323.ttf" />
     <None Remove="Assets\Sounds\coin.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic1.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic2.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic3.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic4.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic5.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic6.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic7.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic8.ogg" />
+    <None Remove="Assets\Sounds\gameplaymusic9.ogg" />
     <None Remove="Assets\Sounds\gun_empty.ogg" />
     <None Remove="Assets\Sounds\gun_reload.ogg" />
     <None Remove="Assets\Sounds\pistol.ogg" />
@@ -61,6 +70,33 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\coin.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic1.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic2.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic3.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic4.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic5.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic6.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic7.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic8.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\gameplaymusic9.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\gun_empty.ogg">
