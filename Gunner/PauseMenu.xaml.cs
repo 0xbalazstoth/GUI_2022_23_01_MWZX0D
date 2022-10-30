@@ -36,9 +36,9 @@ namespace Gunner
 
         private void btnExitToMainMenu_Click(object sender, RoutedEventArgs e)
         {
+            
             MainMenuWindow mainMenuWindow = new MainMenuWindow();
             //Save();
-            mainMenuWindow.ShowDialog();
             Close();
             
         }
