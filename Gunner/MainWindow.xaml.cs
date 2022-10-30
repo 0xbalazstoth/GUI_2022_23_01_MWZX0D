@@ -254,6 +254,7 @@ namespace Gunner
             gameController.HandleShootInput();
             gameController.HandleReloadInput();
             gameController.HandleDebugMode();
+            gameController.HandleGunSwitchInput(window);
 
             //window.MouseWheelScrolled += (s, e) =>
             //{

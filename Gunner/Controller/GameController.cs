@@ -102,24 +102,38 @@ namespace Gunner.Controller
                 int gunIdx = 0;
                 gameModel.Player.Gun.Bullets = new List<BulletModel>();
 
-                if (e.Delta > 0)
+                // Check if the player has more than one gun
+                if (gameModel.Guns.Count > 1)
                 {
-                    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
-                    if (gunIdx >= gameModel.Guns.Count)
+                    // Check if the player is scrolling up or down
+                    if (e.Delta > 0)
                     {
-                        gunIdx = 0;
+                        // Check if the player is on the last gun
+                        if (gameModel.Guns.IndexOf(gameModel.Player.Gun) == gameModel.Guns.Count - 1)
+                        {
+                            gunIdx = 0;
+                        }
+                        else
+                        {
+                            gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
+                        }
                     }
-                }
-                else if (e.Delta < 0)
-                {
-                    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
-                    if (gunIdx < 0)
+                    else if (e.Delta < 0)
                     {
-                        gunIdx = gameModel.Guns.Count - 1;
+                        // Check if the player is on the first gun
+                        if (gameModel.Guns.IndexOf(gameModel.Player.Gun) == 0)
+                        {
+                            gunIdx = gameModel.Guns.Count - 1;
+                        }
+                        else
+                        {
+                            gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
+                        }
                     }
-                }
 
-                gameModel.Player.Gun = gameModel.Guns[gunIdx];
+                    // Set the player's gun to the new gun
+                    gameModel.Player.Gun = gameModel.Guns[gunIdx];
+                }
             };
         }
     }
