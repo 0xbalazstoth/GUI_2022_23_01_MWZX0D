@@ -1,0 +1,26 @@
+﻿<Window x:Class="Gunner.NewGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gunner"
+        mc:Ignorable="d"
+        Title="NewGameWindow" Height="300" Width="300" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" Background="#273866">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Margin="10" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBox x:Name="txtBoxUsername" Grid.Row="0" Height="50" Margin="5" FontSize="20"></TextBox>
+            <Button x:Name="btnCreateNewGame" Click="btnCreateNewGame_Click" Grid.Row="1" Margin="5" Content="New game" FontSize="20"></Button>
+            <TextBlock Grid.Row="2" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Foreground="OrangeRed" x:Name="lblError" Visibility="Hidden"></TextBlock>
+            <Button Grid.Row="3" x:Name="btnBack" Content="Back" Background="Orange" Margin="5" Click="btnBack_Click"></Button>
+        </Grid>
+    </Grid>
+</Window>

@@ -74,8 +74,8 @@ namespace Gunner
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
-        private WindowsFormsHost host;
         private SFMLSurface sfmlSurface;
+        private WindowsFormsHost host;
 
         private const uint WINDOW_WIDTH = 600;
         private const uint WINDOW_HEIGHT = 600;
@@ -101,13 +101,20 @@ namespace Gunner
 
         private TimeSpan lastRenderTime;
 
-        public MainWindow()
+        public MainWindow(string playerUsername)
         {
             InitializeComponent();
 
+            host = new WindowsFormsHost();
+            host.Name = "SfmlSurfaceHost";
             sfmlSurface = new SFMLSurface();
-            SfmlSurfaceHost.Child = sfmlSurface;
+            //SfmlSurfaceHost.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
+
+            host.Child = sfmlSurface;
+            dockPanel.Children.Add(host);
+
+            Trace.WriteLine(playerUsername);
 
             //CompositionTarget.Rendering += RunGame;
             CompositionTargetEx.Rendering += RunGame;
@@ -126,7 +133,43 @@ namespace Gunner
             this.animationLogic = new AnimationLogic(gameModel);
 
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
-            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "FreeMono.ttf");
+            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "VT323.ttf");
+
+            InitSystem();
+            InitGameplay();
+
+            this.gameController = new GameController(gameModel, playerLogic);
+        }
+
+        private void HostGame()
+        {
+            host = new WindowsFormsHost();
+            host.Name = "SfmlSurfaceHost";
+            sfmlSurface = new SFMLSurface();
+            //SfmlSurfaceHost.Child = sfmlSurface;
+            window = new RenderWindow(sfmlSurface.Handle);
+
+            host.Child = sfmlSurface;
+            dockPanel.Children.Add(host);
+
+            //CompositionTarget.Rendering += RunGame;
+            CompositionTargetEx.Rendering += RunGame;
+
+            this.gameModel = new GameModel();
+            this.uiModel = new UIModel();
+
+            this.tilemapLogic = new TilemapLogic(gameModel);
+            this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
+            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic);
+            this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
+
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
+            this.uiLogic = new UILogic(uiModel, gameModel);
+
+            this.animationLogic = new AnimationLogic(gameModel);
+
+            this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
+            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "VT323.ttf");
 
             InitSystem();
             InitGameplay();
@@ -211,9 +254,13 @@ namespace Gunner
             gameController.HandleShootInput();
             gameController.HandleReloadInput();
             gameController.HandleDebugMode();
+            gameController.HandleGunSwitchInput(window);
+
             //window.MouseWheelScrolled += (s, e) =>
             //{
             //    int gunIdx = 0;
+            //    gameModel.Player.Gun.Bullets = new List<BulletModel>();
+
             //    if (e.Delta > 0)
             //    {
             //        gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
@@ -231,7 +278,7 @@ namespace Gunner
             //        }
             //    }
 
-            //    //gameModel.Player.Gun = gameModel.Guns[gunIdx];
+            //    gameModel.Player.Gun = gameModel.Guns[gunIdx];
             //};
         }
 
@@ -286,6 +333,25 @@ namespace Gunner
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             gameController.HandleInventoryInput(e);
+            gameController.HandlePauseMenuInput(e);
+
+            // Check if F11 is pressed
+            if (e.Key == System.Windows.Input.Key.F11)
+            {
+                // Check if window is in fullscreen mode
+                if (WindowState == WindowState.Maximized)
+                {
+                    // Set window to normal mode
+                    WindowState = WindowState.Normal;
+                    WindowStyle = WindowStyle.ThreeDBorderWindow;
+                }
+                else
+                {
+                    // Set window to fullscreen mode
+                    WindowState = WindowState.Maximized;
+                    WindowStyle = WindowStyle.None;
+                }
+            }
         }
 
         private void SfmlSurfaceHost_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)

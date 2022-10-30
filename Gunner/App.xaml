@@ -4,6 +4,60 @@
              xmlns:local="clr-namespace:Gunner"
              StartupUri="MainMenuWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Background" Value="#1E2B4E"/>
+                <Setter Property="Foreground" Value="#FBF2CF"/>
+                <Setter Property="Padding" Value="10"/>
+                <Setter Property="BorderBrush" Value="Transparent"></Setter>
+                <Setter Property="FontFamily" Value="Assets/Fonts/VT323.ttf #VT323"></Setter>
+                <Setter Property="BorderThickness" Value="0"></Setter>
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"></Setter>
+                    </Style>
+                </Style.Resources>
+            </Style>
+            
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="LightGreen" TargetName="Border" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Background" Value="#FBF2CF"></Setter>
+                <Setter Property="Foreground" Value="#1E2B4E"></Setter>
+                <Setter Property="FontFamily" Value="Assets/Fonts/VT323.ttf #VT323"></Setter>
+                <Setter Property="FontSize" Value="20"></Setter>
+                <Setter Property="FontWeight" Value="Bold"></Setter>
+                <Style.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"></Setter>
+                    </Style>
+                </Style.Resources>
+            </Style>
+
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="FontFamily" Value="Assets/Fonts/VT323.ttf #VT323"></Setter>
+                <Setter Property="FontSize" Value="15"></Setter>
+                <Setter Property="FontWeight" Value="Bold"></Setter>
+            </Style>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontFamily" Value="Assets/Fonts/VT323.ttf #VT323"></Setter>
+                <Setter Property="FontSize" Value="15"></Setter>
+                <Setter Property="FontWeight" Value="Bold"></Setter>
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

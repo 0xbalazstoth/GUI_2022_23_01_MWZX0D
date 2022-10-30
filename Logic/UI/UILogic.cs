@@ -39,27 +39,28 @@ namespace Model.Tools
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
-            uiModel.FPSText.CharacterSize = 16;
+            uiModel.FPSText.CharacterSize = 26;
 
             uiModel.PlayerAmmoText.FillColor = Color.Green;
             uiModel.PlayerAmmoText.Position = new Vector2f(10, 50);
-            uiModel.PlayerAmmoText.CharacterSize = 18;
+            uiModel.PlayerAmmoText.CharacterSize = 28;
 
             uiModel.PlayerXPLevelText.FillColor = Color.Yellow;
             uiModel.PlayerXPLevelText.Position = new Vector2f(10, 70);
-            uiModel.PlayerXPLevelText.CharacterSize = 18;
+            uiModel.PlayerXPLevelText.CharacterSize = 28;
 
             uiModel.PlayerCoinSprite.Scale = new Vector2f(2f, 2f);
-            uiModel.PlayerCoinSprite.Position = new Vector2f(6, 90);
+            uiModel.PlayerCoinSprite.Position = new Vector2f(6, 100);
+            
             uiModel.PlayerCoinText.FillColor = Color.Yellow;
-            uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y + 4);
-            uiModel.PlayerCoinText.CharacterSize = 18;
+            uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y - 4);
+            uiModel.PlayerCoinText.CharacterSize = 28;
 
             //uiModel.PlayerSpeedSprite.Scale = new Vector2f(2f, 2f);
             uiModel.PlayerSpeedSprite.Position = new Vector2f(6, 120);
             uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
             uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y + 4);
-            uiModel.PlayerSpeedTimerText.CharacterSize = 18;
+            uiModel.PlayerSpeedTimerText.CharacterSize = 28;
         }
 
         public void UpdateFPS(float dt)
