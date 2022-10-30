@@ -254,9 +254,12 @@ namespace Gunner
             gameController.HandleShootInput();
             gameController.HandleReloadInput();
             gameController.HandleDebugMode();
+
             //window.MouseWheelScrolled += (s, e) =>
             //{
             //    int gunIdx = 0;
+            //    gameModel.Player.Gun.Bullets = new List<BulletModel>();
+
             //    if (e.Delta > 0)
             //    {
             //        gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
@@ -274,7 +277,7 @@ namespace Gunner
             //        }
             //    }
 
-            //    //gameModel.Player.Gun = gameModel.Guns[gunIdx];
+            //    gameModel.Player.Gun = gameModel.Guns[gunIdx];
             //};
         }
 

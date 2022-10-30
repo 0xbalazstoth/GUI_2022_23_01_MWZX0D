@@ -395,7 +395,8 @@ namespace Logic.Game.Classes
                         CreateTemporaryShotgunBullet();
                         PushbackByRecoil(30f);
                     }
-                    else if (gameModel.Player.Gun.GunType == GunType.Pistol)
+                    
+                    if (gameModel.Player.Gun.GunType == GunType.Pistol)
                     {
                         CreateTemporaryPistolBullet();
                         PushbackByRecoil(10f);

@@ -1,6 +1,7 @@
 ﻿using Logic.Game.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -83,6 +84,34 @@ namespace Gunner.Controller
             {
                 gameModel.DebugMode = false;
             }
+        }
+
+        public void HandleGunSwitchInput(RenderWindow window)
+        {
+            window.MouseWheelScrolled += (s, e) =>
+            {
+                int gunIdx = 0;
+                gameModel.Player.Gun.Bullets = new List<BulletModel>();
+
+                if (e.Delta > 0)
+                {
+                    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
+                    if (gunIdx >= gameModel.Guns.Count)
+                    {
+                        gunIdx = 0;
+                    }
+                }
+                else if (e.Delta < 0)
+                {
+                    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
+                    if (gunIdx < 0)
+                    {
+                        gunIdx = gameModel.Guns.Count - 1;
+                    }
+                }
+
+                gameModel.Player.Gun = gameModel.Guns[gunIdx];
+            };
         }
     }
 }
