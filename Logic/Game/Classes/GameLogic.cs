@@ -407,29 +407,13 @@ namespace Logic.Game.Classes
         public void Music()
         {
 
-            //foreach (var music in gameModel.Songs)
-            //{
-            //    //if (k > 1)
-            //    //{
-            //    //    music.Stop();
-            //    //    gameModel.Musics[k - 1].Play();
-            //    //}
-            //    //else
-            //    //{
-            //    //    music.Play();
-            //    //}
+            Random r = new ();
+            int random = r.Next(0, gameModel.Songs.Count);
 
-            //    //if (music.Status == SFML.Audio.SoundStatus.Stopped)
-            //    //{
-            //    //    music.Volume = 30;
-            //    //    music.Play();
-            //    //}
-            //}
-
-            if (gameModel.Songs[0].Status == SoundStatus.Stopped)
+            if (gameModel.Songs[random].Status == SoundStatus.Stopped)
             {
-                gameModel.Songs[0].Volume = 25;
-                gameModel.Songs[0].Play();
+                gameModel.Songs[random].Volume = 25;
+                gameModel.Songs[random].Play();
             }
         }
 
