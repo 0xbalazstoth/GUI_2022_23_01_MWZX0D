@@ -1,32 +1,48 @@
 ﻿using Gunner.Controller;
-using Model.Game.Classes;
+using Repository.Classes;
+using Repository.Exceptions;
+using SFML.Audio;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Gunner
 {
     /// <summary>
     /// Interaction logic for MainMenuWindow.xaml
     /// </summary>
+    
+
     public partial class MainMenuWindow : Window
     {
-        GameController gameController;
+        bool isMuted;
+        SoundBuffer music = new ("Assets/Sounds/menuMusic.ogg");
+        public Sound sound;
+        int volume = 100;
 
         public MainMenuWindow()
         {
             InitializeComponent();
+            Show();
+            PlayMainMenuMusic(music,100);
+            
         }
+
+        private void PlayMainMenuMusic(SoundBuffer music,int milisec)
+        {
+            Thread.Sleep(milisec);
+            sound = new Sound(music);
+            sound.Volume = volume;
+            sound.Loop = true;
+            sound.Play();
+        }
+
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
             NewGameWindow newGameWindow = new NewGameWindow();
@@ -35,6 +51,22 @@ namespace Gunner
 
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
         {
+            SaveHandler saveHandler = new SaveHandler();
+            
+
+            try
+            {
+                string[] saves = saveHandler.LoadSaves();
+
+                LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
+                loadSavedGameWindow.ShowDialog();
+            }
+            catch (NoSaveException error)
+            {
+                lblErrorLoad.Visibility = Visibility.Visible;
+                lblErrorLoad.Text = error.Message;
+            }
+
 
         }
 
@@ -67,6 +99,32 @@ namespace Gunner
                     WindowStyle = WindowStyle.None;
                 }
             }
+        }
+
+        private void btnMultiMediaControll_Click(object sender, RoutedEventArgs e)
+        {
+            
+            var brush = new ImageBrush();
+            if (isMuted == false)
+            {
+                brush.ImageSource = ConvertUriPNG("unmute");
+                btnMultiMediaControll.Background = brush;
+                sound.Volume = 0;
+                isMuted = true;
+            }
+            else
+            {
+                brush.ImageSource = ConvertUriPNG("mute");
+                btnMultiMediaControll.Background = brush;
+                sound.Volume = 100;
+                isMuted = false;
+            }
+
+        }
+
+        public static BitmapImage ConvertUriPNG(string asset)
+        {
+            return new BitmapImage(new Uri($"../../../Assets/Textures/{asset}.png", UriKind.Relative));
         }
     }
 }

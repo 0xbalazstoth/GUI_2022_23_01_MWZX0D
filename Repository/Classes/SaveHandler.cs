@@ -17,9 +17,18 @@ namespace Repository.Classes
 
         private const string SAVE_FOLDER = "Saves";
 
-        public void LoadSaves()
+        public string[] LoadSaves()
         {
-
+            bool exists = Directory.Exists(SAVE_FOLDER);
+            if (exists)
+            {
+                return Directory.GetFiles(SAVE_FOLDER);
+            }
+            else
+            {
+                throw new NoSaveException("No save to load");
+            }
+            
         }
 
         public void NewGame(string saveName)

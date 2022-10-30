@@ -21,6 +21,7 @@ namespace Gunner
     /// </summary>
     public partial class NewGameWindow : Window
     {
+
         public NewGameWindow()
         {
             InitializeComponent();
@@ -45,6 +46,7 @@ namespace Gunner
                 // Get MainMenuWindow and close it
                 MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
                 mainMenuWindow.Close();
+                mainMenuWindow.sound.Stop();
             }
             catch (SaveAlreadyExistsException error)
             {
