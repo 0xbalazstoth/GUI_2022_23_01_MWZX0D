@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Tools
+namespace Logic.UI.Interfaces
 {
-    public interface IUILogic
+    public interface IGameUILogic
     {
         public float GetFps { get; }
         public float GetFrameTime { get; }

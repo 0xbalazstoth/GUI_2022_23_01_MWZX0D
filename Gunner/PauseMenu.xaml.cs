@@ -36,16 +36,21 @@ namespace Gunner
 
         private void btnExitToMainMenu_Click(object sender, RoutedEventArgs e)
         {
-            
-            MainMenuWindow mainMenuWindow = new MainMenuWindow();
-            //Save();
+            MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
+            mainMenuWindow.Show();
+
+            MainWindow gameWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+            gameWindow.Hide();
+            gameWindow.Close();
+            gameWindow.Content = null;
+            gameWindow.Focusable = false;
+            gameWindow.IsEnabled = false;
+
             Close();
-            
         }
 
         private void btnQuitGame_Click(object sender, RoutedEventArgs e)
         {
-            //Save();
             Environment.Exit(0);
         }
     }

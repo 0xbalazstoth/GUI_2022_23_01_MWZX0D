@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Model.UI.Interfaces
 {
-    public interface IUIModel
+    public interface IGameUIModel
     {
         public Text FPSText { get; set; }
         public Text PlayerAmmoText { get; set; }

@@ -1,4 +1,4 @@
-﻿using Logic.Tools;
+﻿using Logic.UI.Interfaces;
 using Model.Game.Classes;
 using Model.UI;
 using Model.UI.Interfaces;
@@ -11,11 +11,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Tools
+namespace Logic.UI.Classes
 {
-    public class UILogic : IUILogic
+    public class GameUILogic : IGameUILogic
     {
-        private IUIModel uiModel;
+        private IGameUIModel uiModel;
         private float fps;
         private float frameTime;
         private float time;
@@ -24,11 +24,11 @@ namespace Model.Tools
         public float GetFps { get => fps; }
         public float GetFrameTime { get => frameTime; }
 
-        public UILogic(IUIModel uiModel, IGameModel gameModel)
+        public GameUILogic(IGameUIModel uiModel, IGameModel gameModel)
         {
             this.uiModel = uiModel;
             this.gameModel = gameModel;
-            
+
             uiModel.FPSText = new Text();
             uiModel.PlayerAmmoText = new Text();
             uiModel.PlayerXPLevelText = new Text();
@@ -51,12 +51,11 @@ namespace Model.Tools
 
             uiModel.PlayerCoinSprite.Scale = new Vector2f(2f, 2f);
             uiModel.PlayerCoinSprite.Position = new Vector2f(6, 100);
-            
+
             uiModel.PlayerCoinText.FillColor = Color.Yellow;
             uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y - 4);
             uiModel.PlayerCoinText.CharacterSize = 28;
 
-            //uiModel.PlayerSpeedSprite.Scale = new Vector2f(2f, 2f);
             uiModel.PlayerSpeedSprite.Position = new Vector2f(6, 120);
             uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
             uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y + 4);

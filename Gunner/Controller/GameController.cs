@@ -1,6 +1,8 @@
 ﻿using Logic.Game.Interfaces;
+using Logic.UI.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using Model.UI.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -20,11 +22,15 @@ namespace Gunner.Controller
     {
         private IGameModel gameModel;
         private IPlayerLogic playerLogic;
+        private IMenuUILogic menuUILogic;
+        private IMenuUIModel menuUIModel;
 
-        public GameController(IGameModel gameModel, IPlayerLogic playerLogic)
+        public GameController(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel)
         {
             this.gameModel = gameModel;
             this.playerLogic = playerLogic;
+            this.menuUILogic = menuUILogic;
+            this.menuUIModel = menuUIModel;
         }
 
         public void HandleMovementInput()
@@ -90,8 +96,26 @@ namespace Gunner.Controller
         {
             if (eventKey.Key == System.Windows.Input.Key.Escape)
             {
-                PauseMenu pauseMenu = new PauseMenu();
-                pauseMenu.Show();
+                gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
+            }
+        }
+
+        public void HandleMainMenuInput(KeyEventArgs eventKey, RenderWindow window)
+        {
+            if (eventKey.Key == System.Windows.Input.Key.Up)
+            {
+                menuUILogic.MoveUp();
+            }
+
+            if (eventKey.Key == System.Windows.Input.Key.Down)
+            {
+                menuUILogic.MoveDown();
+            }
+
+            if (eventKey.Key == System.Windows.Input.Key.Enter)
+            {
+                var selectedMenu = menuUILogic.GetSelectedOption();
+                menuUIModel.SelectedMenuOption = selectedMenu;
             }
         }
         

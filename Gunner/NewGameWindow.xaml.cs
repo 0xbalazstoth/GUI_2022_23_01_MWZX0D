@@ -37,15 +37,15 @@ namespace Gunner
                 saveHandler.NewGame(txtBoxUsername.Text);
 
                 // Run game
-                MainWindow mainWindow = new MainWindow(txtBoxUsername.Text);
-                mainWindow.Show();
+                //MainWindow mainWindow = new MainWindow(txtBoxUsername.Text);
+                //mainWindow.Show();
 
                 // Close this window
                 Close();
 
                 // Get MainMenuWindow and close it
                 MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
-                mainMenuWindow.Close();
+                mainMenuWindow.Hide();
                 mainMenuWindow.sound.Stop();
             }
             catch (SaveAlreadyExistsException error)

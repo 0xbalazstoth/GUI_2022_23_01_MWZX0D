@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Renderer
 {
-    public class UIRenderer
+    public class GameUIRenderer
     {
-        private IUIModel uiModel;
+        private IGameUIModel uiModel;
         private IGameModel gameModel;
 
-        public UIRenderer(IUIModel uiModel, IGameModel gameModel, string fontPath, string fontFile)
+        public GameUIRenderer(IGameUIModel uiModel, IGameModel gameModel, string fontPath, string fontFile)
         {
             this.uiModel = uiModel;
             this.gameModel = gameModel;
@@ -53,7 +53,7 @@ namespace Renderer
             if (gameModel.Player.IsSpeedPotionIsInUse)
             {
                 window.Draw(DrawableSpeedPotionSprite());
-            } 
+            }
         }
 
         private Drawable DrawableFPSText()

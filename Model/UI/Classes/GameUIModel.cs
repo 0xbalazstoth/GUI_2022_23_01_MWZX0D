@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Model.UI.Classes
 {
-    public class UIModel : IUIModel
+    public class GameUIModel : IGameUIModel
     {
         public Text FPSText { get; set; }
         public Font Font { get; set; }
