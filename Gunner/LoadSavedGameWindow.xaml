@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="LoadSavedGame" Height="300" Width="300" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" Background="#273866">
+        Title="Load Game" Height="300" Width="300" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" Background="#273866">
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>

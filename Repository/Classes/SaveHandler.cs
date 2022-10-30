@@ -20,15 +20,25 @@ namespace Repository.Classes
         public string[] LoadSaves()
         {
             bool exists = Directory.Exists(SAVE_FOLDER);
-            if (exists)
+
+            if (!exists)
             {
-                return Directory.GetFiles(SAVE_FOLDER);
+                string[] getfiles = Directory.GetFiles(SAVE_FOLDER);
+                throw new NoSaveException("No save to load");
+
+            }
+            
+            var files = Directory.GetFiles(SAVE_FOLDER);
+
+            if (files.Length>0)
+            {
+                return files;
             }
             else
             {
                 throw new NoSaveException("No save to load");
             }
-            
+
         }
 
         public void NewGame(string saveName)

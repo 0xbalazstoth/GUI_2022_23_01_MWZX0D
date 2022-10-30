@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
 	<UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\Textures\splash_screen.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -150,6 +151,7 @@
     <Content Include="Assets\Textures\speed_potion_sheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\splash_screen.png" />
     <Content Include="Assets\Textures\tilemap.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -197,6 +199,10 @@
     <Content Include="Assets\Textures\coin.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
