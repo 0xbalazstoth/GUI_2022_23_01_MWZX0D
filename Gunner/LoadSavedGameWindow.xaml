@@ -15,7 +15,7 @@
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="40"></RowDefinition>
             </Grid.RowDefinitions>
-            <ListBox x:Name="lbSaves" Grid.Row="0"></ListBox>
+            <ListBox x:Name="lbSaves" Grid.Row="0" SelectionChanged="lbSaves_SelectionChanged"></ListBox>
             <Button Grid.Row="1" x:Name="btnBack" Content="Back" Background="Orange" Margin="5" Click="btnBack_Click"></Button>
         </Grid>
     </Grid>

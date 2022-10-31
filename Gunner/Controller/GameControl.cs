@@ -150,6 +150,8 @@ namespace Gunner.Controller
                     LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
                     loadSavedGameWindow.ShowDialog();
 
+                    var selectedSave = loadSavedGameWindow.SelectedSave;
+
                     if (loadSavedGameWindow.DialogResult == true)
                     {
                         menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
