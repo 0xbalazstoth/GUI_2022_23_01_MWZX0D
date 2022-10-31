@@ -20,19 +20,19 @@ namespace Renderer
 
             menuUIModel.Font = new Font(Path.Combine(fontPath, fontFile));
 
-            for (int i = 0; i < menuUIModel.MenuTexts.Count; i++)
+            for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
             {
-                menuUIModel.MenuTexts[i].Font = menuUIModel.Font;
+                menuUIModel.MainMenuTexts[i].Font = menuUIModel.Font;
             }
 
             arrowKeysTexture = new Texture(@"Assets\Textures\arrow_keys.png");
             menuUIModel.ArrowKeysSprite.Texture = arrowKeysTexture;
 
             // Create border around menu texts
-            for (int i = 0; i < menuUIModel.MenuTexts.Count; i++)
+            for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
             {
-                menuUIModel.MenuTexts[i].OutlineColor = Color.Black;
-                menuUIModel.MenuTexts[i].OutlineThickness = 2;
+                menuUIModel.MainMenuTexts[i].OutlineColor = Color.Black;
+                menuUIModel.MainMenuTexts[i].OutlineThickness = 2;
             }
 
             menuUIModel.GameNameText.Font = menuUIModel.Font;
@@ -47,7 +47,7 @@ namespace Renderer
         {
             window.Draw(menuUIModel.GameNameText);
 
-            foreach (var menuText in menuUIModel.MenuTexts)
+            foreach (var menuText in menuUIModel.MainMenuTexts)
             {
                 window.Draw(menuText);
             }

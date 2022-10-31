@@ -12,9 +12,9 @@ namespace Model.UI.Classes
 {
     public class MenuUIModel : IMenuUIModel
     {
-        public List<Text> MenuTexts { get; set; }
+        public List<Text> MainMenuTexts { get; set; }
         public Font Font { get; set; }
-        public MenuOptions SelectedMenuOption { get; set; }
+        public MenuOptionsState SelectedMenuOptionState { get; set; }
         public Sprite ArrowKeysSprite { get; set; }
         public Text GameNameText { get; set; }
     }

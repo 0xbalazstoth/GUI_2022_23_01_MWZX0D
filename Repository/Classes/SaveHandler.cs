@@ -21,13 +21,12 @@ namespace Repository.Classes
             bool exists = Directory.Exists(SAVE_FOLDER);
             if (exists)
             {
-                return Directory.GetFiles(SAVE_FOLDER);
+                return Directory.GetFiles(SAVE_FOLDER).Select(Path.GetFileNameWithoutExtension).ToArray();
             }
             else
             {
                 throw new NoSaveException("Save folder not exists!");
-            }
-            
+            } 
         }
 
         public void NewGame(string saveName)
@@ -60,14 +59,56 @@ namespace Repository.Classes
             }
         }
 
-        public void Save(string saveName, GameModel gameModel)
+        public void Save(string saveName, IGameModel gameModel)
         {
-            // Name
-            // Inventory items
-            // Gun
-            // Coins
-            // HP
-            // K/D = Kills - Deaths ratio
+            // Check if saves folder exists
+            bool exists = Directory.Exists(SAVE_FOLDER);
+
+            if (exists)
+            {
+                // Check if save exists
+                if (File.Exists(SAVE_FOLDER + "/" + saveName + ".json"))
+                {
+                    // Load save
+                    JObject saveObject = JObject.Parse(File.ReadAllText(SAVE_FOLDER + "/" + saveName + ".json"));
+
+                    // Save player name
+                    saveObject["player"] = saveName;
+
+                    // Save inventory items
+                    var inventory = gameModel.Player.Inventory.Items;
+                    JArray inventoryItems = new JArray();
+                    foreach (var item in inventory)
+                    {
+                        // Create JObject with itemType and itemAmount
+                        JObject itemObject = new JObject(new JProperty("itemType", item.Value.ItemType.ToString()), new JProperty("itemQuantity", item.Value.Quantity));
+
+                        // Add JObject named as item to JArray
+                        inventoryItems.Add(new JObject(new JProperty("item", itemObject)));
+                    }
+                    saveObject["inventory"] = inventoryItems;
+
+                    // Save coins
+                    saveObject["coins"] = gameModel.Player.CurrentCoins;
+
+                    // Save XP level
+                    saveObject["xp"] = gameModel.Player.CurrentXP;
+
+                    //// Save K/D
+                    //saveObject["kd"] = gameModel.Player.Kills - gameModel.Player.Deaths;
+
+                    // Save
+                    File.WriteAllText(SAVE_FOLDER + "/" + saveName + ".json", saveObject.ToString());
+                }
+                else
+                {
+                    throw new NoSaveException("Save not exists!");
+                }
+            }
+            else
+            {
+                throw new NoSaveException("Save folder not exists!");
+            }
         }
     }
 }

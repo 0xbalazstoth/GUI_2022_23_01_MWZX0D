@@ -9,7 +9,7 @@ namespace Repository.Interfaces
 {
     public interface ISaveHandler
     {
-        void Save(string saveName, GameModel gameModel);
+        void Save(string saveName, IGameModel gameModel);
         void NewGame(string saveName);
         string[] LoadSaves();
     }

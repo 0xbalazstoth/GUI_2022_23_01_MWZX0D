@@ -22,7 +22,7 @@ namespace Logic.UI.Classes
         {
             this.menuUIModel = menuUIModel;
 
-            menuUIModel.MenuTexts = new List<Text>();
+            menuUIModel.MainMenuTexts = new List<Text>();
             menuUIModel.ArrowKeysSprite = new Sprite();
             menuUIModel.GameNameText = new Text();
 
@@ -30,24 +30,24 @@ namespace Logic.UI.Classes
             var loadText = new Text { FillColor = Color.White, DisplayedString = "Load game", Position = new Vector2f(0, 0), CharacterSize = 50 };
             var quitText = new Text { FillColor = Color.White, DisplayedString = "Quit", Position = new Vector2f(0, 0), CharacterSize = 50 };
 
-            menuUIModel.MenuTexts.Add(newGameText);
-            menuUIModel.MenuTexts.Add(loadText);
-            menuUIModel.MenuTexts.Add(quitText);
+            menuUIModel.MainMenuTexts.Add(newGameText);
+            menuUIModel.MainMenuTexts.Add(loadText);
+            menuUIModel.MainMenuTexts.Add(quitText);
 
             // Place game name text in the top center of the screen
             var gameNameText = new Text { FillColor = Color.White, DisplayedString = "Gunner", Position = new Vector2f(0, 0), CharacterSize = 90 };
             menuUIModel.GameNameText = gameNameText;
 
             selectedItemIndex = 0;
-            menuUIModel.SelectedMenuOption = MenuOptions.InMenu;
+            menuUIModel.SelectedMenuOptionState = MenuOptionsState.InMenu;
         }
 
         public void UpdateMenu(Vector2u windowSize)
         {
-            for (int i = 0; i < menuUIModel.MenuTexts.Count; i++)
+            for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
             {
                 // Center horizontally and vertically
-                menuUIModel.MenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.MenuTexts[i].GetLocalBounds().Width / 2, windowSize.Y / (MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
+                menuUIModel.MainMenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.MainMenuTexts[i].GetLocalBounds().Width / 2, windowSize.Y / (MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
             }
 
             // Place arrow keys sprite in the bottom left of the screen
@@ -62,9 +62,9 @@ namespace Logic.UI.Classes
             // Move up
             if (selectedItemIndex - 1 >= 0)
             {
-                menuUIModel.MenuTexts[selectedItemIndex].FillColor = Color.White;
+                menuUIModel.MainMenuTexts[selectedItemIndex].FillColor = Color.White;
                 selectedItemIndex--;
-                menuUIModel.MenuTexts[selectedItemIndex].FillColor = selectionColor;
+                menuUIModel.MainMenuTexts[selectedItemIndex].FillColor = selectionColor;
             }
         }
 
@@ -73,25 +73,25 @@ namespace Logic.UI.Classes
             // Move down
             if (selectedItemIndex + 1 < MAX_NUMBER_OF_ITEMS)
             {
-                menuUIModel.MenuTexts[selectedItemIndex].FillColor = Color.White;
+                menuUIModel.MainMenuTexts[selectedItemIndex].FillColor = Color.White;
                 selectedItemIndex++;
-                menuUIModel.MenuTexts[selectedItemIndex].FillColor = selectionColor;
+                menuUIModel.MainMenuTexts[selectedItemIndex].FillColor = selectionColor;
             }
         }
 
-        public MenuOptions GetSelectedOption()
+        public MenuOptionsState GetSelectedOption()
         {
             if (selectedItemIndex == 0)
             {
-                return MenuOptions.NewGame;
+                return MenuOptionsState.NewGame;
             }
             else if (selectedItemIndex == 1)
             {
-                return MenuOptions.LoadGame;
+                return MenuOptionsState.LoadGame;
             }
             else
             {
-                return MenuOptions.QuitGame;
+                return MenuOptionsState.QuitGame;
             }
         }
     }

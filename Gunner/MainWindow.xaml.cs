@@ -94,7 +94,7 @@ namespace Gunner
         private IBulletLogic bulletLogic;
         private IAnimationLogic animationLogic;
 
-        private GameController gameController;
+        private GameControl gameController;
 
         private IGameUILogic gameUILogic;
         private IMenuUILogic menuUILogic;
@@ -144,7 +144,7 @@ namespace Gunner
             InitSystem();
             InitGameplay();
 
-            this.gameController = new GameController(gameModel, playerLogic, menuUILogic, menuUIModel);
+            this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel);
         }
         
         private void InitGameplay()
@@ -213,7 +213,7 @@ namespace Gunner
             window.SetView(gameModel.UIView);
             DrawGameUI();
 
-            if (menuUIModel.SelectedMenuOption != MenuOptions.StartGame)
+            if (menuUIModel.SelectedMenuOptionState != MenuOptionsState.InGame)
             {
                 window.Clear(Color.Black);
                 DrawMenuUI();
@@ -235,16 +235,16 @@ namespace Gunner
 
         public void Update()
         {
-            if (menuUIModel.SelectedMenuOption == MenuOptions.InMenu)
+            if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMenu)
             {
                 menuUILogic.UpdateMenu(window.Size);
             }
-            else if (menuUIModel.SelectedMenuOption == MenuOptions.QuitGame)
+            else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.QuitGame)
             {
                 window.Close();
                 this.Close();
             }
-            else if (menuUIModel.SelectedMenuOption == MenuOptions.StartGame)
+            else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InGame)
             {
                 bool isInWindow = true;
                 if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)

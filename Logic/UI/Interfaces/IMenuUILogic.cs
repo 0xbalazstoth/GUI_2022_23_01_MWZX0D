@@ -1,4 +1,5 @@
 ﻿using Model.Game.Enums;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,6 @@ namespace Logic.UI.Interfaces
         public void UpdateMenu(Vector2u windowSize);
         public void MoveUp();
         public void MoveDown();
-        public MenuOptions GetSelectedOption();
+        public MenuOptionsState GetSelectedOption();
     }
 }

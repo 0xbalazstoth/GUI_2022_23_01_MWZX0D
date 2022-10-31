@@ -4,6 +4,7 @@ using Model.Game;
 using Model.Game.Classes;
 using Model.UI.Interfaces;
 using Repository.Classes;
+using Repository.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -20,19 +21,22 @@ using Mouse = SFML.Window.Mouse;
 
 namespace Gunner.Controller
 {
-    public class GameController
+    public class GameControl
     {
         private IGameModel gameModel;
         private IPlayerLogic playerLogic;
         private IMenuUILogic menuUILogic;
         private IMenuUIModel menuUIModel;
+        private ISaveHandler saveHandler;
 
-        public GameController(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel)
+        public GameControl(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel)
         {
             this.gameModel = gameModel;
             this.playerLogic = playerLogic;
             this.menuUILogic = menuUILogic;
             this.menuUIModel = menuUIModel;
+
+            this.saveHandler = new SaveHandler();
         }
 
         public void HandleMovementInput()
@@ -99,6 +103,16 @@ namespace Gunner.Controller
             if (eventKey.Key == System.Windows.Input.Key.Escape)
             {
                 gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
+                if (!gameModel.Player.IsFocusedInGame)
+                {
+                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMenu;
+                }
+                else
+                {
+                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                }
+
+                saveHandler.Save(gameModel.Player.Name, gameModel);
             }
         }
 
@@ -117,29 +131,28 @@ namespace Gunner.Controller
             if (eventKey.Key == System.Windows.Input.Key.Enter)
             {
                 var selectedMenu = menuUILogic.GetSelectedOption();
-                menuUIModel.SelectedMenuOption = selectedMenu;
+                menuUIModel.SelectedMenuOptionState = selectedMenu;
 
-                if (menuUIModel.SelectedMenuOption == Model.Game.Enums.MenuOptions.NewGame)
+                if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.NewGame)
                 {
                     NewGameWindow newGameWindow = new NewGameWindow();
                     newGameWindow.ShowDialog();
 
                     if (newGameWindow.DialogResult == true)
                     {
-                        menuUIModel.SelectedMenuOption = Model.Game.Enums.MenuOptions.StartGame;
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                         gameModel.Player.Name = newGameWindow.PlayerName;
                     }
                 }
-                else if (menuUIModel.SelectedMenuOption == Model.Game.Enums.MenuOptions.LoadGame)
+                else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.LoadGame)
                 {
-                    SaveHandler saveHandler = new SaveHandler();
                     var saves = saveHandler.LoadSaves();
                     LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
                     loadSavedGameWindow.ShowDialog();
 
                     if (loadSavedGameWindow.DialogResult == true)
                     {
-                        menuUIModel.SelectedMenuOption = Model.Game.Enums.MenuOptions.StartGame;
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                     }
                 }
             }

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Model.Game.Enums
 {
-    public enum MenuOptions
+    public enum MenuOptionsState
     {
         InMenu,
         NewGame,
         LoadGame,
         QuitGame,
-        StartGame
+        InGame
     }
 }
