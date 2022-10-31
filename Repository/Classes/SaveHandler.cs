@@ -1,4 +1,6 @@
 ﻿using Model.Game.Classes;
+using Model.Game.Enums;
+using Model.Game.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Repository.Exceptions;
@@ -15,6 +17,59 @@ namespace Repository.Classes
     public class SaveHandler : ISaveHandler
     {
         private const string SAVE_FOLDER = "Saves";
+
+        public IGameModel LoadSave(string saveName)
+        {
+            IGameModel loadedGame = new GameModel();
+
+            string saveFileName = $"{SAVE_FOLDER}\\{saveName}.json";
+
+            if (!File.Exists(saveFileName))
+            {
+                throw new NoSaveException($"Save {saveName} not exists!");
+            }
+            else
+            {
+                // Read json file
+                string json = File.ReadAllText(saveFileName);
+
+                // Deserialize json to object
+                JObject jsonObj = JObject.Parse(json);
+
+                // Inventory current capacity
+                int inventoryCurrentCapacity = (int)jsonObj["inventoryCurrentCapacity"];
+
+                // Inventory items
+                JArray inventoryArray = (JArray)jsonObj["inventory"];
+                loadedGame.Player = new PlayerModel();
+                InventoryModel inventory = new InventoryModel();
+                inventory.Items = new Dictionary<int, ICollectibleItem>();
+
+                foreach (JObject itemObj in inventoryArray)
+                {
+                    JObject item = (JObject)itemObj["item"];
+                    string itemTypeStr = (string)item["itemType"];
+                    ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemTypeStr);
+                    int itemQuantity = (int)item["itemQuantity"];
+                    int itemId = (int)item["itemId"];
+                    inventory.Items.Add(itemId, new CollectibleItemModel() { Id = itemId, Quantity = itemQuantity, ItemType = itemType });
+                }
+
+                // Coins
+                int coins = (int)jsonObj["coins"];
+
+                // XP
+                int xp = (int)jsonObj["xp"];
+
+                loadedGame.Player.Inventory = inventory;
+                loadedGame.Player.CurrentCoins = coins;
+                loadedGame.Player.CurrentXP = xp;
+                loadedGame.Player.Inventory.Capacity = inventoryCurrentCapacity;
+                loadedGame.Player.Name = saveName;
+            }
+
+            return loadedGame;
+        }
 
         public string[] LoadSaves()
         {
@@ -75,13 +130,16 @@ namespace Repository.Classes
                     // Save player name
                     saveObject["player"] = saveName;
 
+                    // Save inventory current capacity
+                    saveObject["inventoryCurrentCapacity"] = gameModel.Player.Inventory.Capacity;
+
                     // Save inventory items
                     var inventory = gameModel.Player.Inventory.Items;
                     JArray inventoryItems = new JArray();
                     foreach (var item in inventory)
                     {
                         // Create JObject with itemType and itemAmount
-                        JObject itemObject = new JObject(new JProperty("itemType", item.Value.ItemType.ToString()), new JProperty("itemQuantity", item.Value.Quantity));
+                        JObject itemObject = new JObject(new JProperty("itemType", item.Value.ItemType.ToString()), new JProperty("itemQuantity", item.Value.Quantity), new JProperty("itemId", item.Value.Id));
 
                         // Add JObject named as item to JArray
                         inventoryItems.Add(new JObject(new JProperty("item", itemObject)));

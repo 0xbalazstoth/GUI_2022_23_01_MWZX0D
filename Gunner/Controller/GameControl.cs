@@ -154,6 +154,13 @@ namespace Gunner.Controller
 
                     if (loadSavedGameWindow.DialogResult == true)
                     {
+                        var loadedSave = saveHandler.LoadSave(selectedSave);
+                        gameModel.Player.Inventory.Capacity = loadedSave.Player.Inventory.Capacity;
+                        gameModel.Player.Inventory.Items = loadedSave.Player.Inventory.Items;
+                        gameModel.Player.CurrentCoins = loadedSave.Player.CurrentCoins;
+                        gameModel.Player.CurrentXP = loadedSave.Player.CurrentXP;
+                        gameModel.Player.Name = loadedSave.Player.Name;
+
                         menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                     }
                 }
