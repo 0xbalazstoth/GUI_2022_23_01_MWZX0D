@@ -8,6 +8,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,7 +102,7 @@ namespace Gunner.Controller
             }
         }
 
-        public void HandleMainMenuInput(KeyEventArgs eventKey, RenderWindow window)
+        public void HandleMainMenuInput(KeyEventArgs eventKey, ref RenderWindow window)
         {
             if (eventKey.Key == System.Windows.Input.Key.Up)
             {
@@ -120,9 +121,14 @@ namespace Gunner.Controller
 
                 if (menuUIModel.SelectedMenuOption == Model.Game.Enums.MenuOptions.NewGame)
                 {
-                    window.Clear(Color.Black);
                     NewGameWindow newGameWindow = new NewGameWindow();
                     newGameWindow.ShowDialog();
+
+                    if (newGameWindow.DialogResult == true)
+                    {
+                        menuUIModel.SelectedMenuOption = Model.Game.Enums.MenuOptions.StartGame;
+                        gameModel.Player.Name = newGameWindow.PlayerName;
+                    }
                 }
                 else if (menuUIModel.SelectedMenuOption == Model.Game.Enums.MenuOptions.LoadGame)
                 {
@@ -130,6 +136,11 @@ namespace Gunner.Controller
                     var saves = saveHandler.LoadSaves();
                     LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
                     loadSavedGameWindow.ShowDialog();
+
+                    if (loadSavedGameWindow.DialogResult == true)
+                    {
+                        menuUIModel.SelectedMenuOption = Model.Game.Enums.MenuOptions.StartGame;
+                    }
                 }
             }
         }

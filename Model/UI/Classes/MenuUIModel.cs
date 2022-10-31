@@ -15,5 +15,7 @@ namespace Model.UI.Classes
         public List<Text> MenuTexts { get; set; }
         public Font Font { get; set; }
         public MenuOptions SelectedMenuOption { get; set; }
+        public Sprite ArrowKeysSprite { get; set; }
+        public Text GameNameText { get; set; }
     }
 }

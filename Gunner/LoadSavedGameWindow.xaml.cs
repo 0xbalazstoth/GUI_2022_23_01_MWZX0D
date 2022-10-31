@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace Gunner
 {
@@ -12,10 +13,6 @@ namespace Gunner
             InitializeComponent();
 
             lbSaves.ItemsSource = saves;
-            //// Get MainMenuWindow and close it
-            //MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
-            //mainMenuWindow.Close();
-            //mainMenuWindow.sound.Stop();
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)

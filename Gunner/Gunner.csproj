@@ -17,6 +17,7 @@
     <None Remove="Assets\Sounds\gun_reload.ogg" />
     <None Remove="Assets\Sounds\menuMusic.ogg" />
     <None Remove="Assets\Sounds\pistol.ogg" />
+    <None Remove="Assets\Textures\arrow_keys.png" />
     <None Remove="Assets\Textures\bullet_sheet.png" />
     <None Remove="Assets\Textures\chest.png" />
     <None Remove="Assets\Textures\coin.png" />
@@ -79,6 +80,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\pistol.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\arrow_keys.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\bullet_sheet.png">

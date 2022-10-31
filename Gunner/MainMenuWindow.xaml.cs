@@ -3,6 +3,7 @@ using Repository.Classes;
 using Repository.Exceptions;
 using SFML.Audio;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -45,8 +46,8 @@ namespace Gunner
 
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-            NewGameWindow newGameWindow = new NewGameWindow();
-            newGameWindow.ShowDialog();
+            //NewGameWindow newGameWindow = new NewGameWindow();
+            //newGameWindow.ShowDialog();
         }
 
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
@@ -56,10 +57,10 @@ namespace Gunner
 
             try
             {
-                string[] saves = saveHandler.LoadSaves();
+                //IEnumerable<string[]> saves = saveHandler.LoadSaves();
 
-                LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
-                loadSavedGameWindow.ShowDialog();
+                //LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
+                //loadSavedGameWindow.ShowDialog();
             }
             catch (NoSaveException error)
             {

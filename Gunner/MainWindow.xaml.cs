@@ -213,7 +213,7 @@ namespace Gunner
             window.SetView(gameModel.UIView);
             DrawGameUI();
 
-            if (menuUIModel.SelectedMenuOption == MenuOptions.Nothing || menuUIModel.SelectedMenuOption == MenuOptions.NewGame)
+            if (menuUIModel.SelectedMenuOption != MenuOptions.StartGame)
             {
                 window.Clear(Color.Black);
                 DrawMenuUI();
@@ -235,7 +235,7 @@ namespace Gunner
 
         public void Update()
         {
-            if (menuUIModel.SelectedMenuOption == MenuOptions.Nothing)
+            if (menuUIModel.SelectedMenuOption == MenuOptions.InMenu)
             {
                 menuUILogic.UpdateMenu(window.Size);
             }
@@ -244,7 +244,7 @@ namespace Gunner
                 window.Close();
                 this.Close();
             }
-            else if (menuUIModel.SelectedMenuOption == MenuOptions.LoadGame)
+            else if (menuUIModel.SelectedMenuOption == MenuOptions.StartGame)
             {
                 bool isInWindow = true;
                 if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)
@@ -302,7 +302,7 @@ namespace Gunner
         {
             gameController.HandleInventoryInput(e);
             gameController.HandlePauseMenuInput(e);
-            gameController.HandleMainMenuInput(e, window);
+            gameController.HandleMainMenuInput(e, ref window);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)

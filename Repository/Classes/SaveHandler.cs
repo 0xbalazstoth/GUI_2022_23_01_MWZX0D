@@ -14,7 +14,6 @@ namespace Repository.Classes
 {
     public class SaveHandler : ISaveHandler
     {
-
         private const string SAVE_FOLDER = "Saves";
 
         public string[] LoadSaves()
@@ -26,7 +25,7 @@ namespace Repository.Classes
             }
             else
             {
-                throw new NoSaveException("No save to load");
+                throw new NoSaveException("Save folder not exists!");
             }
             
         }
@@ -48,7 +47,6 @@ namespace Repository.Classes
                 {
                     JObject saveObject = new JObject(new JProperty("player", saveName));
 
-                    //string json = JsonConvert.SerializeObject(saveName);
                     File.WriteAllText(SAVE_FOLDER + "/" + saveName + ".json", saveObject.ToString());
                 }
                 else
@@ -70,10 +68,6 @@ namespace Repository.Classes
             // Coins
             // HP
             // K/D = Kills - Deaths ratio
-
-            // 1. Create save window
-            // 2. Get saves from folder
-            // 3. Load save
         }
     }
 }

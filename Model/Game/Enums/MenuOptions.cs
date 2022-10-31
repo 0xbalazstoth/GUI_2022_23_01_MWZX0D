@@ -8,9 +8,10 @@ namespace Model.Game.Enums
 {
     public enum MenuOptions
     {
-        Nothing,
+        InMenu,
         NewGame,
         LoadGame,
-        QuitGame
+        QuitGame,
+        StartGame
     }
 }
