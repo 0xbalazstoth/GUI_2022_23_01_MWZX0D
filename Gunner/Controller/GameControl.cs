@@ -28,6 +28,7 @@ namespace Gunner.Controller
         private IMenuUILogic menuUILogic;
         private IMenuUIModel menuUIModel;
         private ISaveHandler saveHandler;
+        private IHighscoreHandler highscoreHandler;
 
         public GameControl(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel)
         {
@@ -37,6 +38,7 @@ namespace Gunner.Controller
             this.menuUIModel = menuUIModel;
 
             this.saveHandler = new SaveHandler();
+            this.highscoreHandler = new HighscoreHandler();
         }
 
         public void HandleMovementInput()
@@ -155,6 +157,7 @@ namespace Gunner.Controller
                     if (loadSavedGameWindow.DialogResult == true)
                     {
                         var loadedSave = saveHandler.LoadSave(selectedSave);
+
                         gameModel.Player.Inventory.Capacity = loadedSave.Player.Inventory.Capacity;
                         gameModel.Player.Inventory.Items = loadedSave.Player.Inventory.Items;
                         gameModel.Player.CurrentCoins = loadedSave.Player.CurrentCoins;
@@ -162,6 +165,18 @@ namespace Gunner.Controller
                         gameModel.Player.Name = loadedSave.Player.Name;
 
                         menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                    }
+                }
+                else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.Highscore)
+                {
+                    var highscores = highscoreHandler.LoadHighscoreStats();
+
+                    HighscoreWindow highscoreWindow = new HighscoreWindow(highscores);
+                    highscoreWindow.ShowDialog();
+
+                    if (highscoreWindow.DialogResult == true)
+                    {
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMenu;
                     }
                 }
             }

@@ -14,7 +14,7 @@ namespace Logic.UI.Classes
     public class MenuUILogic : IMenuUILogic
     {
         private IMenuUIModel menuUIModel;
-        private const int MAX_NUMBER_OF_ITEMS = 3;
+        private const int MAX_NUMBER_OF_ITEMS = 4;
         private int selectedItemIndex;
         private Color selectionColor = new Color(255, 196, 96);
 
@@ -28,10 +28,12 @@ namespace Logic.UI.Classes
 
             var newGameText = new Text { FillColor = selectionColor, DisplayedString = "New game", Position = new Vector2f(0, 0), CharacterSize = 50 };
             var loadText = new Text { FillColor = Color.White, DisplayedString = "Load game", Position = new Vector2f(0, 0), CharacterSize = 50 };
+            var highscoreText = new Text { FillColor = Color.White, DisplayedString = "Highscores", Position = new Vector2f(0, 0), CharacterSize = 50 };
             var quitText = new Text { FillColor = Color.White, DisplayedString = "Quit", Position = new Vector2f(0, 0), CharacterSize = 50 };
 
             menuUIModel.MainMenuTexts.Add(newGameText);
             menuUIModel.MainMenuTexts.Add(loadText);
+            menuUIModel.MainMenuTexts.Add(highscoreText);
             menuUIModel.MainMenuTexts.Add(quitText);
 
             // Place game name text in the top center of the screen
@@ -88,6 +90,10 @@ namespace Logic.UI.Classes
             else if (selectedItemIndex == 1)
             {
                 return MenuOptionsState.LoadGame;
+            }
+            else if (selectedItemIndex == 2)
+            {
+                return MenuOptionsState.Highscore;
             }
             else
             {

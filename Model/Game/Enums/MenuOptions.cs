@@ -12,6 +12,7 @@ namespace Model.Game.Enums
         NewGame,
         LoadGame,
         QuitGame,
+        Highscore,
         InGame
     }
 }

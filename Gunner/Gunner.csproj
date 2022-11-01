@@ -53,11 +53,8 @@
     <None Remove="csfml-Graphics.dll" />
     <None Remove="csfml-System.dll" />
     <None Remove="csfml-Window.dll" />
-    <None Remove="menu.png" />
-    <None Remove="mute.png" />
     <None Remove="openal32.dll" />
     <None Remove="splash_screen.png" />
-    <None Remove="unmute.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -204,10 +201,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="menu.png" />
-    <Resource Include="mute.png" />
     <Resource Include="splash_screen.png" />
-    <Resource Include="unmute.png" />
   </ItemGroup>
 
   <ItemGroup>
