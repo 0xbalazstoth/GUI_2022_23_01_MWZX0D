@@ -14,9 +14,6 @@ using System.Xml.Linq;
 
 namespace Logic.Game.Classes
 {
-    // Possible tiles:
-    // - https://mportorodrigo.itch.io/the-lost-dungeon-tileset
-
     public class TilemapLogic : ITilemapLogic
     {
         public const int COLLISION_LAYER = 1;
@@ -176,6 +173,29 @@ namespace Logic.Game.Classes
             var texCoordsX = id % tilesetWidth;
             var texCoordsY = id / tilesetWidth;
             return new Vector2f(texCoordsX * map.TileWidth, texCoordsY * map.TileHeight);
+        }
+
+        public List<Vector2f> GetTileIdCoordinatesByMapLayer(int layer, params int[] tileIds)
+        {
+            var points = new List<Vector2f>();
+            for (int i = 0; i < gameModel.Map.MapLayers[layer].Length; i++)
+            {
+                for (int t = 0; t < tileIds.Length; t++)
+                {
+                    if (gameModel.Map.MapLayers[layer][i] == tileIds[t])
+                    {
+                        int x = i % (int)gameModel.Map.Width;
+                        int y = i / (int)gameModel.Map.Width;
+
+                        if (x > gameModel.Map.TileWidth && y > gameModel.Map.TileHeight)
+                        {
+                            points.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+                        }
+                    }
+                }
+            }
+
+            return points;
         }
     }
 }

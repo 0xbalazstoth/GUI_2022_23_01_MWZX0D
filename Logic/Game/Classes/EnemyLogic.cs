@@ -19,7 +19,6 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        //List<Vector2i> path;
 
         public EnemyLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
@@ -28,22 +27,20 @@ namespace Logic.Game.Classes
 
             gameModel.Enemies = new List<EnemyModel>();
 
-            CreateEnemies();
+            //CreateEnemies();
 
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
-            {
-                gameModel.Enemies[i].HPSprite = new Sprite();
-                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    //gameModel.Enemies[i].HPSprite = new Sprite();
+            //    gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
 
-                gameModel.Enemies[i].CurrentHP = gameModel.Enemies[i].MaxHP;
+            //    //gameModel.Enemies[i].CurrentHP = gameModel.Enemies[i].MaxHP;
 
-                gameModel.Enemies[i].HPText = new Text();
-                gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-                gameModel.Enemies[i].HPText.CharacterSize = 16;
-                gameModel.Enemies[i].HPText.FillColor = Color.Red;
-            }
-
-            //path = new List<Vector2i>();
+            //    //gameModel.Enemies[i].HPText = new Text();
+            //    gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
+            //    gameModel.Enemies[i].HPText.CharacterSize = 16;
+            //    gameModel.Enemies[i].HPText.FillColor = Color.Red;
+            //}
         }
 
         public void PathToPlayer(int enemyIdx)
@@ -164,7 +161,7 @@ namespace Logic.Game.Classes
                             enemy.CurrentHP -= gameModel.Player.Gun.Damage;
                         }
 
-                        if (enemy.CurrentHP == 0)
+                        if (enemy.CurrentHP <= 0)
                         {
                             gameModel.Enemies.Remove(enemy);
                             gameModel.Player.CurrentXP += enemy.RewardXP;
@@ -210,7 +207,7 @@ namespace Logic.Game.Classes
         {
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X - (gameModel.Enemies[i].GetGlobalBounds().Width / 2f), gameModel.Enemies[i].Position.Y - (gameModel.Enemies[i].GetGlobalBounds().Height / 2f));
+                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X + gameModel.Enemies[i].TextureRect.Width / 2 - gameModel.Enemies[i].HPSprite.TextureRect.Width, gameModel.Enemies[i].Position.Y - gameModel.Enemies[i].HPSprite.TextureRect.Height);
                 gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].HPSprite.Position.X + 18f, gameModel.Enemies[i].HPSprite.Position.Y - (gameModel.Enemies[i].HPSprite.GetGlobalBounds().Height / 2f) + 4f);
 
                 gameModel.Enemies[i].HPText.DisplayedString = $"{gameModel.Enemies[i].CurrentHP}";
@@ -307,12 +304,12 @@ namespace Logic.Game.Classes
 
         public void CreateEnemies()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 30; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                enemy.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
                 enemy.Speed = 30f;
-                enemy.SightDistance = 300f;
+                enemy.SightDistance = 500f;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
                 enemy.Gun.Damage = 10;
@@ -330,11 +327,15 @@ namespace Logic.Game.Classes
                 enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
                 enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
                 enemy.Gun.ShootSounds = new List<Sound>();
+                enemy.HPSprite = new Sprite();
+                enemy.HPText = new Text();
+                enemy.CurrentHP = enemy.MaxHP;
+                enemy.HPText.CharacterSize = 16;
+                enemy.HPText.FillColor = Color.Red;
 
                 enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = Model.Game.Enums.EnemyType.Eye;
-                //gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
                 
                 gameModel.Enemies.Add(enemy);
                 for (int j = 0; j < i - 1; j++)

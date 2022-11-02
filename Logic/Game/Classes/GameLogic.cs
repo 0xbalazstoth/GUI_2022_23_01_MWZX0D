@@ -67,6 +67,8 @@ namespace Logic.Game.Classes
             
             CreateItems();
 
+            enemyLogic.CreateEnemies();
+
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
             //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
@@ -136,7 +138,7 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer(RenderWindow window)
         {
-            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 2f, gameModel.Player.GetGlobalBounds().Height - 2f);
+            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 15f, gameModel.Player.GetGlobalBounds().Height - 5f);
             gameModel.Player.Hitbox.Position = new Vector2f(gameModel.Player.Position.X, gameModel.Player.Position.Y);
             gameModel.Player.Hitbox.Origin = new Vector2f(gameModel.Player.Origin.X, gameModel.Player.Origin.Y);
 
@@ -186,7 +188,7 @@ namespace Logic.Game.Classes
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].Hitbox.Size = new Vector2f(gameModel.Enemies[i].GetGlobalBounds().Width - 1f, gameModel.Enemies[i].GetGlobalBounds().Height - 1f);
+                gameModel.Enemies[i].Hitbox.Size = new Vector2f(gameModel.Enemies[i].GetGlobalBounds().Width - 5f, gameModel.Enemies[i].GetGlobalBounds().Height - 5f);
                 gameModel.Enemies[i].Hitbox.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
                 gameModel.Enemies[i].Hitbox.Origin = new Vector2f(gameModel.Enemies[i].Origin.X, gameModel.Enemies[i].Origin.Y);
 
@@ -462,17 +464,18 @@ namespace Logic.Game.Classes
                 if (gameModel.Map.MapLayers[0][i] == 0)
                 {
                     // Check if its not outside the map
-                    if (i % gameModel.Map.Width != 0 && i % gameModel.Map.Width != gameModel.Map.Width - 5)
+                    if (i % gameModel.Map.Width != 0 && i % gameModel.Map.Width != gameModel.Map.Width - 1)
                     {
                         // Check if its not on the edge of the map
-                        if (i > gameModel.Map.Width && i < gameModel.Map.MapLayers[0].Length - gameModel.Map.Width - 5)
+                        if (i > gameModel.Map.Width && i < gameModel.Map.MapLayers[0].Length - gameModel.Map.Width - 1)
                         {
-                            // Check if its not on the edge of the map
-                            //spawnPoints.Add(new Vector2f((i % gameModel.Map.Width) * gameModel.Map.TileWidth, (i / gameModel.Map.Width) * gameModel.Map.TileHeight));
-
                             int x = i % (int)gameModel.Map.Width;
                             int y = i / (int)gameModel.Map.Width;
-                            spawnPoints.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+
+                            if (x > gameModel.Map.TileWidth && y > gameModel.Map.TileHeight)
+                            { 
+                                spawnPoints.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+                            }
                         }
                     }
                 }
