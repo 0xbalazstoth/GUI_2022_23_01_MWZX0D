@@ -24,7 +24,7 @@ namespace Gunner
         {
             InitializeComponent();
 
-            lstViewHighscoreStats.ItemsSource = highscoreStats;
+            lstViewHighscoreStats.ItemsSource = highscoreStats.OrderByDescending(x => x.Highscore);
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)

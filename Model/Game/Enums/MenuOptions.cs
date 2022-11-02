@@ -8,11 +8,12 @@ namespace Model.Game.Enums
 {
     public enum MenuOptionsState
     {
-        InMenu,
+        InMainMenu,
         NewGame,
         LoadGame,
         QuitGame,
         Highscore,
-        InGame
+        InGame,
+        InPauseMenu,
     }
 }

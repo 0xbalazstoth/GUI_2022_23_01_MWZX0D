@@ -28,7 +28,6 @@ namespace Gunner
             get { return playerName; }
         }
 
-
         public NewGameWindow()
         {
             InitializeComponent();

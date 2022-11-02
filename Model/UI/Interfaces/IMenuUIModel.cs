@@ -12,6 +12,7 @@ namespace Model.UI.Interfaces
     public interface IMenuUIModel
     {
         public List<Text> MainMenuTexts { get; set; }
+        public List<Text> PauseMenuTexts { get; set; }
         public Font Font { get; set; }
         public MenuOptionsState SelectedMenuOptionState { get; set; }
         public Sprite ArrowKeysSprite { get; set; }

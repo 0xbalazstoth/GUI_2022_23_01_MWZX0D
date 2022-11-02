@@ -107,7 +107,7 @@ namespace Gunner.Controller
                 gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
                 if (!gameModel.Player.IsFocusedInGame)
                 {
-                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMenu;
+                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InPauseMenu;
                 }
                 else
                 {
@@ -116,67 +116,104 @@ namespace Gunner.Controller
 
                 saveHandler.Save(gameModel.Player.Name, gameModel);
             }
+
+            if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InPauseMenu)
+            {
+                if (eventKey.Key == System.Windows.Input.Key.Up)
+                {
+                    menuUILogic.MoveUpPauseMenu();
+                }
+
+                if (eventKey.Key == System.Windows.Input.Key.Down)
+                {
+                    menuUILogic.MoveDownPauseMenu();
+                }
+
+                if (eventKey.Key == System.Windows.Input.Key.Enter)
+                {
+                    var selectedMenu = menuUILogic.GetSelectedPauseMenuOption();
+
+                    if (selectedMenu == Model.Game.Enums.MenuOptionsState.InGame)
+                    {
+                        gameModel.Player.IsFocusedInGame = true;
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                    }
+                    else if (selectedMenu == Model.Game.Enums.MenuOptionsState.InMainMenu)
+                    {
+                        // Restart app
+                        Application.Current.Shutdown();
+                        System.Windows.Forms.Application.Restart();
+                    }
+                    else if (selectedMenu == Model.Game.Enums.MenuOptionsState.QuitGame)
+                    {
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.QuitGame;
+                    }
+                }
+            }
         }
 
-        public void HandleMainMenuInput(KeyEventArgs eventKey, ref RenderWindow window)
+        public void HandleMainMenuInput(KeyEventArgs eventKey)
         {
-            if (eventKey.Key == System.Windows.Input.Key.Up)
+            if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InMainMenu)
             {
-                menuUILogic.MoveUp();
-            }
-
-            if (eventKey.Key == System.Windows.Input.Key.Down)
-            {
-                menuUILogic.MoveDown();
-            }
-
-            if (eventKey.Key == System.Windows.Input.Key.Enter)
-            {
-                var selectedMenu = menuUILogic.GetSelectedOption();
-                menuUIModel.SelectedMenuOptionState = selectedMenu;
-
-                if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.NewGame)
+                if (eventKey.Key == System.Windows.Input.Key.Up)
                 {
-                    NewGameWindow newGameWindow = new NewGameWindow();
-                    newGameWindow.ShowDialog();
-
-                    if (newGameWindow.DialogResult == true)
-                    {
-                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
-                        gameModel.Player.Name = newGameWindow.PlayerName;
-                    }
+                    menuUILogic.MoveUpMainMenu();
                 }
-                else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.LoadGame)
+
+                if (eventKey.Key == System.Windows.Input.Key.Down)
                 {
-                    var saves = saveHandler.LoadSaves();
-                    LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
-                    loadSavedGameWindow.ShowDialog();
-
-                    var selectedSave = loadSavedGameWindow.SelectedSave;
-
-                    if (loadSavedGameWindow.DialogResult == true)
-                    {
-                        var loadedSave = saveHandler.LoadSave(selectedSave);
-
-                        gameModel.Player.Inventory.Capacity = loadedSave.Player.Inventory.Capacity;
-                        gameModel.Player.Inventory.Items = loadedSave.Player.Inventory.Items;
-                        gameModel.Player.CurrentCoins = loadedSave.Player.CurrentCoins;
-                        gameModel.Player.CurrentXP = loadedSave.Player.CurrentXP;
-                        gameModel.Player.Name = loadedSave.Player.Name;
-
-                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
-                    }
+                    menuUILogic.MoveDownMainMenu();
                 }
-                else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.Highscore)
+
+                if (eventKey.Key == System.Windows.Input.Key.Enter)
                 {
-                    var highscores = highscoreHandler.LoadHighscoreStats();
+                    var selectedMenu = menuUILogic.GetSelectedMainMenuOption();
+                    menuUIModel.SelectedMenuOptionState = selectedMenu;
 
-                    HighscoreWindow highscoreWindow = new HighscoreWindow(highscores);
-                    highscoreWindow.ShowDialog();
-
-                    if (highscoreWindow.DialogResult == true)
+                    if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.NewGame)
                     {
-                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMenu;
+                        NewGameWindow newGameWindow = new NewGameWindow();
+                        newGameWindow.ShowDialog();
+
+                        if (newGameWindow.DialogResult == true)
+                        {
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                            gameModel.Player.Name = newGameWindow.PlayerName;
+                        }
+                    }
+                    else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.LoadGame)
+                    {
+                        var saves = saveHandler.LoadSaves();
+                        LoadSavedGameWindow loadSavedGameWindow = new LoadSavedGameWindow(saves);
+                        loadSavedGameWindow.ShowDialog();
+
+                        var selectedSave = loadSavedGameWindow.SelectedSave;
+
+                        if (loadSavedGameWindow.DialogResult == true)
+                        {
+                            var loadedSave = saveHandler.LoadSave(selectedSave);
+
+                            gameModel.Player.Inventory.Capacity = loadedSave.Player.Inventory.Capacity;
+                            gameModel.Player.Inventory.Items = loadedSave.Player.Inventory.Items;
+                            gameModel.Player.CurrentCoins = loadedSave.Player.CurrentCoins;
+                            gameModel.Player.CurrentXP = loadedSave.Player.CurrentXP;
+                            gameModel.Player.Name = loadedSave.Player.Name;
+
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                        }
+                    }
+                    else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.Highscore)
+                    {
+                        var highscores = highscoreHandler.LoadHighscoreStats();
+
+                        HighscoreWindow highscoreWindow = new HighscoreWindow(highscores);
+                        highscoreWindow.ShowDialog();
+
+                        if (highscoreWindow.DialogResult == true)
+                        {
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMainMenu;
+                        }
                     }
                 }
             }

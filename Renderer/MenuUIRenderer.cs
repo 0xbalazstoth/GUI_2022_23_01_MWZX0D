@@ -23,31 +23,40 @@ namespace Renderer
             for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
             {
                 menuUIModel.MainMenuTexts[i].Font = menuUIModel.Font;
+                menuUIModel.MainMenuTexts[i].OutlineColor = Color.Black;
+                menuUIModel.MainMenuTexts[i].OutlineThickness = 2;
+            }
+
+            for (int i = 0; i < menuUIModel.PauseMenuTexts.Count; i++)
+            {
+                menuUIModel.PauseMenuTexts[i].Font = menuUIModel.Font;
+                menuUIModel.PauseMenuTexts[i].OutlineColor = Color.Black;
+                menuUIModel.PauseMenuTexts[i].OutlineThickness = 2;
             }
 
             arrowKeysTexture = new Texture(@"Assets\Textures\arrow_keys.png");
             menuUIModel.ArrowKeysSprite.Texture = arrowKeysTexture;
 
-            // Create border around menu texts
-            for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
-            {
-                menuUIModel.MainMenuTexts[i].OutlineColor = Color.Black;
-                menuUIModel.MainMenuTexts[i].OutlineThickness = 2;
-            }
-
             menuUIModel.GameNameText.Font = menuUIModel.Font;
         }
 
-        public void Draw(RenderTarget window)
-        {
-            DrawMenu(window);
-        }
-
-        public void DrawMenu(RenderTarget window)
+        public void DrawMainMenu(RenderTarget window)
         {
             window.Draw(menuUIModel.GameNameText);
 
             foreach (var menuText in menuUIModel.MainMenuTexts)
+            {
+                window.Draw(menuText);
+            }
+
+            window.Draw(menuUIModel.ArrowKeysSprite);
+        }
+
+        public void DrawPauseMenu(RenderTarget window)
+        {
+            window.Draw(menuUIModel.GameNameText);
+
+            foreach (var menuText in menuUIModel.PauseMenuTexts)
             {
                 window.Draw(menuText);
             }

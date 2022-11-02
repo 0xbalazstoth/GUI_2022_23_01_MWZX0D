@@ -215,8 +215,18 @@ namespace Gunner
 
             if (menuUIModel.SelectedMenuOptionState != MenuOptionsState.InGame)
             {
-                window.Clear(Color.Black);
-                DrawMenuUI();
+                if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMainMenu || menuUIModel.SelectedMenuOptionState == MenuOptionsState.NewGame || menuUIModel.SelectedMenuOptionState == MenuOptionsState.LoadGame || menuUIModel.SelectedMenuOptionState == MenuOptionsState.Highscore)
+                {
+                    window.Clear(Color.Black);
+                    DrawMainMenuUI();
+                }
+                
+                if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InPauseMenu)
+                {
+                    // Make window's background half transparent
+                    window.Clear(new Color(0, 0, 0, 128));
+                    DrawPauseMenuUI();
+                }
             }
 
             window.SetView(window.DefaultView);
@@ -235,9 +245,13 @@ namespace Gunner
 
         public void Update()
         {
-            if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMenu)
+            if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMainMenu)
             {
-                menuUILogic.UpdateMenu(window.Size);
+                menuUILogic.UpdateMainMenu(window.Size);
+            }
+            else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InPauseMenu)
+            {
+                menuUILogic.UpdatePauseMenu(window.Size);
             }
             else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.QuitGame)
             {
@@ -293,16 +307,21 @@ namespace Gunner
             gameUIRenderer.Draw(window);
         }
 
-        public void DrawMenuUI()
+        public void DrawMainMenuUI()
         {
-            menuUIRenderer.Draw(window);
+            menuUIRenderer.DrawMainMenu(window);
+        }
+
+        public void DrawPauseMenuUI()
+        {
+            menuUIRenderer.DrawPauseMenu(window);
         }
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             gameController.HandleInventoryInput(e);
             gameController.HandlePauseMenuInput(e);
-            gameController.HandleMainMenuInput(e, ref window);
+            gameController.HandleMainMenuInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)

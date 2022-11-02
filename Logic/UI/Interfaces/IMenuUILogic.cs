@@ -11,9 +11,13 @@ namespace Logic.UI.Interfaces
 {
     public interface IMenuUILogic
     {
-        public void UpdateMenu(Vector2u windowSize);
-        public void MoveUp();
-        public void MoveDown();
-        public MenuOptionsState GetSelectedOption();
+        public void UpdateMainMenu(Vector2u windowSize);
+        public void MoveUpMainMenu();
+        public void MoveDownMainMenu();
+        public MenuOptionsState GetSelectedMainMenuOption();
+        public void UpdatePauseMenu(Vector2u windowSize);
+        public void MoveUpPauseMenu();
+        public void MoveDownPauseMenu();
+        public MenuOptionsState GetSelectedPauseMenuOption();
     }
 }
