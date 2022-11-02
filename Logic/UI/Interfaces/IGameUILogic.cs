@@ -15,5 +15,6 @@ namespace Logic.UI.Interfaces
         public void UpdateXPLevelText();
         public void UpdatePlayerCoinText();
         public void UpdateSpeedPotionTimeLeftText();
+        public void UpdateKillCountText();
     }
 }

@@ -18,5 +18,7 @@ namespace Model.Game.Classes
         public int CurrentCoins { get; set; }
         public DateTime LastPotionEffect { get; set; }
         public bool IsSpeedPotionIsInUse { get; set; }
+        public int KillCount { get; set; }
+        public int Deaths { get; set; }
     }
 }

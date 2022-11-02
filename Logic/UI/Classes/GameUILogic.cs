@@ -36,6 +36,7 @@ namespace Logic.UI.Classes
             uiModel.PlayerCoinSprite = new Sprite();
             uiModel.PlayerSpeedTimerText = new Text();
             uiModel.PlayerSpeedSprite = new Sprite();
+            uiModel.PlayerKillCountText = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -60,6 +61,10 @@ namespace Logic.UI.Classes
             uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
             uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y + 4);
             uiModel.PlayerSpeedTimerText.CharacterSize = 28;
+
+            uiModel.PlayerKillCountText.FillColor = Color.Red;
+            uiModel.PlayerKillCountText.Position = new Vector2f(10, 150);
+            uiModel.PlayerKillCountText.CharacterSize = 28;
         }
 
         public void UpdateFPS(float dt)
@@ -97,12 +102,17 @@ namespace Logic.UI.Classes
 
             if (gameModel.Player.IsSpeedPotionIsInUse)
             {
-                uiModel.PlayerSpeedTimerText.DisplayedString = $"{timeLeft.ToString("0")} sec";
+                uiModel.PlayerSpeedTimerText.DisplayedString = $"{timeLeft.ToString("0")} seconds";
             }
             else
             {
                 uiModel.PlayerSpeedTimerText.DisplayedString = "";
             }
+        }
+
+        public void UpdateKillCountText()
+        {
+            uiModel.PlayerKillCountText.DisplayedString = $"Kills: {gameModel.Player.KillCount}";
         }
     }
 }

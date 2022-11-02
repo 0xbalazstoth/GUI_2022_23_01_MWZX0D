@@ -12,6 +12,7 @@ namespace Model.UI.Interfaces
         public Text FPSText { get; set; }
         public Text PlayerAmmoText { get; set; }
         public Text PlayerXPLevelText { get; set; }
+        public Text PlayerKillCountText { get; set; }
         public Font Font { get; set; }
         public Sprite PlayerCoinSprite { get; set; }
         public Text PlayerCoinText { get; set; }

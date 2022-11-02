@@ -32,6 +32,7 @@ namespace Renderer
             uiModel.PlayerXPLevelText.Font = uiModel.Font;
             uiModel.PlayerCoinText.Font = uiModel.Font;
             uiModel.PlayerSpeedTimerText.Font = uiModel.Font;
+            uiModel.PlayerKillCountText.Font = uiModel.Font;
 
             gameModel.Player.HPText.Font = uiModel.Font;
 
@@ -54,6 +55,8 @@ namespace Renderer
             {
                 window.Draw(DrawableSpeedPotionSprite());
             }
+
+            window.Draw(DrawablePlayerKillCountText());
         }
 
         private Drawable DrawableFPSText()
@@ -89,6 +92,11 @@ namespace Renderer
         private Drawable DrawableSpeedPotionTimerText()
         {
             return uiModel.PlayerSpeedTimerText;
+        }
+
+        private Drawable DrawablePlayerKillCountText()
+        {
+            return uiModel.PlayerKillCountText;
         }
     }
 }

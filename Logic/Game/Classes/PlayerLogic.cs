@@ -383,7 +383,7 @@ namespace Logic.Game.Classes
 
         public void Shoot()
         {
-            // Player can shoot every 1 seconds
+            // Player can shoot every x seconds
             if (gameModel.Player.Gun.LastFired + gameModel.Player.Gun.FiringInterval < DateTime.Now)
             {
                 // Check if player has ammo based on max ammo
@@ -392,7 +392,7 @@ namespace Logic.Game.Classes
                     if (gameModel.Player.Gun.GunType == GunType.Shotgun)
                     {
                         CreateTemporaryShotgunBullet();
-                        PushbackByRecoil(30f);
+                        PushbackByRecoil(25f);
                     }
                     
                     if (gameModel.Player.Gun.GunType == GunType.Pistol)

@@ -165,6 +165,7 @@ namespace Logic.Game.Classes
                         {
                             gameModel.Enemies.Remove(enemy);
                             gameModel.Player.CurrentXP += enemy.RewardXP;
+                            gameModel.Player.KillCount++;
                         }
 
                         break;
