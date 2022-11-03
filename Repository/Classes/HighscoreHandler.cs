@@ -36,8 +36,12 @@ namespace Repository.Classes
                     // Player
                     string player = (string)jsonObj["player"];
 
-                    // XP
-                    int xp = (int)jsonObj["xp"];
+                    int xp = 0;
+
+                    if (jsonObj.ContainsKey("xp"))
+                    {
+                        xp = (int)jsonObj["xp"];
+                    }
 
                     highscoreModel.Player = player;
                     highscoreModel.Highscore = xp;

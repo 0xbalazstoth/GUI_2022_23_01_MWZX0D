@@ -35,50 +35,69 @@ namespace Repository.Classes
 
                 // Deserialize json to object
                 JObject jsonObj = JObject.Parse(json);
-
                 loadedGame.Player = new PlayerModel();
 
-                // Inventory items
-                JArray inventoryArray = (JArray)jsonObj["inventory"];
-
-                if (inventoryArray.HasValues)
+                if (jsonObj.ContainsKey("inventory"))
                 {
-                    InventoryModel inventory = new InventoryModel();
-                    inventory.Items = new Dictionary<int, ICollectibleItem>();
+                    // Inventory items
+                    JArray inventoryArray = (JArray)jsonObj["inventory"];
 
-                    foreach (JObject itemObj in inventoryArray)
+                    if (inventoryArray.HasValues)
                     {
-                        JObject item = (JObject)itemObj["item"];
-                        string itemTypeStr = (string)item["itemType"];
-                        ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemTypeStr);
-                        int itemQuantity = (int)item["itemQuantity"];
-                        int itemId = (int)item["itemId"];
-                        inventory.Items.Add(itemId, new CollectibleItemModel() { Id = itemId, Quantity = itemQuantity, ItemType = itemType });
+                        InventoryModel inventory = new InventoryModel();
+                        inventory.Items = new Dictionary<int, ICollectibleItem>();
+
+                        foreach (JObject itemObj in inventoryArray)
+                        {
+                            JObject item = (JObject)itemObj["item"];
+                            string itemTypeStr = (string)item["itemType"];
+                            ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemTypeStr);
+                            int itemQuantity = (int)item["itemQuantity"];
+                            int itemId = (int)item["itemId"];
+                            inventory.Items.Add(itemId, new CollectibleItemModel() { Id = itemId, Quantity = itemQuantity, ItemType = itemType });
+                        }
+
+                        // Inventory current capacity
+                        int inventoryCurrentCapacity = (int)jsonObj["inventoryCurrentCapacity"];
+
+                        // Coins
+                        int coins = (int)jsonObj["coins"];
+
+                        // XP
+                        int xp = (int)jsonObj["xp"];
+
+                        loadedGame.Player.Inventory = inventory;
+                        loadedGame.Player.CurrentCoins = coins;
+                        loadedGame.Player.CurrentXP = xp;
+                        loadedGame.Player.Inventory.Capacity = inventoryCurrentCapacity;
                     }
+                    else
+                    {
+                        // Player saved, but inventory is empty
+                        loadedGame.Player.Inventory = new InventoryModel();
+                        loadedGame.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
+                        loadedGame.Player.Inventory.Capacity = 0;
 
-                    // Inventory current capacity
-                    int inventoryCurrentCapacity = (int)jsonObj["inventoryCurrentCapacity"];
+                        // Coins
+                        int coins = (int)jsonObj["coins"];
 
-                    // Coins
-                    int coins = (int)jsonObj["coins"];
+                        // XP
+                        int xp = (int)jsonObj["xp"];
 
-                    // XP
-                    int xp = (int)jsonObj["xp"];
-
-                    loadedGame.Player.Inventory = inventory;
-                    loadedGame.Player.CurrentCoins = coins;
-                    loadedGame.Player.CurrentXP = xp;
-                    loadedGame.Player.Inventory.Capacity = inventoryCurrentCapacity;
+                        loadedGame.Player.CurrentCoins = coins;
+                        loadedGame.Player.CurrentXP = xp;
+                    }
                 }
                 else
                 {
+                    // Player do not have any save data
                     loadedGame.Player.Inventory = new InventoryModel();
                     loadedGame.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
                     loadedGame.Player.CurrentCoins = 0;
                     loadedGame.Player.CurrentXP = 0;
                     loadedGame.Player.Inventory.Capacity = 0;
                 }
-                
+
                 loadedGame.Player.Name = saveName;
             }
 
