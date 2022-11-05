@@ -1,4 +1,5 @@
-﻿using Model.Game.Interfaces;
+﻿using Model.Game.Enums;
+using Model.Game.Interfaces;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;

@@ -162,7 +162,13 @@ namespace Renderer
                     gameModel.Gates[i].Hitbox.FillColor = Color.Transparent;
                     gameModel.Gates[i].Hitbox.OutlineColor = Color.Red;
                     gameModel.Gates[i].Hitbox.OutlineThickness = 1.0f;
+                    
+                    gameModel.Gates[i].InteractArea.FillColor = Color.Transparent;
+                    gameModel.Gates[i].InteractArea.OutlineColor = Color.Green;
+                    gameModel.Gates[i].InteractArea.OutlineThickness = 1.0f;
+                    
                     window.Draw(gameModel.Gates[i].Hitbox);
+                    window.Draw(gameModel.Gates[i].InteractArea);
                 }
 
                 gameModel.Gates[i].Animations[0].Texture = gateTexture;

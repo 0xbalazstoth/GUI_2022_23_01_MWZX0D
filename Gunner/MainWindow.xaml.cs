@@ -276,8 +276,8 @@ namespace Gunner
                     animationLogic.Update(gameLogic.GetDeltaTime);
 
                     gameLogic.UpdateBullets(window);
-                    gameLogic.UpdateCamera(gameModel.CameraView);
                     gameLogic.MoveCamera(gameModel.CurrentMap.GetMapWidth, gameLogic.GetDeltaTime);
+                    gameLogic.UpdateCamera(gameModel.CameraView);
                     gameLogic.UpdatePlayer(window);
 
                     gameLogic.UpdateTilemap();
@@ -291,9 +291,9 @@ namespace Gunner
                     gameUILogic.UpdatePlayerCoinText();
                     gameUILogic.UpdateSpeedPotionTimeLeftText();
                     gameUILogic.UpdateKillCountText();
+                    gameUILogic.UpdateGateEnterText(window);
 
                     gameLogic.UpdateEnemies(window);
-                    enemyLogic.HandleMovement();
                 }
                 //else if (gameModel.Player.IsDead)
                 //{
@@ -328,6 +328,7 @@ namespace Gunner
             gameController.HandlePauseMenuInput(e);
             gameController.HandleMainMenuInput(e);
             gameController.HandleRespawnInput(e);
+            gameController.HandleGateOpenInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)

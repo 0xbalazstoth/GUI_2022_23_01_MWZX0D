@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using Model.Game.Enums;
+using SFML.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,7 @@ namespace Model.Game.Classes
         public Sprite GateSprite { get; set; }
         public List<AnimationModel> Animations { get; set; }
         public RectangleShape Hitbox { get; set; }
+        public GateState GateState { get; set; }
+        public RectangleShape InteractArea { get; set; }
     }
 }

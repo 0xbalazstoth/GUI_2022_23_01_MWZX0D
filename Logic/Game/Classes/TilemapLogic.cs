@@ -35,10 +35,10 @@ namespace Logic.Game.Classes
             //float scale = 0.10f;
             float[,] noiseValues = SimplexNoise.Noise.Calc2D((int)width, (int)height, scale);
 
-            int grassType1 = 1;
-            int grassType2 = 2;
-            int grassType3 = 3;
-            int wall = 4;
+            int grassType1 = 169;
+            int grassType2 = 168;
+            int grassType3 = 470;
+            int wall = 10;
 
             int[] generatedMap = new int[height * width];
 
@@ -81,10 +81,12 @@ namespace Logic.Game.Classes
             //float scale = 0.10f;
             float[,] noiseValues = SimplexNoise.Noise.Calc2D((int)width, (int)height, scale);
 
-            int grassType1 = 1;
-            int grassType2 = 2;
-            int grassType3 = 3;
-            int wall = 4;
+            int[] grassTerrainSets = new int[] { 169, 168, 170, 171};
+
+            int grassType1 = 169;
+            int grassType2 = 170;
+            int grassType3 = 171;
+            int wall = 10;
 
             int[] generatedMap = new int[height * width];
 
@@ -93,6 +95,31 @@ namespace Logic.Game.Classes
             {
                 for (int y = 0; y < width; y++)
                 {
+                    //for (int t = 0; t < grassTerrainSets.Length; t++)
+                    //{
+                    //    // Place grass terrain sets in one place
+                    //    if (noiseValues[x, y] < 70f + (t * 10f))
+                    //    {
+                    //        generatedMap[x + y * height] = grassTerrainSets[t];
+                    //    }
+                    //    else if (noiseValues[x, y] < 80f + (t * 10f))
+                    //    {
+                    //        generatedMap[x + y * height] = grassTerrainSets[t];
+                    //    }
+                    //    else if (noiseValues[x, y] < 90f + (t * 10f))
+                    //    {
+                    //        generatedMap[x + y * height] = grassTerrainSets[t];
+                    //    }
+                    //    else if (noiseValues[x, y] < 100f + (t * 10f))
+                    //    {
+                    //        generatedMap[x + y * height] = grassTerrainSets[t];
+                    //    }
+                    //    else
+                    //    {
+                    //        generatedMap[x + y * height] = wall;
+                    //    }
+                    //}
+
                     if (noiseValues[x, y] < 70f)
                     {
                         generatedMap[x + y * height] = grassType1;
@@ -104,6 +131,10 @@ namespace Logic.Game.Classes
                     else if (noiseValues[x, y] < 150f)
                     {
                         generatedMap[x + y * height] = grassType2;
+                    }
+                    else
+                    {
+                        generatedMap[x + y * height] = grassType3;
                     }
                 }
             }

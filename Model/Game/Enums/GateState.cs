@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Model.Game.Enums
 {
-    public enum PlayerState
+    public enum GateState
     {
         InLobby,
         InKillArena,
-        InBossArena
+        InBossArena,
+        InShop
     }
 }

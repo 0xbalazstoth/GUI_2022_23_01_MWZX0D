@@ -23,6 +23,6 @@ namespace Model.Game.Classes
         public int Deaths { get; set; }
         public bool IsDead { get; set; }
         public DateTime RespawnTimer { get; set; }
-        public PlayerState PlayerState { get; set; }
+        public GateState PlayerState { get; set; }
     }
 }

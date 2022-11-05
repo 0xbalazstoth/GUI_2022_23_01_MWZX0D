@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.System;
 using System.Collections.Generic;
 using SFML.Audio;
+using Model.Game.Enums;
 
 namespace Model.Game.Classes
 {

@@ -174,11 +174,6 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void HandleMovement()
-        {
-            
-        }
-
         public void LoadTexture(string filename)
         {
 

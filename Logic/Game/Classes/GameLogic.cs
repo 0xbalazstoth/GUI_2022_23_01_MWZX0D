@@ -81,23 +81,29 @@ namespace Logic.Game.Classes
             //gameModel.Player.Position = spawnPoints[spawnPointIndex];
             
             gameModel.Player.Position = new Vector2f(300, 500);
-            gameModel.Player.PlayerState = PlayerState.InLobby;
+            gameModel.Player.PlayerState = GateState.InLobby;
 
             List<GateModel> gates = new List<GateModel>();
             GateModel shopGate = new GateModel();
             shopGate.GateSprite = new Sprite();
             shopGate.GateSprite.Position = new Vector2f(120, 20);
             shopGate.Hitbox = new RectangleShape();
+            shopGate.InteractArea = new RectangleShape();
+            shopGate.GateState = GateState.InShop;
 
             GateModel killArenaGate = new GateModel();
             killArenaGate.GateSprite = new Sprite();
             killArenaGate.GateSprite.Position = new Vector2f(850, 20);
             killArenaGate.Hitbox = new RectangleShape();
+            killArenaGate.InteractArea = new RectangleShape();
+            killArenaGate.GateState = GateState.InKillArena;
 
             GateModel bossArenaGate = new GateModel();
             bossArenaGate.GateSprite = new Sprite();
             bossArenaGate.GateSprite.Position = new Vector2f(1700, 20);
             bossArenaGate.Hitbox = new RectangleShape();
+            bossArenaGate.InteractArea = new RectangleShape();
+            bossArenaGate.GateState = GateState.InBossArena;
 
             gates.Add(shopGate);
             gates.Add(killArenaGate);
@@ -224,6 +230,7 @@ namespace Logic.Game.Classes
 
         public void UpdateEnemies(RenderWindow window)
         {
+            // TODO: Allow enemies only in Kill arena and boss arena
             enemyLogic.UpdateAnimationTextures();
             enemyLogic.HandleBulletCollision();
 
@@ -262,6 +269,10 @@ namespace Logic.Game.Classes
                 gameModel.Gates[i].Hitbox.Size = new Vector2f(gameModel.Gates[i].GateSprite.GetGlobalBounds().Width, gameModel.Gates[i].GateSprite.GetGlobalBounds().Height - 95f);
                 gameModel.Gates[i].Hitbox.Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X, gameModel.Gates[i].GateSprite.Position.Y + 30f);
                 gameModel.Gates[i].Hitbox.Origin = new Vector2f(gameModel.Gates[i].GateSprite.Origin.X, gameModel.Gates[i].GateSprite.Origin.Y);
+
+                gameModel.Gates[i].InteractArea.Size = new Vector2f(gameModel.Gates[i].GateSprite.GetGlobalBounds().Width, 50f);
+                gameModel.Gates[i].InteractArea.Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X, gameModel.Gates[i].GateSprite.GetGlobalBounds().Height - 32f);
+
                 gameModel.Gates[i].GateSprite.Texture = gameModel.Gates[i].Animations[0].Texture;
                 gameModel.Gates[i].GateSprite.TextureRect = gameModel.Gates[i].Animations[0].TextureRect;
             }

@@ -18,5 +18,6 @@ namespace Logic.UI.Interfaces
         public void UpdateSpeedPotionTimeLeftText();
         public void UpdateKillCountText();
         public void UpdateGameOverText(RenderWindow window);
+        public void UpdateGateEnterText(RenderWindow window);
     }
 }

@@ -144,6 +144,26 @@ namespace Logic.Game.Classes
                 {
                     gameModel.Player.Position = previousPosition;
                 }
+
+                if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].InteractArea.GetGlobalBounds()))
+                {
+                    if (gameModel.Gates[i].GateState == GateState.InKillArena)
+                    {
+                        gameModel.Player.PlayerState = GateState.InKillArena;
+                    }
+                    else if (gameModel.Gates[i].GateState == GateState.InBossArena)
+                    {
+                        gameModel.Player.PlayerState = GateState.InBossArena;
+                    }
+                    else if (gameModel.Gates[i].GateState == GateState.InShop)
+                    {
+                        gameModel.Player.PlayerState = GateState.InShop;
+                    }
+                }
+                else
+                {
+                    gameModel.Player.PlayerState = GateState.InLobby;
+                }
             }
         }
 

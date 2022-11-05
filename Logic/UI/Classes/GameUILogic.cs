@@ -38,6 +38,7 @@ namespace Logic.UI.Classes
             uiModel.PlayerSpeedSprite = new Sprite();
             uiModel.PlayerKillCountText = new Text();
             uiModel.GameOverText = new Text();
+            uiModel.GateEnterText = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -69,6 +70,11 @@ namespace Logic.UI.Classes
 
             uiModel.GameOverText.FillColor = Color.White;
             uiModel.GameOverText.CharacterSize = 130;
+
+            uiModel.GateEnterText.FillColor = Color.White;
+            uiModel.GateEnterText.CharacterSize = 70;
+            uiModel.GateEnterText.OutlineColor = Color.Black;
+            uiModel.GateEnterText.OutlineThickness = 2;
         }
 
         public void UpdateFPS(float dt)
@@ -123,6 +129,13 @@ namespace Logic.UI.Classes
         {
             uiModel.GameOverText.DisplayedString = "Game Over";
             uiModel.GameOverText.Position = new Vector2f((window.Size.X / 2) - (uiModel.GameOverText.GetGlobalBounds().Width / 2), (window.Size.Y / 2) - (uiModel.GameOverText.GetGlobalBounds().Height / 2));
+        }
+
+        public void UpdateGateEnterText(RenderWindow window)
+        {
+            uiModel.GateEnterText.DisplayedString = "Press E to enter the gate";
+            uiModel.GateEnterText.Position = new Vector2f();
+            uiModel.GateEnterText.Position = new Vector2f((window.Size.X / 2) - (uiModel.GateEnterText.GetGlobalBounds().Width / 2), (window.Size.Y / 2) - (uiModel.GateEnterText.GetGlobalBounds().Height / 2));
         }
     }
 }
