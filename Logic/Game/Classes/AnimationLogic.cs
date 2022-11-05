@@ -162,7 +162,7 @@ namespace Logic.Game.Classes
                     ColumnsInRow = 16,
                     TotalRows = 1,
                     TotalColumns = 16,
-                    Speed = 5f,
+                    Speed = 10f,
                 });
             }
             #endregion

@@ -79,6 +79,7 @@ namespace Logic.Game.Classes
             Random rnd = new Random();
             int spawnPointIndex = rnd.Next(0, spawnPoints.Count);
             //gameModel.Player.Position = spawnPoints[spawnPointIndex];
+            
             gameModel.Player.Position = new Vector2f(300, 500);
             gameModel.Player.PlayerState = PlayerState.InLobby;
 
@@ -86,14 +87,17 @@ namespace Logic.Game.Classes
             GateModel shopGate = new GateModel();
             shopGate.GateSprite = new Sprite();
             shopGate.GateSprite.Position = new Vector2f(120, 20);
+            shopGate.Hitbox = new RectangleShape();
 
             GateModel killArenaGate = new GateModel();
             killArenaGate.GateSprite = new Sprite();
             killArenaGate.GateSprite.Position = new Vector2f(850, 20);
+            killArenaGate.Hitbox = new RectangleShape();
 
             GateModel bossArenaGate = new GateModel();
             bossArenaGate.GateSprite = new Sprite();
             bossArenaGate.GateSprite.Position = new Vector2f(1700, 20);
+            bossArenaGate.Hitbox = new RectangleShape();
 
             gates.Add(shopGate);
             gates.Add(killArenaGate);
@@ -127,7 +131,6 @@ namespace Logic.Game.Classes
             gameModel.LobbyMap.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
             gameModel.LobbyMap.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
             #endregion
-
             #region Kill arena
             uint killArenaWidth = 100;
             uint killArenaHeight = 100;
@@ -170,7 +173,7 @@ namespace Logic.Game.Classes
 
         public void UpdatePlayer(RenderWindow window)
         {
-            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 15f, gameModel.Player.GetGlobalBounds().Height - 5f);
+            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 15f, gameModel.Player.GetGlobalBounds().Height - 10f);
             gameModel.Player.Hitbox.Position = new Vector2f(gameModel.Player.Position.X, gameModel.Player.Position.Y);
             gameModel.Player.Hitbox.Origin = new Vector2f(gameModel.Player.Origin.X, gameModel.Player.Origin.Y);
 
@@ -256,6 +259,9 @@ namespace Logic.Game.Classes
 
             for (int i = 0; i < gameModel.Gates.Count; i++)
             {
+                gameModel.Gates[i].Hitbox.Size = new Vector2f(gameModel.Gates[i].GateSprite.GetGlobalBounds().Width, gameModel.Gates[i].GateSprite.GetGlobalBounds().Height - 95f);
+                gameModel.Gates[i].Hitbox.Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X, gameModel.Gates[i].GateSprite.Position.Y + 30f);
+                gameModel.Gates[i].Hitbox.Origin = new Vector2f(gameModel.Gates[i].GateSprite.Origin.X, gameModel.Gates[i].GateSprite.Origin.Y);
                 gameModel.Gates[i].GateSprite.Texture = gameModel.Gates[i].Animations[0].Texture;
                 gameModel.Gates[i].GateSprite.TextureRect = gameModel.Gates[i].Animations[0].TextureRect;
             }

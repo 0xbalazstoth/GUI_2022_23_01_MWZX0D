@@ -11,5 +11,6 @@ namespace Model.Game.Classes
     {
         public Sprite GateSprite { get; set; }
         public List<AnimationModel> Animations { get; set; }
+        public RectangleShape Hitbox { get; set; }
     }
 }

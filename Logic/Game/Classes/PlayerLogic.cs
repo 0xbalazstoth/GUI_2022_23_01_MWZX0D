@@ -102,15 +102,6 @@ namespace Logic.Game.Classes
             gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.IdleRight].Texture;
             gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect;
             gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-
-            //var movement = GetMovementByDirection(movementDirection);
-
-            //if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
-            //{
-            //    gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
-            //    gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
-            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            //}
         }
 
         public void UpdateDeltaTime(float dt)
@@ -144,6 +135,15 @@ namespace Logic.Game.Classes
             if (gameModel.Player.GetGlobalBounds().Intersects(item.GetGlobalBounds()))
             {
                 gameModel.Player.Position = previousPosition;
+            }
+
+            // Gates
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].Hitbox.GetGlobalBounds()))
+                {
+                    gameModel.Player.Position = previousPosition;
+                }
             }
         }
 
