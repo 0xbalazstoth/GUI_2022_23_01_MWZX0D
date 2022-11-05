@@ -31,5 +31,6 @@ namespace Model.Game.Classes
         public List<ICollectibleItem> CollectibleItems { get; set; }
         public List<Music> Musics { get; set; }
         public bool DebugMode { get; set; }
+        public List<GateModel> Gates { get; set; }
     }
 }

@@ -150,6 +150,22 @@ namespace Logic.Game.Classes
                 });
             }
             #endregion
+
+            #region Gate animation setup
+            foreach (GateModel gate in gameModel.Gates)
+            {
+                gate.Animations = new List<AnimationModel>();
+
+                gate.Animations.Add(new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 16,
+                    TotalRows = 1,
+                    TotalColumns = 16,
+                    Speed = 5f,
+                });
+            }
+            #endregion
         }
 
         public void Update(float dt)
@@ -234,6 +250,22 @@ namespace Logic.Game.Classes
                     
                     enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
                     gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
+                }
+            }
+
+            // Gate animation
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                for (int j = 0; j < gameModel.Gates[i].Animations.Count; j++)
+                {
+                    gameModel.Gates[i].Animations[j].Counter += gameModel.Gates[i].Animations[j].Speed * dt;
+
+                    if (gameModel.Gates[i].Animations[j].Counter >= (float)gameModel.Gates[i].Animations[j].ColumnsInRow)
+                    {
+                        gameModel.Gates[i].Animations[j].Counter = 0f;
+                    }
+
+                    gameModel.Gates[i].Animations[j].TextureRect = new IntRect((int)gameModel.Gates[i].Animations[j].Counter * gameModel.Gates[i].Animations[j].GetSpriteSize.X, gameModel.Gates[i].Animations[j].Row * gameModel.Gates[i].Animations[j].GetSpriteSize.Y, gameModel.Gates[i].Animations[j].GetSpriteSize.X, gameModel.Gates[i].Animations[j].GetSpriteSize.Y);
                 }
             }
         }

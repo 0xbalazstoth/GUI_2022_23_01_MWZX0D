@@ -27,6 +27,7 @@ namespace Renderer
         private Texture pistolTexture;
         private Texture shotgunTexture;
         private Texture hpTexture;
+        private Texture gateTexture;
 
         public GameRenderer(IGameModel gameModel, string path)
         {
@@ -57,6 +58,8 @@ namespace Renderer
             shotgunTexture = new Texture("Assets/Textures/shotgun.png");
 
             hpTexture = new Texture("Assets/Textures/heart.png");
+
+            gateTexture = new Texture("Assets/Textures/gate.png");
         }
 
         public void Draw(RenderTarget window)
@@ -150,6 +153,14 @@ namespace Renderer
             {
                 shotgun.Texture = shotgunTexture;
                 shotgun.TextureRect = new IntRect(0, 0, 16, 6);
+            }
+
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                gameModel.Gates[i].Animations[0].Texture = gateTexture;
+                gameModel.Gates[i].Animations[0].Sprite = new Sprite(gameModel.Gates[i].Animations[0].Texture);
+                gameModel.Gates[i].Animations[0].TextureRect = new IntRect(0, 0, gameModel.Gates[i].Animations[0].GetSpriteSize.X, gameModel.Gates[i].Animations[0].GetSpriteSize.Y);
+                window.Draw(gameModel.Gates[i].GateSprite);
             }
         }
 

@@ -81,6 +81,25 @@ namespace Logic.Game.Classes
             //gameModel.Player.Position = spawnPoints[spawnPointIndex];
             gameModel.Player.Position = new Vector2f(300, 500);
             gameModel.Player.PlayerState = PlayerState.InLobby;
+
+            List<GateModel> gates = new List<GateModel>();
+            GateModel shopGate = new GateModel();
+            shopGate.GateSprite = new Sprite();
+            shopGate.GateSprite.Position = new Vector2f(120, 20);
+
+            GateModel killArenaGate = new GateModel();
+            killArenaGate.GateSprite = new Sprite();
+            killArenaGate.GateSprite.Position = new Vector2f(850, 20);
+
+            GateModel bossArenaGate = new GateModel();
+            bossArenaGate.GateSprite = new Sprite();
+            bossArenaGate.GateSprite.Position = new Vector2f(1700, 20);
+
+            gates.Add(shopGate);
+            gates.Add(killArenaGate);
+            gates.Add(bossArenaGate);
+
+            gameModel.Gates = gates;
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -110,10 +129,6 @@ namespace Logic.Game.Classes
             #endregion
 
             #region Kill arena
-            //gameModel.Map.CollidableIDs = new List<int>();
-            //gameModel.Map.TilesetTexture = new Texture(tilesetFile);
-
-            // Kill Arena map
             uint killArenaWidth = 100;
             uint killArenaHeight = 100;
             float killArenaScale = 1f;
@@ -134,23 +149,23 @@ namespace Logic.Game.Classes
             tilemapLogic.InitializeVertices(gameModel.KillArenaMap);
             #endregion
 
-            gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
-            gameModel.CurrentMap.MapLayers = gameModel.KillArenaMap.MapLayers;
-            gameModel.CurrentMap.Width = gameModel.KillArenaMap.Width;
-            gameModel.CurrentMap.Height = gameModel.KillArenaMap.Height;
-            gameModel.CurrentMap.TileWidth = gameModel.KillArenaMap.TileWidth;
-            gameModel.CurrentMap.TileHeight = gameModel.KillArenaMap.TileHeight;
-            gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
-            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
+            //gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
+            //gameModel.CurrentMap.MapLayers = gameModel.KillArenaMap.MapLayers;
+            //gameModel.CurrentMap.Width = gameModel.KillArenaMap.Width;
+            //gameModel.CurrentMap.Height = gameModel.KillArenaMap.Height;
+            //gameModel.CurrentMap.TileWidth = gameModel.KillArenaMap.TileWidth;
+            //gameModel.CurrentMap.TileHeight = gameModel.KillArenaMap.TileHeight;
+            //gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
+            //gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
 
-            //gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
-            //gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
-            //gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
-            //gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
-            //gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
-            //gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
-            //gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
-            //gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+            gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+            gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+            gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+            gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+            gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+            gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+            gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
         }
 
         public void UpdatePlayer(RenderWindow window)
@@ -238,6 +253,12 @@ namespace Logic.Game.Classes
         public void UpdateTilemap()
         {
             tilemapLogic.UpdateItemAnimationTextures();
+
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                gameModel.Gates[i].GateSprite.Texture = gameModel.Gates[i].Animations[0].Texture;
+                gameModel.Gates[i].GateSprite.TextureRect = gameModel.Gates[i].Animations[0].TextureRect;
+            }
         }
 
         public void UpdateDeltaTime()

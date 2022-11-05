@@ -30,6 +30,7 @@
     <None Remove="Assets\Textures\enemy_eye_right.png" />
     <None Remove="Assets\Textures\enemy_move_left.png" />
     <None Remove="Assets\Textures\enemy_move_right.png" />
+    <None Remove="Assets\Textures\gate.png" />
     <None Remove="Assets\Textures\health_potion.png" />
     <None Remove="Assets\Textures\health_potion_sheet.png" />
     <None Remove="Assets\Textures\heart.png" />
@@ -98,6 +99,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\enemy_eye_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\gate.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\health_potion.png">
