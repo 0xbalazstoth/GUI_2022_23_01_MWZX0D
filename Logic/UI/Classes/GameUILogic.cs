@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.UI.Classes
+namespace Model.Tools
 {
     public class GameUILogic : IGameUILogic
     {
