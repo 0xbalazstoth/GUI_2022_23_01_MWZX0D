@@ -23,8 +23,9 @@ namespace Logic.Game.Classes
         {
             this.gameModel = gameModel;
 
-            gameModel.Map = new TilemapModel();
+            gameModel.CurrentMap = new TilemapModel();
             gameModel.KillArenaMap = new TilemapModel();
+            gameModel.LobbyMap = new TilemapModel();
         }
 
         public int[] CollisionMapGeneration(uint height, uint width, float scale, int seed = 209323094)
@@ -112,15 +113,15 @@ namespace Logic.Game.Classes
 
         public int GetTileID(int layer, int x, int y)
         {
-            var paramsAreInvalid = layer < 0 || layer >= gameModel.Map.MapLayers.Count ||
-                x < 0 || x >= gameModel.Map.Width ||
-                y < 0 || y >= gameModel.Map.Height;
+            var paramsAreInvalid = layer < 0 || layer >= gameModel.CurrentMap.MapLayers.Count ||
+                x < 0 || x >= gameModel.CurrentMap.Width ||
+                y < 0 || y >= gameModel.CurrentMap.Height;
 
-            return paramsAreInvalid ? -1 : gameModel.Map.MapLayers[layer][y * (int)gameModel.Map.Width + x];
+            return paramsAreInvalid ? -1 : gameModel.CurrentMap.MapLayers[layer][y * (int)gameModel.CurrentMap.Width + x];
         }
         public Vector2f GetTileWorldPosition(int x, int y)
         {
-            return new(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight);
+            return new(x * gameModel.CurrentMap.TileWidth, y * gameModel.CurrentMap.TileHeight);
         }
 
         public override string ToString()
@@ -178,18 +179,18 @@ namespace Logic.Game.Classes
         public List<Vector2f> GetTileIdCoordinatesByMapLayer(int layer, params int[] tileIds)
         {
             var points = new List<Vector2f>();
-            for (int i = 0; i < gameModel.Map.MapLayers[layer].Length; i++)
+            for (int i = 0; i < gameModel.CurrentMap.MapLayers[layer].Length; i++)
             {
                 for (int t = 0; t < tileIds.Length; t++)
                 {
-                    if (gameModel.Map.MapLayers[layer][i] == tileIds[t])
+                    if (gameModel.CurrentMap.MapLayers[layer][i] == tileIds[t])
                     {
-                        int x = i % (int)gameModel.Map.Width;
-                        int y = i / (int)gameModel.Map.Width;
+                        int x = i % (int)gameModel.CurrentMap.Width;
+                        int y = i / (int)gameModel.CurrentMap.Width;
 
-                        if (x > gameModel.Map.TileWidth && y > gameModel.Map.TileHeight)
+                        if (x > gameModel.CurrentMap.TileWidth && y > gameModel.CurrentMap.TileHeight)
                         {
-                            points.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+                            points.Add(new Vector2f(x * gameModel.CurrentMap.TileWidth, y * gameModel.CurrentMap.TileHeight));
                         }
                     }
                 }

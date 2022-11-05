@@ -20,6 +20,7 @@ namespace Logic.Game.Interfaces
         void LoadTexture(string filename);
         void LoadTexture(Texture filename);
         void HandleEnemyCollision();
+        void HandleEnemyBulletCollision();
         void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
         void FlipAndRotateGun();

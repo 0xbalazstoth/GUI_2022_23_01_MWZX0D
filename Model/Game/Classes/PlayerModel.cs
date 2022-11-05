@@ -1,3 +1,4 @@
+using Model.Game.Enums;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,8 @@ namespace Model.Game.Classes
         public bool IsSpeedPotionIsInUse { get; set; }
         public int KillCount { get; set; }
         public int Deaths { get; set; }
+        public bool IsDead { get; set; }
+        public DateTime RespawnTimer { get; set; }
+        public PlayerState PlayerState { get; set; }
     }
 }

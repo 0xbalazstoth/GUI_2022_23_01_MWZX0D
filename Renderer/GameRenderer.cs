@@ -67,6 +67,11 @@ namespace Renderer
             DrawEnemy(window);
             DrawPlayer(window);
             DrawBullets(window);
+
+            if (gameModel.Player.IsDead)
+            {
+                //window.Clear(Color.Black);
+            }
         }
 
         private void DrawBullets(RenderTarget window)
@@ -268,9 +273,9 @@ namespace Renderer
 
         private void DrawTilemap(RenderTarget window)
         {
-            for (int i = 0; i < gameModel.Map.Vertices.Count; i++)
+            for (int i = 0; i < gameModel.CurrentMap.Vertices.Count; i++)
             {
-                window.Draw(gameModel.Map.Vertices[i], PrimitiveType.Quads, new(BlendMode.Alpha, Transform.Identity, gameModel.Map.TilesetTexture, null));
+                window.Draw(gameModel.CurrentMap.Vertices[i], PrimitiveType.Quads, new(BlendMode.Alpha, Transform.Identity, gameModel.CurrentMap.TilesetTexture, null));
             }
         }
     }

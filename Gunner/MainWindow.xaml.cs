@@ -270,14 +270,14 @@ namespace Gunner
                     isInWindow = true;
                 }
 
-                if (isInWindow && gameModel.Player.IsFocusedInGame)
+                if (isInWindow && gameModel.Player.IsFocusedInGame) //  && gameModel.Player.IsDead == false
                 {
                     gameUILogic.UpdateFPS(gameLogic.GetDeltaTime);
                     animationLogic.Update(gameLogic.GetDeltaTime);
 
                     gameLogic.UpdateBullets(window);
                     gameLogic.UpdateCamera(gameModel.CameraView);
-                    gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
+                    gameLogic.MoveCamera(gameModel.CurrentMap.GetMapWidth, gameLogic.GetDeltaTime);
                     gameLogic.UpdatePlayer(window);
 
                     gameLogic.UpdateTilemap();
@@ -295,6 +295,10 @@ namespace Gunner
                     gameLogic.UpdateEnemies(window);
                     enemyLogic.HandleMovement();
                 }
+                //else if (gameModel.Player.IsDead)
+                //{
+                //    gameUILogic.UpdateGameOverText(window);
+                //}
             }
         }
 
@@ -323,6 +327,7 @@ namespace Gunner
             gameController.HandleInventoryInput(e);
             gameController.HandlePauseMenuInput(e);
             gameController.HandleMainMenuInput(e);
+            gameController.HandleRespawnInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)

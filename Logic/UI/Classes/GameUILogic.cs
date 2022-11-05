@@ -37,6 +37,7 @@ namespace Logic.UI.Classes
             uiModel.PlayerSpeedTimerText = new Text();
             uiModel.PlayerSpeedSprite = new Sprite();
             uiModel.PlayerKillCountText = new Text();
+            uiModel.GameOverText = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -65,6 +66,9 @@ namespace Logic.UI.Classes
             uiModel.PlayerKillCountText.FillColor = Color.Red;
             uiModel.PlayerKillCountText.Position = new Vector2f(10, 150);
             uiModel.PlayerKillCountText.CharacterSize = 28;
+
+            uiModel.GameOverText.FillColor = Color.White;
+            uiModel.GameOverText.CharacterSize = 130;
         }
 
         public void UpdateFPS(float dt)
@@ -113,6 +117,12 @@ namespace Logic.UI.Classes
         public void UpdateKillCountText()
         {
             uiModel.PlayerKillCountText.DisplayedString = $"Kills: {gameModel.Player.KillCount}";
+        }
+
+        public void UpdateGameOverText(RenderWindow window)
+        {
+            uiModel.GameOverText.DisplayedString = "Game Over";
+            uiModel.GameOverText.Position = new Vector2f((window.Size.X / 2) - (uiModel.GameOverText.GetGlobalBounds().Width / 2), (window.Size.Y / 2) - (uiModel.GameOverText.GetGlobalBounds().Height / 2));
         }
     }
 }

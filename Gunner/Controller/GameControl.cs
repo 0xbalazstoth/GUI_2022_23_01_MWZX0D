@@ -218,6 +218,19 @@ namespace Gunner.Controller
                 }
             }
         }
+
+        public void HandleRespawnInput(KeyEventArgs eventKey)
+        {
+            if (gameModel.Player.IsDead)
+            {
+                if (eventKey.Key == System.Windows.Input.Key.Space)
+                {
+                    gameModel.Player.IsDead = false;
+                    gameModel.Player.CurrentHP = 100;
+                    gameModel.Player.Position = new Vector2f(300, 300);
+                }
+            }
+        }
         
         public void HandleGunSwitchInput(RenderWindow window)
         {

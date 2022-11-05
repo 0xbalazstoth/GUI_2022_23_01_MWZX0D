@@ -19,7 +19,6 @@ using System.Timers;
 
 namespace Logic.Game.Classes
 {
-
     public class PlayerLogic : IPlayerLogic
     {
         private IGameModel gameModel;
@@ -442,7 +441,7 @@ namespace Logic.Game.Classes
             // Shake camera
             if (gameModel.Player.Gun.CurrentAmmo > 0)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 2f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 2f);
             }
         }
 
@@ -503,6 +502,31 @@ namespace Logic.Game.Classes
             });
 
             gameModel.Player.Gun.Bullets.Add(tempBullet);
+        }
+
+        public void HandleEnemyBulletCollision()
+        {
+            // Check if player is hit by enemy bullet
+            foreach (var enemy in gameModel.Enemies)
+            {
+                foreach (var bullet in enemy.Gun.Bullets)
+                {
+                    if (bullet.Bullet.GetGlobalBounds().Intersects(gameModel.Player.Hitbox.GetGlobalBounds()))
+                    {
+                        if (gameModel.Player.CurrentHP >= 1)
+                        {
+                            gameModel.Player.CurrentHP -= enemy.Gun.Damage;
+                        }
+
+                        //if (gameModel.Player.CurrentHP <= 0)
+                        //{
+                        //    enemy.Gun.Bullets.Remove(bullet);
+                        //    gameModel.Player.IsDead = true;
+                        //}
+                        return;
+                    }
+                }
+            }
         }
     }
 }

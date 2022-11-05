@@ -78,31 +78,40 @@ namespace Logic.Game.Classes
             var spawnPoints = GetSafeSpawnPoints();
             Random rnd = new Random();
             int spawnPointIndex = rnd.Next(0, spawnPoints.Count);
-            gameModel.Player.Position = spawnPoints[spawnPointIndex];
+            //gameModel.Player.Position = spawnPoints[spawnPointIndex];
+            gameModel.Player.Position = new Vector2f(300, 500);
+            gameModel.Player.PlayerState = PlayerState.InLobby;
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
         {
-            //var tilemapModel = tilemapRepository.LoadTMXFile(tmxFile);
-            //TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
-            //tmapLoader.LoadTMXFile(tmxFile);
-            //tmapLoader.InitializeVertices();
+            gameModel.CurrentMap.CollidableIDs = new List<int>();
+            gameModel.CurrentMap.TilesetTexture = new Texture(tilesetFile);
+            foreach (var id in gameModel.MapCollidibleIDs)
+            {
+                gameModel.CurrentMap.CollidableIDs.Add(id);
+            }
 
+            #region Lobby
+            TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
+            tmapLoader.LoadTMXFile(tmxFile);
+            tmapLoader.InitializeVertices();
+
+            gameModel.LobbyMap.CollidableIDs = new List<int>();
+            gameModel.LobbyMap.Vertices = tmapLoader.Vertices;
+            gameModel.LobbyMap.TilesetTexture = tmapLoader.TilesetTexture;
+            gameModel.LobbyMap.MapLayers = tmapLoader.MapLayers;
+            gameModel.LobbyMap.Width = tmapLoader.Width;
+            gameModel.LobbyMap.Height = tmapLoader.Height;
+            gameModel.LobbyMap.TileWidth = tmapLoader.TileWidth;
+            gameModel.LobbyMap.TileHeight = tmapLoader.TileHeight;
+            gameModel.LobbyMap.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
+            gameModel.LobbyMap.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
+            #endregion
+
+            #region Kill arena
             //gameModel.Map.CollidableIDs = new List<int>();
-            //gameModel.Map.CollidableIDs.Add(4);
             //gameModel.Map.TilesetTexture = new Texture(tilesetFile);
-            //gameModel.Map.Vertices = tmapLoader.Vertices;
-            //gameModel.Map.MapLayers = tmapLoader.MapLayers;
-            //gameModel.Map.Width = tmapLoader.Width;
-            //gameModel.Map.Height = tmapLoader.Height;
-            //gameModel.Map.TileWidth = tmapLoader.TileWidth;
-            //gameModel.Map.TileHeight = tmapLoader.TileHeight;
-            //gameModel.Map.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
-            //gameModel.Map.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
-
-            gameModel.Map.CollidableIDs = new List<int>();
-            gameModel.Map.CollidableIDs.Add(4);
-            gameModel.Map.TilesetTexture = new Texture(tilesetFile);
 
             // Kill Arena map
             uint killArenaWidth = 100;
@@ -112,28 +121,36 @@ namespace Logic.Game.Classes
             uint killArenaTileHeight = 32;
             int[] collisionLayer = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
             gameModel.KillArenaMap.CollidableIDs = new List<int>();
-            gameModel.KillArenaMap.CollidableIDs.Add(4);
-            gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
             gameModel.KillArenaMap.MapLayers = new List<int[]>();
             gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
             gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
+            gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
             gameModel.KillArenaMap.Width = killArenaWidth;
             gameModel.KillArenaMap.Height = killArenaHeight;
             gameModel.KillArenaMap.TileWidth = killArenaTileWidth;
             gameModel.KillArenaMap.TileHeight = killArenaTileHeight;
             gameModel.KillArenaMap.Size = new Vector2u(killArenaWidth, killArenaHeight);
             gameModel.KillArenaMap.TileSize = new Vector2u(killArenaTileWidth, killArenaHeight);
-
             tilemapLogic.InitializeVertices(gameModel.KillArenaMap);
+            #endregion
 
-            gameModel.Map.Vertices = gameModel.KillArenaMap.Vertices;
-            gameModel.Map.MapLayers = gameModel.KillArenaMap.MapLayers;
-            gameModel.Map.Width = gameModel.KillArenaMap.Width;
-            gameModel.Map.Height = gameModel.KillArenaMap.Height;
-            gameModel.Map.TileWidth = gameModel.KillArenaMap.TileWidth;
-            gameModel.Map.TileHeight = gameModel.KillArenaMap.TileHeight;
-            gameModel.Map.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
-            gameModel.Map.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
+            gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
+            gameModel.CurrentMap.MapLayers = gameModel.KillArenaMap.MapLayers;
+            gameModel.CurrentMap.Width = gameModel.KillArenaMap.Width;
+            gameModel.CurrentMap.Height = gameModel.KillArenaMap.Height;
+            gameModel.CurrentMap.TileWidth = gameModel.KillArenaMap.TileWidth;
+            gameModel.CurrentMap.TileHeight = gameModel.KillArenaMap.TileHeight;
+            gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
+            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
+
+            //gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+            //gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+            //gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+            //gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+            //gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+            //gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+            //gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+            //gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
         }
 
         public void UpdatePlayer(RenderWindow window)
@@ -145,8 +162,8 @@ namespace Logic.Game.Classes
             playerLogic.UpdateAnimationTextures();
             playerLogic.UpdateWorldPositionByMouse(window);
             playerLogic.UpdateDeltaTime(deltaTime);
-            playerLogic.UpdateTilePosition(gameModel.Map);
-            playerLogic.HandleMapCollision(gameModel.Map);
+            playerLogic.UpdateTilePosition(gameModel.CurrentMap);
+            playerLogic.HandleMapCollision(gameModel.CurrentMap);
             playerLogic.HandleEnemyCollision();
 
             foreach (ObjectEntityModel chest in gameModel.Objects)
@@ -161,6 +178,12 @@ namespace Logic.Game.Classes
             playerLogic.HandleInventory();
             playerLogic.UpdateHP();
             playerLogic.UpdateSpeedPotionTimer();
+            playerLogic.HandleEnemyBulletCollision();
+
+            //if (gameModel.Player.CurrentHP <= 0)
+            //{
+            //    gameModel.Player.IsDead = true;
+            //}
         }
         
         public void UpdateBullets(RenderWindow window)
@@ -279,7 +302,7 @@ namespace Logic.Game.Classes
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
                 coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
@@ -290,7 +313,7 @@ namespace Logic.Game.Classes
                 {
                     if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
                         j = 0;
                     }
                 }
@@ -300,7 +323,7 @@ namespace Logic.Game.Classes
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
                 healtPotionItem.IconFileName = "health_potion.png";
@@ -310,7 +333,7 @@ namespace Logic.Game.Classes
                 {
                     if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
                         j = 0;
                     }
                 }
@@ -320,7 +343,7 @@ namespace Logic.Game.Classes
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
-                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
                 speedPotion.IconFileName = "speed_potion.png";
@@ -330,7 +353,7 @@ namespace Logic.Game.Classes
                 {
                     if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
                     {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
                         j = 0;
                     }
                 }
@@ -347,15 +370,15 @@ namespace Logic.Game.Classes
                     {
                         var xTilePosition = item.Item.Position.X;
                         var yTilePosition = item.Item.Position.Y;
-                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.CurrentMap.TileSize.X), (int)((int)yTilePosition / gameModel.CurrentMap.TileSize.Y)) + new Vector2i(x, y);
                         var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                        if (gameModel.CurrentMap.CollidableIDs.Contains(currentTileID) == false)
                         {
                             continue;
                         }
 
                         var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.CurrentMap.TileSize.X, gameModel.CurrentMap.TileSize.Y);
                         var rect = item.Item.GetGlobalBounds();
 
                         if (tileRect.Intersects(rect))
@@ -365,12 +388,12 @@ namespace Logic.Game.Classes
                             var optimalPosition = new Vector2f(); 
                             var optimalDistance = float.MaxValue;
 
-                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+                            for (int xP = 0; xP < gameModel.CurrentMap.Size.X; xP++)
                             {
-                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+                                for (int yP = 0; yP < gameModel.CurrentMap.Size.Y; yP++)
                                 {
                                     var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
-                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+                                    if (gameModel.CurrentMap.CollidableIDs.Contains(tileID) == false)
                                     {
                                         var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
                                         var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
@@ -392,9 +415,10 @@ namespace Logic.Game.Classes
                 }
 
                 // Spawn items inside the map
-                if (item.Item.Position.X < 0 || item.Item.Position.X > gameModel.Map.Size.X * gameModel.Map.TileSize.X || item.Item.Position.Y < 0 || item.Item.Position.Y > gameModel.Map.Size.Y * gameModel.Map.TileSize.Y)
+                if (item.Item.Position.X < 0 || item.Item.Position.X > gameModel.CurrentMap.Size.X * gameModel.CurrentMap.TileSize.X || item.Item.Position.Y < 0 || item.Item.Position.Y > gameModel.CurrentMap.Size.Y * gameModel.CurrentMap.TileSize.Y)
                 {
                     gameModel.CollectibleItems.Remove(item);
+                    return;
                 }
             }
         }
@@ -440,18 +464,18 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
             }
-            if (gameModel.CameraView.Center.X > gameModel.Map.GetMapWidth - gameModel.CameraView.Size.X / 2f)
+            if (gameModel.CameraView.Center.X > gameModel.CurrentMap.GetMapWidth - gameModel.CameraView.Size.X / 2f)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.Map.GetMapWidth - gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CurrentMap.GetMapWidth - gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
             }
 
             if (gameModel.CameraView.Center.Y < gameModel.CameraView.Size.Y / 2f)
             {
                 gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.CameraView.Size.Y / 2f);
             }
-            if (gameModel.CameraView.Center.Y > gameModel.Map.GetMapHeight - gameModel.CameraView.Size.Y / 2f)
+            if (gameModel.CameraView.Center.Y > gameModel.CurrentMap.GetMapHeight - gameModel.CameraView.Size.Y / 2f)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.Map.GetMapWidth - gameModel.CameraView.Size.Y / 2f);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.CurrentMap.GetMapHeight - gameModel.CameraView.Size.Y / 2f);
             }
         }
 
@@ -459,22 +483,22 @@ namespace Logic.Game.Classes
         {
             // Find spawn points in map
             var spawnPoints = new List<Vector2f>();
-            for (int i = 0; i < gameModel.Map.MapLayers[0].Length; i++)
+            for (int i = 0; i < gameModel.CurrentMap.MapLayers[0].Length; i++)
             {
-                if (gameModel.Map.MapLayers[0][i] == 0)
+                if (gameModel.CurrentMap.MapLayers[0][i] == 0)
                 {
                     // Check if its not outside the map
-                    if (i % gameModel.Map.Width != 0 && i % gameModel.Map.Width != gameModel.Map.Width - 1)
+                    if (i % gameModel.CurrentMap.Width != 0 && i % gameModel.CurrentMap.Width != gameModel.CurrentMap.Width - 1)
                     {
                         // Check if its not on the edge of the map
-                        if (i > gameModel.Map.Width && i < gameModel.Map.MapLayers[0].Length - gameModel.Map.Width - 1)
+                        if (i > gameModel.CurrentMap.Width && i < gameModel.CurrentMap.MapLayers[0].Length - gameModel.CurrentMap.Width - 1)
                         {
-                            int x = i % (int)gameModel.Map.Width;
-                            int y = i / (int)gameModel.Map.Width;
+                            int x = i % (int)gameModel.CurrentMap.Width;
+                            int y = i / (int)gameModel.CurrentMap.Width;
 
-                            if (x > gameModel.Map.TileWidth && y > gameModel.Map.TileHeight)
+                            if (x > gameModel.CurrentMap.TileWidth && y > gameModel.CurrentMap.TileHeight)
                             { 
-                                spawnPoints.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+                                spawnPoints.Add(new Vector2f(x * gameModel.CurrentMap.TileWidth, y * gameModel.CurrentMap.TileHeight));
                             }
                         }
                     }

@@ -33,6 +33,7 @@ namespace Renderer
             uiModel.PlayerCoinText.Font = uiModel.Font;
             uiModel.PlayerSpeedTimerText.Font = uiModel.Font;
             uiModel.PlayerKillCountText.Font = uiModel.Font;
+            uiModel.GameOverText.Font = uiModel.Font;
 
             gameModel.Player.HPText.Font = uiModel.Font;
 
@@ -44,19 +45,26 @@ namespace Renderer
 
         public void Draw(RenderTarget window)
         {
-            window.Draw(DrawableFPSText());
-            window.Draw(DrawableAmmoText());
-            window.Draw(DrawableXPLevelText());
-            window.Draw(DrawablePlayerCoinSprite());
-            window.Draw(DrawablePlayerCoinText());
-            window.Draw(DrawableSpeedPotionTimerText());
-
-            if (gameModel.Player.IsSpeedPotionIsInUse)
+            if (gameModel.Player.IsDead == false)
             {
-                window.Draw(DrawableSpeedPotionSprite());
-            }
+                window.Draw(DrawableFPSText());
+                window.Draw(DrawableAmmoText());
+                window.Draw(DrawableXPLevelText());
+                window.Draw(DrawablePlayerCoinSprite());
+                window.Draw(DrawablePlayerCoinText());
+                window.Draw(DrawableSpeedPotionTimerText());
 
-            window.Draw(DrawablePlayerKillCountText());
+                if (gameModel.Player.IsSpeedPotionIsInUse)
+                {
+                    window.Draw(DrawableSpeedPotionSprite());
+                }
+
+                window.Draw(DrawablePlayerKillCountText());
+            }
+            else
+            {
+                window.Draw(DrawableGameOverText());
+            }
         }
 
         private Drawable DrawableFPSText()
@@ -97,6 +105,11 @@ namespace Renderer
         private Drawable DrawablePlayerKillCountText()
         {
             return uiModel.PlayerKillCountText;
+        }
+
+        private Drawable DrawableGameOverText()
+        {
+            return uiModel.GameOverText;
         }
     }
 }

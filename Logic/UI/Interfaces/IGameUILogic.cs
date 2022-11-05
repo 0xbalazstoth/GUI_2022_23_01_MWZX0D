@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace Logic.UI.Interfaces
         public void UpdatePlayerCoinText();
         public void UpdateSpeedPotionTimeLeftText();
         public void UpdateKillCountText();
+        public void UpdateGameOverText(RenderWindow window);
     }
 }

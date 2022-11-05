@@ -50,20 +50,20 @@ namespace Logic.Game.Classes
             {
                 gameModel.Enemies[enemyIdx].Position = new Vector2f(0, gameModel.Enemies[enemyIdx].Position.Y);
             }
-            if (gameModel.Enemies[enemyIdx].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
+            if (gameModel.Enemies[enemyIdx].Position.X > gameModel.CurrentMap.Width * gameModel.CurrentMap.TileSize.X)
             {
-                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[enemyIdx].Position.Y);
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.CurrentMap.Width * gameModel.CurrentMap.TileSize.X, gameModel.Enemies[enemyIdx].Position.Y);
             }
             if (gameModel.Enemies[enemyIdx].Position.Y < 0)
             {
                 gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, 0);
             }
-            if (gameModel.Enemies[enemyIdx].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
+            if (gameModel.Enemies[enemyIdx].Position.Y > gameModel.CurrentMap.Height * gameModel.CurrentMap.TileSize.Y)
             {
-                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.CurrentMap.Height * gameModel.CurrentMap.TileSize.Y);
             }
 
-            int[] grid = gameModel.Map.MapLayers[1];
+            int[] grid = gameModel.CurrentMap.MapLayers[1];
 
             gameModel.Enemies[enemyIdx].Path = new List<Vector2i>();
 
@@ -89,12 +89,12 @@ namespace Logic.Game.Classes
                 foreach (Vector2i point in adjacent)
                 {
                     // check if the point is in the grid
-                    if (point.X >= 0 && point.X < gameModel.Map.Width && point.Y >= 0 && point.Y < gameModel.Map.Height)
+                    if (point.X >= 0 && point.X < gameModel.CurrentMap.Width && point.Y >= 0 && point.Y < gameModel.CurrentMap.Height)
                     {
                         // check if the point is not a wall
-                        foreach (var collidibleId in gameModel.Map.CollidableIDs)
+                        foreach (var collidibleId in gameModel.CurrentMap.CollidableIDs)
                         {
-                            if (grid[point.X + point.Y * gameModel.Map.Width] != collidibleId)
+                            if (grid[point.X + point.Y * gameModel.CurrentMap.Width] != collidibleId)
                             {
                                 // check if the point is not already in the list
                                 if (!gameModel.Enemies[enemyIdx].Path.Contains(point))
@@ -122,20 +122,20 @@ namespace Logic.Game.Classes
             // Move the enemy
             if (pathCopy.Count > 0)
             {
-                if (pathCopy[0].X < gameModel.Enemies[enemyIdx].Position.X / gameModel.Map.TileWidth)
+                if (pathCopy[0].X < gameModel.Enemies[enemyIdx].Position.X / gameModel.CurrentMap.TileWidth)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X - 1, gameModel.Enemies[enemyIdx].Position.Y);
                 }
-                else if (pathCopy[0].X > gameModel.Enemies[enemyIdx].Position.X / gameModel.Map.TileWidth)
+                else if (pathCopy[0].X > gameModel.Enemies[enemyIdx].Position.X / gameModel.CurrentMap.TileWidth)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X + 1, gameModel.Enemies[enemyIdx].Position.Y);
                 }
 
-                if (pathCopy[0].Y < gameModel.Enemies[enemyIdx].Position.Y / gameModel.Map.TileHeight)
+                if (pathCopy[0].Y < gameModel.Enemies[enemyIdx].Position.Y / gameModel.CurrentMap.TileHeight)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y - 1);
                 }
-                else if (pathCopy[0].Y > gameModel.Enemies[enemyIdx].Position.Y / gameModel.Map.TileHeight)
+                else if (pathCopy[0].Y > gameModel.Enemies[enemyIdx].Position.Y / gameModel.CurrentMap.TileHeight)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y + 1);
                 }
@@ -308,9 +308,9 @@ namespace Logic.Game.Classes
             for (int i = 0; i < 30; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                enemy.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                enemy.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight);
                 enemy.Speed = 30f;
-                enemy.SightDistance = 500f;
+                enemy.SightDistance = 300f;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
                 enemy.Gun.Damage = 10;

@@ -11,8 +11,16 @@ namespace Model.Game.Classes
         public View CameraView { get; set; }
         public View UIView { get; set; }
         public Movement Movement { get; set; }
-        public TilemapModel Map { get; set; }
+        public TilemapModel CurrentMap { get; set; }
         public TilemapModel KillArenaMap { get; set; }
+        public TilemapModel LobbyMap { get; set; }
+        public List<int> MapCollidibleIDs
+        {
+            get
+            {
+                return new List<int>() { 9, 10, 13, 98, 1, 2, 147, 198, 50, 49, 151, 102, 53, 52 };
+            }
+        }
         public PlayerModel Player { get; set; }
         public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get ; set ; }
