@@ -35,7 +35,6 @@ namespace Renderer
             uiModel.PlayerSpeedTimerText.Font = uiModel.Font;
             uiModel.PlayerKillCountText.Font = uiModel.Font;
             uiModel.GameOverText.Font = uiModel.Font;
-            uiModel.GateEnterText.Font = uiModel.Font;
 
             gameModel.Player.HPText.Font = uiModel.Font;
 
@@ -62,11 +61,6 @@ namespace Renderer
                 }
 
                 window.Draw(DrawablePlayerKillCountText());
-
-                if (!(gameModel.Player.PlayerState == Model.Game.Enums.GateState.InLobby))
-                {
-                    window.Draw(uiModel.GateEnterText);
-                }
             }
             else
             {

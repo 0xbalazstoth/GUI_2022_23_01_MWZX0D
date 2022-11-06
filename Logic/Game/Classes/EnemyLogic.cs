@@ -26,21 +26,6 @@ namespace Logic.Game.Classes
             this.tilemapLogic = tilemapLogic;
 
             gameModel.Enemies = new List<EnemyModel>();
-
-            //CreateEnemies();
-
-            //for (int i = 0; i < gameModel.Enemies.Count; i++)
-            //{
-            //    //gameModel.Enemies[i].HPSprite = new Sprite();
-            //    gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-
-            //    //gameModel.Enemies[i].CurrentHP = gameModel.Enemies[i].MaxHP;
-
-            //    //gameModel.Enemies[i].HPText = new Text();
-            //    gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-            //    gameModel.Enemies[i].HPText.CharacterSize = 16;
-            //    gameModel.Enemies[i].HPText.FillColor = Color.Red;
-            //}
         }
 
         public void PathToPlayer(int enemyIdx)
