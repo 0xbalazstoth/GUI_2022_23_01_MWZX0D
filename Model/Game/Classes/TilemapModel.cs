@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using Model.Game.Enums;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,6 @@ namespace Model.Game.Classes
         public uint TileHeight { get; set; }
         public uint GetMapHeight { get => Height * TileHeight; }
         public uint GetMapWidth { get => Width * TileWidth; }
+        public GateState GateState { get; set; }
     }
 }

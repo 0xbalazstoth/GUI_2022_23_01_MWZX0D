@@ -136,35 +136,6 @@ namespace Logic.Game.Classes
             {
                 gameModel.Player.Position = previousPosition;
             }
-
-            // Gates
-            for (int i = 0; i < gameModel.Gates.Count; i++)
-            {
-                if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].Hitbox.GetGlobalBounds()))
-                {
-                    gameModel.Player.Position = previousPosition;
-                }
-
-                if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].InteractArea.GetGlobalBounds()))
-                {
-                    if (gameModel.Gates[i].GateState == GateState.InKillArena)
-                    {
-                        gameModel.Player.PlayerState = GateState.InKillArena;
-                    }
-                    else if (gameModel.Gates[i].GateState == GateState.InBossArena)
-                    {
-                        gameModel.Player.PlayerState = GateState.InBossArena;
-                    }
-                    else if (gameModel.Gates[i].GateState == GateState.InShop)
-                    {
-                        gameModel.Player.PlayerState = GateState.InShop;
-                    }
-                }
-                else
-                {
-                    gameModel.Player.PlayerState = GateState.InLobby;
-                }
-            }
         }
 
         public void FlipAndRotateGun()
@@ -544,6 +515,48 @@ namespace Logic.Game.Classes
                         //    gameModel.Player.IsDead = true;
                         //}
                         return;
+                    }
+                }
+            }
+        }
+
+        public void HandleGateCollision()
+        {
+            if (gameModel.Player.PlayerState == GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
+            {
+                for (int i = 0; i < gameModel.Gates.Count; i++)
+                {
+                    if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].Hitbox.GetGlobalBounds()))
+                    {
+                        gameModel.Player.Position = previousPosition;
+                    }
+
+                    if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].InteractArea.GetGlobalBounds()))
+                    {
+                        if (gameModel.Gates[i].GateState == GateState.InKillArena)
+                        {
+                            gameModel.Player.PlayerState = GateState.InKillArena;
+
+                            gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.KillArenaMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.KillArenaMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.KillArenaMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.KillArenaMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.KillArenaMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InKillArena;
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InBossArena)
+                        {
+                            gameModel.Player.PlayerState = GateState.InBossArena;
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InShop)
+                        {
+                            gameModel.Player.PlayerState = GateState.InShop;
+                        }
                     }
                 }
             }

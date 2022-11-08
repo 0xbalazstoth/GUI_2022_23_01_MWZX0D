@@ -292,7 +292,6 @@ namespace Gunner
                     gameUILogic.UpdatePlayerCoinText();
                     gameUILogic.UpdateSpeedPotionTimeLeftText();
                     gameUILogic.UpdateKillCountText();
-                    gameUILogic.UpdateGateEnterText(window);
 
                     gameLogic.UpdateEnemies(window);
                 }
@@ -329,7 +328,6 @@ namespace Gunner
             gameController.HandlePauseMenuInput(e);
             gameController.HandleMainMenuInput(e);
             gameController.HandleRespawnInput(e);
-            gameController.HandleGateOpenInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)

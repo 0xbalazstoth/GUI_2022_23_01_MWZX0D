@@ -236,22 +236,6 @@ namespace Gunner.Controller
             }
         }
 
-        public void HandleGateOpenInput(KeyEventArgs eventKey)
-        {
-            if (eventKey.Key == System.Windows.Input.Key.E)
-            {
-                gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
-                gameModel.CurrentMap.MapLayers = gameModel.KillArenaMap.MapLayers;
-                gameModel.CurrentMap.Width = gameModel.KillArenaMap.Width;
-                gameModel.CurrentMap.Height = gameModel.KillArenaMap.Height;
-                gameModel.CurrentMap.TileWidth = gameModel.KillArenaMap.TileWidth;
-                gameModel.CurrentMap.TileHeight = gameModel.KillArenaMap.TileHeight;
-                gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
-                gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
-                gameModel.Player.PlayerState = Model.Game.Enums.GateState.InKillArena;
-            }
-        }
-
         public void HandleGunSwitchInput(RenderWindow window)
         {
             window.MouseWheelScrolled += (s, e) =>

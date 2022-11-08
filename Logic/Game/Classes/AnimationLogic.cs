@@ -22,7 +22,8 @@ namespace Logic.Game.Classes
 
             #region Player animation setup
             gameModel.Player.Animations = new Dictionary<MovementDirection, AnimationModel>();
-            gameModel.Player.Animations.Add(MovementDirection.Idle, new AnimationModel() {
+            gameModel.Player.Animations.Add(MovementDirection.Idle, new AnimationModel()
+            {
                 Row = 0,
                 ColumnsInRow = 5,
                 TotalRows = 1,
@@ -130,7 +131,7 @@ namespace Logic.Game.Classes
             foreach (EnemyModel enemy in gameModel.Enemies)
             {
                 enemy.Animations = new Dictionary<MovementDirection, AnimationModel>();
-                
+
                 enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
                 {
                     Row = 0,
@@ -184,18 +185,21 @@ namespace Logic.Game.Classes
             }
 
             // Item animation
-            foreach (CollectibleItemModel item in gameModel.CollectibleItems)
+            if (gameModel.Player.PlayerState == Model.Game.Enums.GateState.InKillArena || gameModel.Player.PlayerState == Model.Game.Enums.GateState.InBossArena)
             {
-                foreach (var itemAnimation in item.Animations)
+                foreach (CollectibleItemModel item in gameModel.CollectibleItems)
                 {
-                    itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
-
-                    if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
+                    foreach (var itemAnimation in item.Animations)
                     {
-                        itemAnimation.Value.Counter = 0f;
+                        itemAnimation.Value.Counter += itemAnimation.Value.Speed * dt;
+
+                        if (itemAnimation.Value.Counter >= (float)itemAnimation.Value.ColumnsInRow)
+                        {
+                            itemAnimation.Value.Counter = 0f;
+                        }
+                        itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
+                        item.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                     }
-                    itemAnimation.Value.TextureRect = new IntRect((int)itemAnimation.Value.Counter * itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.Row * itemAnimation.Value.GetSpriteSize.Y, itemAnimation.Value.GetSpriteSize.X, itemAnimation.Value.GetSpriteSize.Y);
-                    item.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                 }
             }
 
@@ -229,7 +233,7 @@ namespace Logic.Game.Classes
                         {
                             bulletAnimation.Value.Counter = 0f;
                         }
-                        
+
                         bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
                         gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
                     }
@@ -247,7 +251,7 @@ namespace Logic.Game.Classes
                     {
                         enemyAnimation.Value.Counter = 0f;
                     }
-                    
+
                     enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
                     gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
                 }

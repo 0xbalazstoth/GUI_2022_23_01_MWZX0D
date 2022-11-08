@@ -1,11 +1,13 @@
 ﻿using Logic.Game;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.UI;
 using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -66,7 +68,10 @@ namespace Renderer
         {
             DrawTilemap(window);
             DrawObjects(window);
-            DrawCollectibleItems(window);
+            if (gameModel.Player.PlayerState == Model.Game.Enums.GateState.InKillArena || gameModel.Player.PlayerState == Model.Game.Enums.GateState.InBossArena)
+            {
+                DrawCollectibleItems(window);
+            }
             DrawEnemy(window);
             DrawPlayer(window);
             DrawBullets(window);
@@ -155,26 +160,29 @@ namespace Renderer
                 shotgun.TextureRect = new IntRect(0, 0, 16, 6);
             }
 
-            for (int i = 0; i < gameModel.Gates.Count; i++)
+            if (gameModel.Player.PlayerState == GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
             {
-                if (gameModel.DebugMode)
+                for (int i = 0; i < gameModel.Gates.Count; i++)
                 {
-                    gameModel.Gates[i].Hitbox.FillColor = Color.Transparent;
-                    gameModel.Gates[i].Hitbox.OutlineColor = Color.Red;
-                    gameModel.Gates[i].Hitbox.OutlineThickness = 1.0f;
-                    
-                    gameModel.Gates[i].InteractArea.FillColor = Color.Transparent;
-                    gameModel.Gates[i].InteractArea.OutlineColor = Color.Green;
-                    gameModel.Gates[i].InteractArea.OutlineThickness = 1.0f;
-                    
-                    window.Draw(gameModel.Gates[i].Hitbox);
-                    window.Draw(gameModel.Gates[i].InteractArea);
-                }
+                    if (gameModel.DebugMode)
+                    {
+                        gameModel.Gates[i].Hitbox.FillColor = Color.Transparent;
+                        gameModel.Gates[i].Hitbox.OutlineColor = Color.Red;
+                        gameModel.Gates[i].Hitbox.OutlineThickness = 1.0f;
 
-                gameModel.Gates[i].Animations[0].Texture = gateTexture;
-                gameModel.Gates[i].Animations[0].Sprite = new Sprite(gameModel.Gates[i].Animations[0].Texture);
-                gameModel.Gates[i].Animations[0].TextureRect = new IntRect(0, 0, gameModel.Gates[i].Animations[0].GetSpriteSize.X, gameModel.Gates[i].Animations[0].GetSpriteSize.Y);
-                window.Draw(gameModel.Gates[i].GateSprite);
+                        gameModel.Gates[i].InteractArea.FillColor = Color.Transparent;
+                        gameModel.Gates[i].InteractArea.OutlineColor = Color.Green;
+                        gameModel.Gates[i].InteractArea.OutlineThickness = 1.0f;
+
+                        window.Draw(gameModel.Gates[i].Hitbox);
+                        window.Draw(gameModel.Gates[i].InteractArea);
+                    }
+
+                    gameModel.Gates[i].Animations[0].Texture = gateTexture;
+                    gameModel.Gates[i].Animations[0].Sprite = new Sprite(gameModel.Gates[i].Animations[0].Texture);
+                    gameModel.Gates[i].Animations[0].TextureRect = new IntRect(0, 0, gameModel.Gates[i].Animations[0].GetSpriteSize.X, gameModel.Gates[i].Animations[0].GetSpriteSize.Y);
+                    window.Draw(gameModel.Gates[i].GateSprite);
+                }
             }
         }
 
@@ -211,12 +219,17 @@ namespace Renderer
                 }
 
                 window.Draw(gameModel.Enemies[i]);
-                window.Draw(gameModel.Enemies[i].Gun);
-
-                // Draw HP
                 gameModel.Enemies[i].HPSprite.Texture = hpTexture;
-                window.Draw(gameModel.Enemies[i].HPSprite);
-                window.Draw(gameModel.Enemies[i].HPText);
+                
+                if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
+                {
+                    window.Draw(gameModel.Enemies[i].Gun);
+
+                    // Draw HP
+                    
+                    window.Draw(gameModel.Enemies[i].HPSprite);
+                    window.Draw(gameModel.Enemies[i].HPText);
+                }
             }
         }
 
