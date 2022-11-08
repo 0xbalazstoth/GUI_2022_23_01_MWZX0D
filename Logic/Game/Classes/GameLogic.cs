@@ -121,21 +121,22 @@ namespace Logic.Game.Classes
             }
 
             #region Lobby
-            TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
-            tmapLoader.LoadTMXFile(tmxFile);
-            tmapLoader.InitializeVertices();
+            ManualTilemapLoadingHandler tilemapLoader = new ManualTilemapLoadingHandler();
+            var lobbyMap = tilemapLoader.LoadTMXFile(tmxFile, tilesetFile);
+            tilemapLogic.InitializeVertices(lobbyMap);
 
             gameModel.LobbyMap.CollidableIDs = new List<int>();
-            gameModel.LobbyMap.Vertices = tmapLoader.Vertices;
-            gameModel.LobbyMap.TilesetTexture = tmapLoader.TilesetTexture;
-            gameModel.LobbyMap.MapLayers = tmapLoader.MapLayers;
-            gameModel.LobbyMap.Width = tmapLoader.Width;
-            gameModel.LobbyMap.Height = tmapLoader.Height;
-            gameModel.LobbyMap.TileWidth = tmapLoader.TileWidth;
-            gameModel.LobbyMap.TileHeight = tmapLoader.TileHeight;
-            gameModel.LobbyMap.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
-            gameModel.LobbyMap.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
+            gameModel.LobbyMap.Vertices = lobbyMap.Vertices;
+            gameModel.LobbyMap.TilesetTexture = lobbyMap.TilesetTexture;
+            gameModel.LobbyMap.MapLayers = lobbyMap.MapLayers;
+            gameModel.LobbyMap.Width = lobbyMap.Width;
+            gameModel.LobbyMap.Height = lobbyMap.Height;
+            gameModel.LobbyMap.TileWidth = lobbyMap.TileWidth;
+            gameModel.LobbyMap.TileHeight = lobbyMap.TileHeight;
+            gameModel.LobbyMap.Size = new Vector2u(lobbyMap.Width, lobbyMap.Height);
+            gameModel.LobbyMap.TileSize = new Vector2u(lobbyMap.TileWidth, lobbyMap.TileHeight);
             #endregion
+
             #region Kill arena
             uint killArenaWidth = 100;
             uint killArenaHeight = 100;
@@ -157,6 +158,7 @@ namespace Logic.Game.Classes
             tilemapLogic.InitializeVertices(gameModel.KillArenaMap);
             #endregion
 
+            #region Set lobby as default map
             gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
             gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
             gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
@@ -165,6 +167,7 @@ namespace Logic.Game.Classes
             gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
             gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
             gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+            #endregion
         }
 
         public void UpdatePlayer(RenderWindow window)
