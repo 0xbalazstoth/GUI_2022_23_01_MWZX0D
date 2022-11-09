@@ -271,7 +271,7 @@ namespace Gunner
                     isInWindow = true;
                 }
 
-                if (isInWindow && gameModel.Player.IsFocusedInGame) //  && gameModel.Player.IsDead == false
+                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false) //  && gameModel.Player.IsDead == false
                 {
                     gameUILogic.UpdateFPS(gameLogic.GetDeltaTime);
                     animationLogic.Update(gameLogic.GetDeltaTime);
@@ -295,10 +295,10 @@ namespace Gunner
 
                     gameLogic.UpdateEnemies(window);
                 }
-                //else if (gameModel.Player.IsDead)
-                //{
-                //    gameUILogic.UpdateGameOverText(window);
-                //}
+                else if (gameModel.Player.IsDead)
+                {
+                    gameUILogic.UpdateGameOverText(window);
+                }
             }
         }
 

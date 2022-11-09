@@ -509,11 +509,12 @@ namespace Logic.Game.Classes
                             gameModel.Player.CurrentHP -= enemy.Gun.Damage;
                         }
 
-                        //if (gameModel.Player.CurrentHP <= 0)
-                        //{
-                        //    enemy.Gun.Bullets.Remove(bullet);
-                        //    gameModel.Player.IsDead = true;
-                        //}
+                        enemy.Gun.Bullets.Remove(bullet);
+
+                        if (gameModel.Player.CurrentHP <= 0)
+                        {
+                            gameModel.Player.IsDead = true;
+                        }
                         return;
                     }
                 }

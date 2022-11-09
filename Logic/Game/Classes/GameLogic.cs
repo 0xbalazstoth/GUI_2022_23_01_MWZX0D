@@ -143,11 +143,11 @@ namespace Logic.Game.Classes
             float killArenaScale = 1f;
             uint killArenaTileWidth = 32;
             uint killArenaTileHeight = 32;
-            int[] collisionLayer = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
+            int[] mapGeneration = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
             gameModel.KillArenaMap.CollidableIDs = new List<int>();
             gameModel.KillArenaMap.MapLayers = new List<int[]>();
-            gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
-            gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
+            gameModel.KillArenaMap.MapLayers.Add(mapGeneration);
+            gameModel.KillArenaMap.MapLayers.Add(mapGeneration);
             gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
             gameModel.KillArenaMap.Width = killArenaWidth;
             gameModel.KillArenaMap.Height = killArenaHeight;
@@ -424,7 +424,7 @@ namespace Logic.Game.Classes
                         {
                             gameModel.CollectibleItems.Remove(item);
 
-                            var optimalPosition = new Vector2f(); 
+                            var optimalPosition = new Vector2f();
                             var optimalDistance = float.MaxValue;
 
                             for (int xP = 0; xP < gameModel.CurrentMap.Size.X; xP++)
@@ -461,7 +461,7 @@ namespace Logic.Game.Classes
                 }
             }
         }
-        
+
         public void Music()
         {
             //if (gameModel.Music == null)

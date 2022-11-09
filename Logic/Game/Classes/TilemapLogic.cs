@@ -207,27 +207,43 @@ namespace Logic.Game.Classes
             return new Vector2f(texCoordsX * map.TileWidth, texCoordsY * map.TileHeight);
         }
 
-        public List<Vector2f> GetTileIdCoordinatesByMapLayer(int layer, params int[] tileIds)
+        public List<Vector2f> GetTileIdCoordinatesByMapLayer(TilemapModel map, int layer, List<int> tileIds)
         {
             var points = new List<Vector2f>();
-            for (int i = 0; i < gameModel.CurrentMap.MapLayers[layer].Length; i++)
-            {
-                for (int t = 0; t < tileIds.Length; t++)
-                {
-                    if (gameModel.CurrentMap.MapLayers[layer][i] == tileIds[t])
-                    {
-                        int x = i % (int)gameModel.CurrentMap.Width;
-                        int y = i / (int)gameModel.CurrentMap.Width;
 
-                        if (x > gameModel.CurrentMap.TileWidth && y > gameModel.CurrentMap.TileHeight)
-                        {
-                            points.Add(new Vector2f(x * gameModel.CurrentMap.TileWidth, y * gameModel.CurrentMap.TileHeight));
-                        }
+            // Get all tile coordinates by tile id from tileIds
+            for (int y = 0; y < map.Height; y++)
+            {
+                for (int x = 0; x < map.Width; x++)
+                {
+                    var tileId = map.MapLayers[layer][y * (int)map.Width + x];
+                    if (tileIds.Contains(tileId))
+                    {
+                        points.Add(new Vector2f(x, y));
                     }
                 }
             }
+            //for (int i = 0; i < map.MapLayers[layer].Length; i++)
+            //{
+            //    for (int t = 0; t < tileIds.Count; t++)
+            //    {
+            //        var tileId = map.MapLayers[layer][i];
+            //        var safeTileId = tileIds[t];
+            //        if (tileId == safeTileId)
+            //        {
+            //            var textureCoordinate = GetTextureCoordinatesByTileID(map, tileIds[t]);
+            //            points.Add(textureCoordinate);
+            //        }
+            //    }
+            //}
 
             return points;
+        }
+
+        public List<int> GetSafeTileIDs()
+        {
+            var safeIDs = gameModel.CurrentMap.MapLayers[COLLISION_LAYER].Except(gameModel.CurrentMap.CollidableIDs).ToList();
+            return safeIDs;
         }
     }
 }

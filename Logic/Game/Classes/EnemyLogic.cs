@@ -104,9 +104,19 @@ namespace Logic.Game.Classes
             // Remove the first point in the path
             pathCopy.RemoveAt(0);
 
-            // Move the enemy
+            // Move enemy
             if (pathCopy.Count > 0)
             {
+                // Check if the enemy is on the same tile as collidable id
+                foreach (var collidibleId in gameModel.CurrentMap.CollidableIDs)
+                {
+                    if (grid[(int)gameModel.Enemies[enemyIdx].Position.X / 32 + (int)gameModel.Enemies[enemyIdx].Position.Y / 32 * gameModel.CurrentMap.Width] == collidibleId)
+                    {
+
+                    }
+                }
+
+                // left, right
                 if (pathCopy[0].X < gameModel.Enemies[enemyIdx].Position.X / gameModel.CurrentMap.TileWidth)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X - 1, gameModel.Enemies[enemyIdx].Position.Y);
@@ -116,6 +126,7 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X + 1, gameModel.Enemies[enemyIdx].Position.Y);
                 }
 
+                // up, down
                 if (pathCopy[0].Y < gameModel.Enemies[enemyIdx].Position.Y / gameModel.CurrentMap.TileHeight)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y - 1);
@@ -125,7 +136,7 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y + 1);
                 }
             }
-            
+
             // Clear the path
             gameModel.Enemies[enemyIdx].Path.Clear();
         }
@@ -206,7 +217,7 @@ namespace Logic.Game.Classes
                 {
                     BulletModel tempBullet = new BulletModel();
                     tempBullet.Bullet = new Sprite();
-                    tempBullet.Speed = 4f;
+                    tempBullet.Speed = 3f;
                     tempBullet.Bullet.Position = gameModel.Enemies[enemyIdx].Position;
                     tempBullet.Velocity = gameModel.Enemies[enemyIdx].AimDirectionNormalized * tempBullet.Speed;
                     tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
@@ -285,16 +296,16 @@ namespace Logic.Game.Classes
 
         public void CreateEnemies()
         {
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 2; i++)
             {
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight);
-                enemy.Speed = 30f;
+                enemy.Speed = 20f;
                 enemy.SightDistance = 300f;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
-                enemy.Gun.Damage = 10;
-                enemy.Gun.MaxAmmo = 15;
+                enemy.Gun.Damage = 5;
+                enemy.Gun.MaxAmmo = 5;
                 enemy.Gun.Recoil = 5f;
                 enemy.Hitbox = new RectangleShape();
                 enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
@@ -303,7 +314,7 @@ namespace Logic.Game.Classes
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
                 enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
                 enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
-                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(300);
+                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(2000);
                 enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
                 enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
                 enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
