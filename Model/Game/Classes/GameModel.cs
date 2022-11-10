@@ -19,7 +19,7 @@ namespace Model.Game.Classes
         {
             get
             {
-                return new List<int>() { 9, 10, 13, 98, 1, 2, 147, 198, 50, 49, 151, 102, 53, 52 };
+                return new List<int>() { 9, 10, 13, 98, 1, 2, 147, 198, 50, 49, 151, 102, 53, 52, 3 };
             }
         }
         public PlayerModel Player { get; set; }

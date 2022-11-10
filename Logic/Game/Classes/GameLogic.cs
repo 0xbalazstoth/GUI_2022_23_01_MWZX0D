@@ -144,9 +144,10 @@ namespace Logic.Game.Classes
             uint killArenaTileWidth = 32;
             uint killArenaTileHeight = 32;
             int[] mapGeneration = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
+            int[] groundMapGeneration = tilemapLogic.GroundMapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
             gameModel.KillArenaMap.CollidableIDs = new List<int>();
             gameModel.KillArenaMap.MapLayers = new List<int[]>();
-            gameModel.KillArenaMap.MapLayers.Add(mapGeneration);
+            gameModel.KillArenaMap.MapLayers.Add(groundMapGeneration);
             gameModel.KillArenaMap.MapLayers.Add(mapGeneration);
             gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
             gameModel.KillArenaMap.Width = killArenaWidth;
