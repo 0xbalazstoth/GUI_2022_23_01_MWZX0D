@@ -198,11 +198,6 @@ namespace Logic.Game.Classes
             playerLogic.UpdateSpeedPotionTimer();
             playerLogic.HandleEnemyBulletCollision();
             playerLogic.HandleGateCollision();
-
-            //if (gameModel.Player.CurrentHP <= 0)
-            //{
-            //    gameModel.Player.IsDead = true;
-            //}
         }
         
         public void UpdateBullets(RenderWindow window)
@@ -338,65 +333,65 @@ namespace Logic.Game.Classes
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < new Random().Next(30, 80); i++)
+            for (int i = 0; i < new Random().Next(50, 130); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight);
+                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.KillArenaMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
                 coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
                 coinItem.Id = (int)coinItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(coinItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
-                        j = 0;
-                    }
-                }
+                //for (int j = 0; j < i - 1; j++)
+                //{
+                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                //    {
+                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
+                //        j = 0;
+                //    }
+                //}
             }
 
-            for (int i = 0; i < new Random().Next(15, 40); i++)
+            for (int i = 0; i < new Random().Next(30, 70); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.KillArenaMap.GetMapWidth, new Random().Next() % gameModel.KillArenaMap.GetMapHeight);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
                 healtPotionItem.IconFileName = "health_potion.png";
                 
                 gameModel.CollectibleItems.Add(healtPotionItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
-                        j = 0;
-                    }
-                }
+                //for (int j = 0; j < i - 1; j++)
+                //{
+                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                //    {
+                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
+                //        j = 0;
+                //    }
+                //}
             }
 
-            for (int i = 0; i < new Random().Next(15, 40); i++)
+            for (int i = 0; i < new Random().Next(30, 70); i++)
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
-                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
+                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.KillArenaMap.GetMapWidth, new Random().Next() % gameModel.KillArenaMap.GetMapHeight);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
                 speedPotion.IconFileName = "speed_potion.png";
 
                 gameModel.CollectibleItems.Add(speedPotion);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
-                        j = 0;
-                    }
-                }
+                //for (int j = 0; j < i - 1; j++)
+                //{
+                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
+                //    {
+                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
+                //        j = 0;
+                //    }
+                //}
             }
         }
 

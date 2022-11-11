@@ -71,18 +71,12 @@ namespace Logic.Game.Classes
             {
                 for (int y = 0; y < width; y++)
                 {
-                    //if (noiseValues[x, y] < 70f)
-                    //{
-                    //    generatedMap[x + y * height] = grassType1;
-                    //}
-                    //else if (noiseValues[x, y] < 150f)
-                    //{
-                    //    generatedMap[x + y * height] = grassType2;
-                    //}
-                    //else
-                    //{
-                    //    generatedMap[x + y * height] = grassType3;
-                    //}
+                    generatedMap[x + y * height] = grassTerrainSets[new Random().Next(0, grassTerrainSets.Length)];
+
+                    if (noiseValues[x, y] < 30f)
+                    {
+                        generatedMap[x + y * height] = wallTop;
+                    }
 
                     if (x == 0 && y == 0) // top left to right
                     {

@@ -101,6 +101,18 @@ namespace Gunner.Controller
             }
         }
 
+        public void HandleGateInput(KeyEventArgs eventKey)
+        {
+            if (gameModel.Player.PlayerState == GateState.InShop)
+            {
+                if (eventKey.Key == System.Windows.Input.Key.E)
+                {
+                    ShopWindow shopWindow = new ShopWindow(gameModel, playerLogic);
+                    shopWindow.ShowDialog();
+                }
+            }
+        }
+
         public void HandlePauseMenuInput(KeyEventArgs eventKey)
         {
             if (eventKey.Key == System.Windows.Input.Key.Escape)

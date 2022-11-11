@@ -294,6 +294,12 @@ namespace Gunner
                     gameUILogic.UpdateKillCountText();
 
                     gameLogic.UpdateEnemies(window);
+
+                    //if (gameModel.Player.PlayerState == GateState.InShop)
+                    //{
+                    //    ShopWindow shopWindow = new ShopWindow(gameModel, playerLogic);
+                    //    shopWindow.ShowDialog();
+                    //}
                 }
                 else if (gameModel.Player.IsDead)
                 {
@@ -328,6 +334,7 @@ namespace Gunner
             gameController.HandlePauseMenuInput(e);
             gameController.HandleMainMenuInput(e);
             gameController.HandleRespawnInput(e);
+            gameController.HandleGateInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)
