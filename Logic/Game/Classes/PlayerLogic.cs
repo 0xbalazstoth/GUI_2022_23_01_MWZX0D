@@ -517,9 +517,9 @@ namespace Logic.Game.Classes
 
         public void HandleGateCollision()
         {
-            if (gameModel.Player.PlayerState == GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
+            for (int i = 0; i < gameModel.Gates.Count; i++)
             {
-                for (int i = 0; i < gameModel.Gates.Count; i++)
+                if (gameModel.Gates[i].IsGateReady)
                 {
                     if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].Hitbox.GetGlobalBounds()))
                     {
@@ -564,6 +564,34 @@ namespace Logic.Game.Classes
                         if (gameModel.Gates[i].GateState == GateState.InShop)
                         {
                             gameModel.Player.PlayerState = GateState.InShop;
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InLobby)
+                        {
+                            gameModel.Player.PlayerState = GateState.InLobby;
+
+                            gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InLobby;
+                            gameModel.Player.Position = new Vector2f(300f, 300f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                if (gameModel.Gates[j].GateState != GateState.InLobby)
+                                {
+                                    gameModel.Gates[j].IsGateReady = true;
+                                }
+                                else
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+                            }
                         }
                     }
                 }

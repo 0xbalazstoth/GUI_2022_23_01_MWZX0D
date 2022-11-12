@@ -153,7 +153,7 @@ namespace Logic.Game.Classes
 
             backToLobbyGate.GateTexts = new List<Text>();
             Text backToLobbyGateNameText = new Text();
-            backToLobbyGateNameText.DisplayedString = "Back to lobby gate";
+            backToLobbyGateNameText.DisplayedString = "Lobby gate";
             backToLobbyGateNameText.FillColor = Color.Red;
             backToLobbyGateNameText.CharacterSize = 28;
             backToLobbyGate.GateTexts.Add(backToLobbyGateNameText);
