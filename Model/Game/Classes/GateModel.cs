@@ -15,5 +15,6 @@ namespace Model.Game.Classes
         public RectangleShape Hitbox { get; set; }
         public GateState GateState { get; set; }
         public RectangleShape InteractArea { get; set; }
+        public List<Text> GateTexts { get; set; }
     }
 }
