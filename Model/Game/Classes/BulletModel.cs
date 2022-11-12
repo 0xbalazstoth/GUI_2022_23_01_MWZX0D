@@ -17,7 +17,5 @@ namespace Model.Game.Classes
         public Vector2f Velocity { get; set; }
         public float Speed { get; set; }
         public Dictionary<GunType, AnimationModel> Animations { get; set; }
-
-        
     }
 }

@@ -78,7 +78,7 @@ namespace Renderer
 
             if (gameModel.Player.IsDead)
             {
-                //window.Clear(Color.Black);
+                window.Clear(Color.Black);
             }
         }
 

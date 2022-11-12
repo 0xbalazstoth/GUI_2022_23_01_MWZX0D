@@ -90,12 +90,12 @@ namespace Repository.Classes
                 }
                 else
                 {
-                    // Player do not have any save data
+                    // Player do not have any save data or inventory is empty
                     loadedGame.Player.Inventory = new InventoryModel();
                     loadedGame.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
+                    loadedGame.Player.Inventory.Capacity = 0;
                     loadedGame.Player.CurrentCoins = 0;
                     loadedGame.Player.CurrentXP = 0;
-                    loadedGame.Player.Inventory.Capacity = 0;
                 }
 
                 loadedGame.Player.Name = saveName;

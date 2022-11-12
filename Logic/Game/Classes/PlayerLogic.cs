@@ -509,11 +509,12 @@ namespace Logic.Game.Classes
                             gameModel.Player.CurrentHP -= enemy.Gun.Damage;
                         }
 
-                        //if (gameModel.Player.CurrentHP <= 0)
-                        //{
-                        //    enemy.Gun.Bullets.Remove(bullet);
-                        //    gameModel.Player.IsDead = true;
-                        //}
+                        enemy.Gun.Bullets.Remove(bullet);
+
+                        if (gameModel.Player.CurrentHP <= 0)
+                        {
+                            gameModel.Player.IsDead = true;
+                        }
                         return;
                     }
                 }
@@ -546,6 +547,7 @@ namespace Logic.Game.Classes
                             gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
                             gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
                             gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InKillArena;
+                            gameModel.Player.Position = new Vector2f(150f, 150f);
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InBossArena)
@@ -558,6 +560,23 @@ namespace Logic.Game.Classes
                             gameModel.Player.PlayerState = GateState.InShop;
                         }
                     }
+                }
+            }
+        }
+
+        public void BuyItemFromShop(ICollectibleItem item)
+        {
+            if (gameModel.Player.Inventory.Capacity < gameModel.Player.Inventory.MaxCapacity && gameModel.Player.CurrentCoins >= item.Price)
+            {
+                AddItemToInventory(item);
+
+                if (item.ItemType == ItemType.Speed_Potion)
+                {
+                    gameModel.Player.CurrentCoins -= item.Price;
+                }
+                else if (item.ItemType == ItemType.Health_Potion)
+                {
+                    gameModel.Player.CurrentCoins -= item.Price;
                 }
             }
         }

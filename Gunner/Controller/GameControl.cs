@@ -2,6 +2,7 @@
 using Logic.UI.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.UI.Interfaces;
 using Repository.Classes;
 using Repository.Interfaces;
@@ -97,6 +98,18 @@ namespace Gunner.Controller
             else if (IsKeyPressed(Key.F2))
             {
                 gameModel.DebugMode = false;
+            }
+        }
+
+        public void HandleGateInput(KeyEventArgs eventKey)
+        {
+            if (gameModel.Player.PlayerState == GateState.InShop)
+            {
+                if (eventKey.Key == System.Windows.Input.Key.E)
+                {
+                    ShopWindow shopWindow = new ShopWindow(gameModel, playerLogic);
+                    shopWindow.ShowDialog();
+                }
             }
         }
 
@@ -232,6 +245,16 @@ namespace Gunner.Controller
                     gameModel.Player.IsDead = false;
                     gameModel.Player.CurrentHP = 100;
                     gameModel.Player.Position = new Vector2f(300, 300);
+
+                    gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+                    gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+                    gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+                    gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+                    gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+                    gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+                    gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+                    gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+                    gameModel.Player.PlayerState = GateState.InLobby;
                 }
             }
         }
