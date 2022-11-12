@@ -170,16 +170,6 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void LoadTexture(string filename)
-        {
-
-        }
-
-        public void LoadTexture(Texture texture)
-        {
-
-        }
-
         public void UpdateAnimationTextures()
         {
             // Update animation textures
@@ -188,11 +178,6 @@ namespace Logic.Game.Classes
                 gameModel.Enemies[i].Texture = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Left].Texture;
                 gameModel.Enemies[i].TextureRect = gameModel.Enemies[i].Animations[Model.Game.MovementDirection.Left].TextureRect;
             }
-        }
-
-        public void UpdateDeltaTime(float dt)
-        {
-
         }
 
         public void UpdateHP()

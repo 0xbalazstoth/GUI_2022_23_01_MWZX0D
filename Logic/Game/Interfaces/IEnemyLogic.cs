@@ -9,10 +9,7 @@ namespace Logic.Game.Interfaces
 {
     public interface IEnemyLogic
     {
-        void UpdateDeltaTime(float dt);
         void UpdateAnimationTextures();
-        void LoadTexture(string filename);
-        void LoadTexture(Texture filename);
         void PathToPlayer(int enemyIdx);
         void HandleBulletCollision();
         void UpdateHP();

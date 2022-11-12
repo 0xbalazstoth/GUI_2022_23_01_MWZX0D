@@ -271,7 +271,7 @@ namespace Gunner
                     isInWindow = true;
                 }
 
-                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false) //  && gameModel.Player.IsDead == false
+                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false)
                 {
                     gameUILogic.UpdateFPS(gameLogic.GetDeltaTime);
                     animationLogic.Update(gameLogic.GetDeltaTime);
@@ -294,12 +294,6 @@ namespace Gunner
                     gameUILogic.UpdateKillCountText();
 
                     gameLogic.UpdateEnemies(window);
-
-                    //if (gameModel.Player.PlayerState == GateState.InShop)
-                    //{
-                    //    ShopWindow shopWindow = new ShopWindow(gameModel, playerLogic);
-                    //    shopWindow.ShowDialog();
-                    //}
                 }
                 else if (gameModel.Player.IsDead)
                 {

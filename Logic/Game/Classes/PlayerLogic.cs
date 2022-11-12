@@ -62,17 +62,6 @@ namespace Logic.Game.Classes
             return new(numericsVector.X, numericsVector.Y);
         }
 
-        public MovementDirection GetMovementByDirection(Vector2f movementDirection)
-        {
-            return gameModel.MovementDirections.Where(x => x.Value.Direction == movementDirection).FirstOrDefault().Key;
-        }
-
-        public void LoadTexture(string filename)
-        {
-            gameModel.Player.Texture = new Texture(filename);
-            gameModel.Player.Origin = new Vector2f(gameModel.Player.Texture.Size.X / 2, gameModel.Player.Texture.Size.Y / 2);
-        }
-
         public void UpdateTilePosition(TilemapModel tilemap)
         {
             var x = gameModel.Player.Position.X + gameModel.Player.Origin.X;
@@ -90,11 +79,6 @@ namespace Logic.Game.Classes
             previousPosition = gameModel.Player.Position;
             gameModel.Player.Position += movementDirection * gameModel.Player.DeltaTime * gameModel.Player.Speed;
             this.movementDirection = movementDirection;
-        }
-
-        public void LoadTexture(Texture texture)
-        {
-            
         }
 
         public void UpdateAnimationTextures()

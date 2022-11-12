@@ -313,22 +313,6 @@ namespace Logic.Game.Classes
             CameraEdges();
         }
 
-        public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)
-        {
-            view = new View();
-            view.Size = size;
-
-            if (center != null)
-            {
-                view.Center = center.Value;
-            }
-
-            if (viewport != null)
-            {
-                view.Viewport = viewport.Value;
-            }
-        }
-
         public void CreateItems()
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
