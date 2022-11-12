@@ -89,6 +89,18 @@ namespace Logic.Game.Classes
             shopGate.Hitbox = new RectangleShape();
             shopGate.InteractArea = new RectangleShape();
             shopGate.GateState = GateState.InShop;
+            
+            shopGate.GateTexts = new List<Text>();
+            Text shopGateNameText = new Text();
+            shopGateNameText.DisplayedString = "Shop gate";
+            shopGateNameText.FillColor = Color.Red;
+            shopGateNameText.CharacterSize = 28;
+            shopGate.GateTexts.Add(shopGateNameText);
+
+            Text shopGateMsgText = new Text();
+            shopGateMsgText.DisplayedString = "Press E to enter the shop!";
+            shopGateMsgText.CharacterSize = 28;
+            shopGate.GateTexts.Add(shopGateMsgText);
 
             GateModel killArenaGate = new GateModel();
             killArenaGate.GateSprite = new Sprite();
@@ -97,12 +109,36 @@ namespace Logic.Game.Classes
             killArenaGate.InteractArea = new RectangleShape();
             killArenaGate.GateState = GateState.InKillArena;
 
+            killArenaGate.GateTexts = new List<Text>();
+            Text killArenaGateNameText = new Text();
+            killArenaGateNameText.DisplayedString = "Kill arena gate";
+            killArenaGateNameText.FillColor = Color.Red;
+            killArenaGateNameText.CharacterSize = 28;
+            killArenaGate.GateTexts.Add(killArenaGateNameText);
+
+            Text killArenaGateMsgText = new Text();
+            killArenaGateMsgText.DisplayedString = "Come in to fight against enemies!";
+            killArenaGateMsgText.CharacterSize = 28;
+            killArenaGate.GateTexts.Add(killArenaGateMsgText);
+
             GateModel bossArenaGate = new GateModel();
             bossArenaGate.GateSprite = new Sprite();
             bossArenaGate.GateSprite.Position = new Vector2f(1650, 20);
             bossArenaGate.Hitbox = new RectangleShape();
             bossArenaGate.InteractArea = new RectangleShape();
             bossArenaGate.GateState = GateState.InBossArena;
+
+            bossArenaGate.GateTexts = new List<Text>();
+            Text bossArenaGateNameText = new Text();
+            bossArenaGateNameText.DisplayedString = "Boss arena gate";
+            bossArenaGateNameText.FillColor = Color.Red;
+            bossArenaGateNameText.CharacterSize = 28;
+            bossArenaGate.GateTexts.Add(bossArenaGateNameText);
+
+            Text bossArenaGateMsgText = new Text();
+            bossArenaGateMsgText.DisplayedString = "Come in to fight against the boss!";
+            bossArenaGateMsgText.CharacterSize = 28;
+            bossArenaGate.GateTexts.Add(bossArenaGateMsgText);
 
             gates.Add(shopGate);
             gates.Add(killArenaGate);
@@ -271,6 +307,19 @@ namespace Logic.Game.Classes
 
                     gameModel.Gates[i].GateSprite.Texture = gameModel.Gates[i].Animations[0].Texture;
                     gameModel.Gates[i].GateSprite.TextureRect = gameModel.Gates[i].Animations[0].TextureRect;
+
+                    for (int j = 0; j < gameModel.Gates[i].GateTexts.Count; j++)
+                    {
+                        // Center texts by gate sprite
+                        if (j % 2 != 0)
+                        {
+                            gameModel.Gates[i].GateTexts[j].Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X - (gameModel.Gates[i].Hitbox.Size.X / 2f) + 5, gameModel.Gates[i].InteractArea.Position.Y + 10f);
+                        }
+                        else
+                        {
+                            gameModel.Gates[i].GateTexts[j].Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X - (gameModel.Gates[i].Hitbox.Size.X / 2f) + 5, gameModel.Gates[i].InteractArea.Position.Y - 10f);
+                        }
+                    }
                 }
             }
         }

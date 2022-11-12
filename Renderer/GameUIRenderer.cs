@@ -42,6 +42,14 @@ namespace Renderer
             {
                 gameModel.Enemies[i].HPText.Font = uiModel.Font;
             }
+
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                for (int j = 0; j < gameModel.Gates[i].GateTexts.Count; j++)
+                {
+                    gameModel.Gates[i].GateTexts[j].Font = uiModel.Font;
+                }
+            }
         }
 
         public void Draw(RenderTarget window)
