@@ -89,6 +89,7 @@ namespace Logic.Game.Classes
             shopGate.Hitbox = new RectangleShape();
             shopGate.InteractArea = new RectangleShape();
             shopGate.GateState = GateState.InShop;
+            shopGate.IsGateReady = true;
             
             shopGate.GateTexts = new List<Text>();
             Text shopGateNameText = new Text();
@@ -108,6 +109,7 @@ namespace Logic.Game.Classes
             killArenaGate.Hitbox = new RectangleShape();
             killArenaGate.InteractArea = new RectangleShape();
             killArenaGate.GateState = GateState.InKillArena;
+            killArenaGate.IsGateReady = true;
 
             killArenaGate.GateTexts = new List<Text>();
             Text killArenaGateNameText = new Text();
@@ -127,6 +129,7 @@ namespace Logic.Game.Classes
             bossArenaGate.Hitbox = new RectangleShape();
             bossArenaGate.InteractArea = new RectangleShape();
             bossArenaGate.GateState = GateState.InBossArena;
+            bossArenaGate.IsGateReady = true;
 
             bossArenaGate.GateTexts = new List<Text>();
             Text bossArenaGateNameText = new Text();
@@ -140,9 +143,30 @@ namespace Logic.Game.Classes
             bossArenaGateMsgText.CharacterSize = 28;
             bossArenaGate.GateTexts.Add(bossArenaGateMsgText);
 
+            GateModel backToLobbyGate = new GateModel();
+            backToLobbyGate.GateSprite = new Sprite();
+            backToLobbyGate.GateSprite.Position = new Vector2f(150, 20);
+            backToLobbyGate.Hitbox = new RectangleShape();
+            backToLobbyGate.InteractArea = new RectangleShape();
+            backToLobbyGate.GateState = GateState.InLobby;
+            backToLobbyGate.IsGateReady = false;
+
+            backToLobbyGate.GateTexts = new List<Text>();
+            Text backToLobbyGateNameText = new Text();
+            backToLobbyGateNameText.DisplayedString = "Back to lobby gate";
+            backToLobbyGateNameText.FillColor = Color.Red;
+            backToLobbyGateNameText.CharacterSize = 28;
+            backToLobbyGate.GateTexts.Add(backToLobbyGateNameText);
+
+            Text backToLobbyGateMsgText = new Text();
+            backToLobbyGateMsgText.DisplayedString = "Come back to lobby!";
+            backToLobbyGateMsgText.CharacterSize = 28;
+            backToLobbyGate.GateTexts.Add(backToLobbyGateMsgText);
+
             gates.Add(shopGate);
             gates.Add(killArenaGate);
             gates.Add(bossArenaGate);
+            gates.Add(backToLobbyGate);
 
             gameModel.Gates = gates;
         }
@@ -229,7 +253,10 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
 
             playerLogic.FlipAndRotateGun();
-            playerLogic.HandleInventory();
+            if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
+            {
+                playerLogic.HandleInventory();
+            }
             playerLogic.UpdateHP();
             playerLogic.UpdateSpeedPotionTimer();
             playerLogic.HandleEnemyBulletCollision();
@@ -274,15 +301,12 @@ namespace Logic.Game.Classes
                         enemyLogic.Shoot(i);
                         enemyLogic.PathToPlayer(i);
                     }
+
+                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                 }
 
                 enemyLogic.SpawnEnemies(deltaTime);
 
-                for (int i = 0; i < gameModel.Enemies.Count; i++)
-                {
-                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
-                    gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
-                }
                 enemyLogic.UpdateHP();
                 enemyLogic.FlipAndRotateGun();
             }
@@ -294,9 +318,10 @@ namespace Logic.Game.Classes
             {
                 tilemapLogic.UpdateItemAnimationTextures();
             }
-            else if (gameModel.Player.PlayerState == Model.Game.Enums.GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
+            
+            for (int i = 0; i < gameModel.Gates.Count; i++)
             {
-                for (int i = 0; i < gameModel.Gates.Count; i++)
+                if (gameModel.Gates[i].IsGateReady)
                 {
                     gameModel.Gates[i].Hitbox.Size = new Vector2f(gameModel.Gates[i].GateSprite.GetGlobalBounds().Width, gameModel.Gates[i].GateSprite.GetGlobalBounds().Height - 95f);
                     gameModel.Gates[i].Hitbox.Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X, gameModel.Gates[i].GateSprite.Position.Y + 30f);

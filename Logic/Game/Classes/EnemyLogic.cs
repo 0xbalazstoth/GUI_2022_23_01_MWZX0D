@@ -202,7 +202,7 @@ namespace Logic.Game.Classes
                 {
                     BulletModel tempBullet = new BulletModel();
                     tempBullet.Bullet = new Sprite();
-                    tempBullet.Speed = 3f;
+                    tempBullet.Speed = 5f;
                     tempBullet.Bullet.Position = gameModel.Enemies[enemyIdx].Position;
                     tempBullet.Velocity = gameModel.Enemies[enemyIdx].AimDirectionNormalized * tempBullet.Speed;
                     tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
@@ -285,7 +285,7 @@ namespace Logic.Game.Classes
             {
                 EnemyModel enemy = new EnemyModel();
                 enemy.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight);
-                enemy.Speed = 20f;
+                enemy.Speed = 30f;
                 enemy.SightDistance = 300f;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
@@ -299,7 +299,7 @@ namespace Logic.Game.Classes
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
                 enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
                 enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
-                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(2000);
+                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(750);
                 enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
                 enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
                 enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);

@@ -16,5 +16,6 @@ namespace Model.Game.Classes
         public GateState GateState { get; set; }
         public RectangleShape InteractArea { get; set; }
         public List<Text> GateTexts { get; set; }
+        public bool IsGateReady { get; set; }
     }
 }
