@@ -324,7 +324,17 @@ namespace Logic.Game.Classes
                if (gameModel.Player.CurrentHP < gameModel.Player.MaxHP)
                 {
                     // Increment player HP
-                    gameModel.Player.CurrentHP += 10;
+                    // Check the difference, if its more than 10, calculate the difference and add it to the player HP
+                    // If its less than 10, add 10 to the player HP
+                    if (gameModel.Player.MaxHP - gameModel.Player.CurrentHP >= 10)
+                    {
+                        gameModel.Player.CurrentHP += 10;
+                    }
+                    else
+                    {
+                        gameModel.Player.CurrentHP += gameModel.Player.MaxHP - gameModel.Player.CurrentHP;
+                    }
+                    //gameModel.Player.CurrentHP += 10;
 
                     RemoveItemFromInventory(item);
                 }

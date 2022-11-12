@@ -201,31 +201,10 @@ namespace Logic.Game.Classes
                         item.Animations[itemAnimation.Key].TextureRect = itemAnimation.Value.TextureRect;
                     }
                 }
-            }
 
-            // Bullet animation
-            for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
-            {
-                foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
+                for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
                 {
-                    bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
-
-                    if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
-                    {
-                        bulletAnimation.Value.Counter = 0f;
-                    }
-
-                    bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
-                    gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
-                }
-            }
-
-            // Enemy bullet animation
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
-            {
-                for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
-                {
-                    foreach (var bulletAnimation in gameModel.Enemies[i].Gun.Bullets[j].Animations)
+                    foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
                     {
                         bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
 
@@ -235,27 +214,101 @@ namespace Logic.Game.Classes
                         }
 
                         bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                        gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
                     }
                 }
-            }
 
-            // Enemy animation
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
-            {
-                foreach (var enemyAnimation in gameModel.Enemies[i].Animations)
+                // Enemy bullet animation
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
                 {
-                    enemyAnimation.Value.Counter += enemyAnimation.Value.Speed * dt;
-
-                    if (enemyAnimation.Value.Counter >= (float)enemyAnimation.Value.ColumnsInRow)
+                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
                     {
-                        enemyAnimation.Value.Counter = 0f;
-                    }
+                        foreach (var bulletAnimation in gameModel.Enemies[i].Gun.Bullets[j].Animations)
+                        {
+                            bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
 
-                    enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
-                    gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
+                            if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
+                            {
+                                bulletAnimation.Value.Counter = 0f;
+                            }
+
+                            bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+                        }
+                    }
+                }
+
+                // Enemy animation
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
+                {
+                    foreach (var enemyAnimation in gameModel.Enemies[i].Animations)
+                    {
+                        enemyAnimation.Value.Counter += enemyAnimation.Value.Speed * dt;
+
+                        if (enemyAnimation.Value.Counter >= (float)enemyAnimation.Value.ColumnsInRow)
+                        {
+                            enemyAnimation.Value.Counter = 0f;
+                        }
+
+                        enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
+                        gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
+                    }
                 }
             }
+
+            // Bullet animation
+            //for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
+            //{
+            //    foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
+            //    {
+            //        bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
+
+            //        if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
+            //        {
+            //            bulletAnimation.Value.Counter = 0f;
+            //        }
+
+            //        bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+            //        gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+            //    }
+            //}
+
+            //// Enemy bullet animation
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+            //    {
+            //        foreach (var bulletAnimation in gameModel.Enemies[i].Gun.Bullets[j].Animations)
+            //        {
+            //            bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
+
+            //            if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
+            //            {
+            //                bulletAnimation.Value.Counter = 0f;
+            //            }
+
+            //            bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
+            //            gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
+            //        }
+            //    }
+            //}
+
+            //// Enemy animation
+            //for (int i = 0; i < gameModel.Enemies.Count; i++)
+            //{
+            //    foreach (var enemyAnimation in gameModel.Enemies[i].Animations)
+            //    {
+            //        enemyAnimation.Value.Counter += enemyAnimation.Value.Speed * dt;
+
+            //        if (enemyAnimation.Value.Counter >= (float)enemyAnimation.Value.ColumnsInRow)
+            //        {
+            //            enemyAnimation.Value.Counter = 0f;
+            //        }
+
+            //        enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
+            //        gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
+            //    }
+            //}
 
             // Gate animation
             for (int i = 0; i < gameModel.Gates.Count; i++)

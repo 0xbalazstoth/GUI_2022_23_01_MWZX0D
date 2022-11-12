@@ -229,7 +229,10 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
 
             playerLogic.FlipAndRotateGun();
-            playerLogic.HandleInventory();
+            if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
+            {
+                playerLogic.HandleInventory();
+            }
             playerLogic.UpdateHP();
             playerLogic.UpdateSpeedPotionTimer();
             playerLogic.HandleEnemyBulletCollision();
@@ -274,15 +277,17 @@ namespace Logic.Game.Classes
                         enemyLogic.Shoot(i);
                         enemyLogic.PathToPlayer(i);
                     }
+
+                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                 }
 
                 enemyLogic.SpawnEnemies(deltaTime);
 
-                for (int i = 0; i < gameModel.Enemies.Count; i++)
-                {
-                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
-                    gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
-                }
+                //for (int i = 0; i < gameModel.Enemies.Count; i++)
+                //{
+                //    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
+                //    gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
+                //}
                 enemyLogic.UpdateHP();
                 enemyLogic.FlipAndRotateGun();
             }

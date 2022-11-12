@@ -71,8 +71,8 @@ namespace Renderer
             if (gameModel.Player.PlayerState == Model.Game.Enums.GateState.InKillArena || gameModel.Player.PlayerState == Model.Game.Enums.GateState.InBossArena)
             {
                 DrawCollectibleItems(window);
+                DrawEnemy(window);
             }
-            DrawEnemy(window);
             DrawPlayer(window);
             DrawBullets(window);
 
@@ -215,6 +215,8 @@ namespace Renderer
                     gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 16, 6);
                 }
 
+                gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
+
                 if (gameModel.DebugMode)
                 {
                     gameModel.Enemies[i].Hitbox.FillColor = Color.Transparent;
@@ -231,7 +233,6 @@ namespace Renderer
                     window.Draw(gameModel.Enemies[i].Gun);
 
                     // Draw HP
-                    
                     window.Draw(gameModel.Enemies[i].HPSprite);
                     window.Draw(gameModel.Enemies[i].HPText);
                 }
