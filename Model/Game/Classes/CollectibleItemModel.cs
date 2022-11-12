@@ -21,5 +21,6 @@ namespace Model.Game.Classes
         public int Quantity { get; set; }
         public string IconFileName { get; set; }
         public string IconPath { get => $"pack://application:,,,/Assets/Textures/{IconFileName}"; }
+        public int Price { get; set; }
     }
 }

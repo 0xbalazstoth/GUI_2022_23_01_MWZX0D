@@ -35,10 +35,8 @@ namespace Gunner
             this.gameModel = gameModel;
             this.playerLogic = playerLogic;
 
-            foreach (var item in gameModel.CollectibleItems)
-            {
-                items.Add(item);
-            }
+            items.Add(new CollectibleItemModel() { ItemType = ItemType.Health_Potion, Price = 5, Id = (int)ItemType.Health_Potion });
+            items.Add(new CollectibleItemModel() { ItemType = ItemType.Speed_Potion, Price = 10, Id = (int)ItemType.Speed_Potion });
 
             lstBoxItems.ItemsSource = items;
             gameModel.Player.IsFocusedInGame = false;
@@ -66,22 +64,7 @@ namespace Gunner
                 var selectedItem = item.SelectedItem;
                 var selectedItemValue = (ICollectibleItem)selectedItem;
 
-                // Update inventory
-                playerLogic.AddItemToInventory(selectedItemValue);
-
-                if (gameModel.Player.Inventory.Capacity <= gameModel.Player.Inventory.MaxCapacity)
-                { 
-                    if (selectedItemValue.ItemType == ItemType.Speed_Potion)
-                    {
-                        // Decrease player's coin
-                        gameModel.Player.CurrentCoins -= 3;
-                    }
-                    if (selectedItemValue.ItemType == ItemType.Health_Potion)
-                    {
-                        // Decrease player's coin
-                        gameModel.Player.CurrentCoins -= 5;
-                    }
-                }
+                playerLogic.BuyItemFromShop(selectedItemValue);
 
                 // Refresh inventory list box
                 lstBoxItems.Items.Refresh();

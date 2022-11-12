@@ -35,5 +35,6 @@ namespace Logic.Game.Interfaces
         void PushbackByRecoil(float pushbackValue);
         void ShakeCameraByRecoil();
         void HandleGateCollision();
+        void BuyItemFromShop(ICollectibleItem item);
     }
 }

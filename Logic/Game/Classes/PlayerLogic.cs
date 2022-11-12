@@ -563,5 +563,22 @@ namespace Logic.Game.Classes
                 }
             }
         }
+
+        public void BuyItemFromShop(ICollectibleItem item)
+        {
+            if (gameModel.Player.Inventory.Capacity < gameModel.Player.Inventory.MaxCapacity && gameModel.Player.CurrentCoins >= item.Price)
+            {
+                AddItemToInventory(item);
+
+                if (item.ItemType == ItemType.Speed_Potion)
+                {
+                    gameModel.Player.CurrentCoins -= item.Price;
+                }
+                else if (item.ItemType == ItemType.Health_Potion)
+                {
+                    gameModel.Player.CurrentCoins -= item.Price;
+                }
+            }
+        }
     }
 }
