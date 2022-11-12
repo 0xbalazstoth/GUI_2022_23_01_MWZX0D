@@ -160,9 +160,9 @@ namespace Renderer
                 shotgun.TextureRect = new IntRect(0, 0, 16, 6);
             }
 
-            if (gameModel.Player.PlayerState == GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
+            for (int i = 0; i < gameModel.Gates.Count; i++)
             {
-                for (int i = 0; i < gameModel.Gates.Count; i++)
+                if (gameModel.Gates[i].IsGateReady)
                 {
                     if (gameModel.DebugMode)
                     {

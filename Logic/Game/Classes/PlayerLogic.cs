@@ -541,7 +541,19 @@ namespace Logic.Game.Classes
                             gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
                             gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
                             gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InKillArena;
-                            gameModel.Player.Position = new Vector2f(150f, 150f);
+                            gameModel.Player.Position = new Vector2f(100f, 150f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                if (gameModel.Gates[j].GateState == GateState.InLobby)
+                                {
+                                    gameModel.Gates[j].IsGateReady = true;
+                                }
+                                else
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+                            }
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InBossArena)

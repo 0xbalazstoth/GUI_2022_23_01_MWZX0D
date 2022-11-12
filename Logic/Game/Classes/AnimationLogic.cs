@@ -255,74 +255,23 @@ namespace Logic.Game.Classes
                     }
                 }
             }
-
-            // Bullet animation
-            //for (int i = 0; i < gameModel.Player.Gun.Bullets.Count; i++)
-            //{
-            //    foreach (var bulletAnimation in gameModel.Player.Gun.Bullets[i].Animations)
-            //    {
-            //        bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
-
-            //        if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
-            //        {
-            //            bulletAnimation.Value.Counter = 0f;
-            //        }
-
-            //        bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
-            //        gameModel.Player.Gun.Bullets[i].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
-            //    }
-            //}
-
-            //// Enemy bullet animation
-            //for (int i = 0; i < gameModel.Enemies.Count; i++)
-            //{
-            //    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
-            //    {
-            //        foreach (var bulletAnimation in gameModel.Enemies[i].Gun.Bullets[j].Animations)
-            //        {
-            //            bulletAnimation.Value.Counter += bulletAnimation.Value.Speed * dt;
-
-            //            if (bulletAnimation.Value.Counter >= (float)bulletAnimation.Value.ColumnsInRow)
-            //            {
-            //                bulletAnimation.Value.Counter = 0f;
-            //            }
-
-            //            bulletAnimation.Value.TextureRect = new IntRect((int)bulletAnimation.Value.Counter * bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.Row * bulletAnimation.Value.GetSpriteSize.Y, bulletAnimation.Value.GetSpriteSize.X, bulletAnimation.Value.GetSpriteSize.Y);
-            //            gameModel.Enemies[i].Gun.Bullets[j].Animations[bulletAnimation.Key].TextureRect = bulletAnimation.Value.TextureRect;
-            //        }
-            //    }
-            //}
-
-            //// Enemy animation
-            //for (int i = 0; i < gameModel.Enemies.Count; i++)
-            //{
-            //    foreach (var enemyAnimation in gameModel.Enemies[i].Animations)
-            //    {
-            //        enemyAnimation.Value.Counter += enemyAnimation.Value.Speed * dt;
-
-            //        if (enemyAnimation.Value.Counter >= (float)enemyAnimation.Value.ColumnsInRow)
-            //        {
-            //            enemyAnimation.Value.Counter = 0f;
-            //        }
-
-            //        enemyAnimation.Value.TextureRect = new IntRect((int)enemyAnimation.Value.Counter * enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.Row * enemyAnimation.Value.GetSpriteSize.Y, enemyAnimation.Value.GetSpriteSize.X, enemyAnimation.Value.GetSpriteSize.Y);
-            //        gameModel.Enemies[i].Animations[enemyAnimation.Key].TextureRect = enemyAnimation.Value.TextureRect;
-            //    }
-            //}
-
+            
             // Gate animation
             for (int i = 0; i < gameModel.Gates.Count; i++)
             {
-                for (int j = 0; j < gameModel.Gates[i].Animations.Count; j++)
+                if (gameModel.Gates[i].IsGateReady)
                 {
-                    gameModel.Gates[i].Animations[j].Counter += gameModel.Gates[i].Animations[j].Speed * dt;
-
-                    if (gameModel.Gates[i].Animations[j].Counter >= (float)gameModel.Gates[i].Animations[j].ColumnsInRow)
+                    for (int j = 0; j < gameModel.Gates[i].Animations.Count; j++)
                     {
-                        gameModel.Gates[i].Animations[j].Counter = 0f;
-                    }
+                        gameModel.Gates[i].Animations[j].Counter += gameModel.Gates[i].Animations[j].Speed * dt;
 
-                    gameModel.Gates[i].Animations[j].TextureRect = new IntRect((int)gameModel.Gates[i].Animations[j].Counter * gameModel.Gates[i].Animations[j].GetSpriteSize.X, gameModel.Gates[i].Animations[j].Row * gameModel.Gates[i].Animations[j].GetSpriteSize.Y, gameModel.Gates[i].Animations[j].GetSpriteSize.X, gameModel.Gates[i].Animations[j].GetSpriteSize.Y);
+                        if (gameModel.Gates[i].Animations[j].Counter >= (float)gameModel.Gates[i].Animations[j].ColumnsInRow)
+                        {
+                            gameModel.Gates[i].Animations[j].Counter = 0f;
+                        }
+
+                        gameModel.Gates[i].Animations[j].TextureRect = new IntRect((int)gameModel.Gates[i].Animations[j].Counter * gameModel.Gates[i].Animations[j].GetSpriteSize.X, gameModel.Gates[i].Animations[j].Row * gameModel.Gates[i].Animations[j].GetSpriteSize.Y, gameModel.Gates[i].Animations[j].GetSpriteSize.X, gameModel.Gates[i].Animations[j].GetSpriteSize.Y);
+                    }
                 }
             }
         }
