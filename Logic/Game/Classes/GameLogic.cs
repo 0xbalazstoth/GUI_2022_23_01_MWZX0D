@@ -30,6 +30,7 @@ namespace Logic.Game.Classes
         private IEnemyLogic enemyLogic;
         private IObjectEntityLogic objectEntityLogic;
         private IBulletLogic bulletLogic;
+        private static Random r = new ();
 
         private Clock deltaTimeClock;
         private float deltaTime;
@@ -406,14 +407,14 @@ namespace Logic.Game.Classes
         
         public void Music()
         {
-
-            Random r = new ();
             int random = r.Next(0, gameModel.Songs.Count);
+
+            gameModel.Songs[random].Volume = 30;
+            gameModel.Songs[random].Play();
 
             if (gameModel.Songs[random].Status == SoundStatus.Stopped)
             {
-                gameModel.Songs[random].Volume = 25;
-                gameModel.Songs[random].Play();
+                Music();
             }
         }
 
