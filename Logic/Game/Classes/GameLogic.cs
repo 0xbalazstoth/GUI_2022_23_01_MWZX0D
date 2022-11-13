@@ -145,7 +145,7 @@ namespace Logic.Game.Classes
 
             GateModel backToLobbyGate = new GateModel();
             backToLobbyGate.GateSprite = new Sprite();
-            backToLobbyGate.GateSprite.Position = new Vector2f(150, 20);
+            backToLobbyGate.GateSprite.Position = new Vector2f(120, 20);
             backToLobbyGate.Hitbox = new RectangleShape();
             backToLobbyGate.InteractArea = new RectangleShape();
             backToLobbyGate.GateState = GateState.InLobby;
@@ -400,14 +400,6 @@ namespace Logic.Game.Classes
                 coinItem.Id = (int)coinItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(coinItem);
-                //for (int j = 0; j < i - 1; j++)
-                //{
-                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                //    {
-                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
-                //        j = 0;
-                //    }
-                //}
             }
 
             for (int i = 0; i < new Random().Next(30, 70); i++)
@@ -420,14 +412,6 @@ namespace Logic.Game.Classes
                 healtPotionItem.IconFileName = "health_potion.png";
                 
                 gameModel.CollectibleItems.Add(healtPotionItem);
-                //for (int j = 0; j < i - 1; j++)
-                //{
-                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                //    {
-                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
-                //        j = 0;
-                //    }
-                //}
             }
 
             for (int i = 0; i < new Random().Next(30, 70); i++)
@@ -440,14 +424,6 @@ namespace Logic.Game.Classes
                 speedPotion.IconFileName = "speed_potion.png";
 
                 gameModel.CollectibleItems.Add(speedPotion);
-                //for (int j = 0; j < i - 1; j++)
-                //{
-                //    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                //    {
-                //        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
-                //        j = 0;
-                //    }
-                //}
             }
         }
 

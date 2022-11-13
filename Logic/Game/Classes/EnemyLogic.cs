@@ -135,35 +135,19 @@ namespace Logic.Game.Classes
                 }
 
                 HandleMapCollision(enemyIdx);
-                //// Check if enemy is on a collidable tile
-                //for (int y = -2; y < 2; y++)
+
+                //var currentRect = new FloatRect(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y, gameModel.Enemies[enemyIdx].Hitbox.Size.X, gameModel.Enemies[enemyIdx].Hitbox.Size.Y);
+
+                //// Check if current enemy colliding with other enemies
+                //for (int i = 0; i < gameModel.Enemies.Count; i++)
                 //{
-                //    for (int x = -2; x < 2; x++)
+                //    if (i != enemyIdx)
                 //    {
-                //        // Kinda works
-                //        //if (gameModel.CurrentMap.CollidableIDs.Contains(grid[(int)gameModel.Enemies[enemyIdx].Position.X / 32 + x + ((int)gameModel.Enemies[enemyIdx].Position.Y / 32 + y) * gameModel.CurrentMap.Width]))
-                //        //{
-                //        //    gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
-                //        //}
+                //        var otherRect = new FloatRect(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y, gameModel.Enemies[i].Hitbox.Size.X, gameModel.Enemies[i].Hitbox.Size.Y);
 
-                //        var xTilePosition = gameModel.Enemies[enemyIdx].Position.X;
-                //        var yTilePosition = gameModel.Enemies[enemyIdx].Position.Y;
-                //        var currentTilePosition = new Vector2i((int)((int)xTilePosition / gameModel.CurrentMap.TileSize.X), (int)((int)yTilePosition / gameModel.CurrentMap.TileSize.Y)) + new Vector2i(x, y);
-                //        var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
-
-                //        if (gameModel.CurrentMap.CollidableIDs.Contains(currentTileID) == false)
-                //        {
-                //            continue;
-                //        }
-
-                //        var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
-                //        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.CurrentMap.TileSize.X, gameModel.CurrentMap.TileSize.Y);
-                //        var rect = new FloatRect(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y, gameModel.Enemies[enemyIdx].Hitbox.Size.X, gameModel.Enemies[enemyIdx].Hitbox.Size.Y);
-
-                //        if (tileRect.Intersects(rect))
+                //        if (currentRect.Intersects(otherRect))
                 //        {
                 //            gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
-                //            return;
                 //        }
                 //    }
                 //}
@@ -367,12 +351,6 @@ namespace Logic.Game.Classes
             {
                 for (int x = -2; x < 2; x++)
                 {
-                    // Kinda works
-                    //if (gameModel.CurrentMap.CollidableIDs.Contains(grid[(int)gameModel.Enemies[enemyIdx].Position.X / 32 + x + ((int)gameModel.Enemies[enemyIdx].Position.Y / 32 + y) * gameModel.CurrentMap.Width]))
-                    //{
-                    //    gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
-                    //}
-
                     var xTilePosition = gameModel.Enemies[enemyIdx].Position.X;
                     var yTilePosition = gameModel.Enemies[enemyIdx].Position.Y;
                     var currentTilePosition = new Vector2i((int)((int)xTilePosition / gameModel.CurrentMap.TileSize.X), (int)((int)yTilePosition / gameModel.CurrentMap.TileSize.Y)) + new Vector2i(x, y);

@@ -255,6 +255,18 @@ namespace Gunner.Controller
                     gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
                     gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
                     gameModel.Player.PlayerState = GateState.InLobby;
+
+                    for (int j = 0; j < gameModel.Gates.Count; j++)
+                    {
+                        if (gameModel.Gates[j].GateState != GateState.InLobby)
+                        {
+                            gameModel.Gates[j].IsGateReady = true;
+                        }
+                        else
+                        {
+                            gameModel.Gates[j].IsGateReady = false;
+                        }
+                    }
                 }
             }
         }
