@@ -14,5 +14,6 @@ namespace Model.Game.Classes
         public bool IsShooting { get; set; }
         public float SightDistance { get; set; }
         public List<Vector2i> Path { get; set; }
+        public Vector2f PreviousPosition { get; set; }
     }
 }

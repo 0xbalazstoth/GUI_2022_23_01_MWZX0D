@@ -305,8 +305,6 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                 }
 
-                enemyLogic.SpawnEnemies(deltaTime);
-
                 enemyLogic.UpdateHP();
                 enemyLogic.FlipAndRotateGun();
             }
