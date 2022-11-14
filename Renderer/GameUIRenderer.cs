@@ -51,6 +51,11 @@ namespace Renderer
                     gameModel.Gates[i].GateTexts[j].Font = uiModel.Font;
                 }
             }
+
+            for (int i = 0; i < gameModel.CreatorTexts.Count; i++)
+            {
+                gameModel.CreatorTexts[i].Font = uiModel.Font;
+            }
         }
 
         public void Draw(RenderTarget window)

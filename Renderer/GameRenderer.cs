@@ -321,6 +321,14 @@ namespace Renderer
             {
                 window.Draw(gameModel.CurrentMap.Vertices[i], PrimitiveType.Quads, new(BlendMode.Alpha, Transform.Identity, gameModel.CurrentMap.TilesetTexture, null));
             }
+
+            if (gameModel.Player.PlayerState == GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
+            {
+                for (int i = 0; i < gameModel.CreatorTexts.Count; i++)
+                {
+                    window.Draw(gameModel.CreatorTexts[i]);
+                }
+            }
         }
     }
 }

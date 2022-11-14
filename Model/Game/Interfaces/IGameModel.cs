@@ -31,5 +31,7 @@ namespace Model.Game.Classes
         public List<Music> Musics { get; set; }
         public bool DebugMode { get; set; }
         public List<GateModel> Gates { get; set; }
+        public List<Text> CreatorTexts { get; set; }
+        public List<Text> SettingsTexts { get; set; }
     }
 }
