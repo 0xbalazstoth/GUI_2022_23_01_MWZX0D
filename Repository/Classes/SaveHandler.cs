@@ -66,10 +66,18 @@ namespace Repository.Classes
                         // XP
                         int xp = (int)jsonObj["xp"];
 
+                        // Kill count
+                        int killCount = (int)jsonObj["killCount"];
+
+                        // Death count
+                        int deathCount = (int)jsonObj["deathCount"];
+
                         loadedGame.Player.Inventory = inventory;
                         loadedGame.Player.CurrentCoins = coins;
                         loadedGame.Player.CurrentXP = xp;
                         loadedGame.Player.Inventory.Capacity = inventoryCurrentCapacity;
+                        loadedGame.Player.KillCounter = killCount;
+                        loadedGame.Player.DeathCounter = deathCount;
                     }
                     else
                     {
@@ -84,8 +92,16 @@ namespace Repository.Classes
                         // XP
                         int xp = (int)jsonObj["xp"];
 
+                        // Kill count
+                        int killCount = (int)jsonObj["killCount"];
+
+                        // Death count
+                        int deathCount = (int)jsonObj["deathCount"];
+
                         loadedGame.Player.CurrentCoins = coins;
                         loadedGame.Player.CurrentXP = xp;
+                        loadedGame.Player.KillCounter = killCount;
+                        loadedGame.Player.DeathCounter = deathCount;
                     }
                 }
                 else
@@ -95,7 +111,9 @@ namespace Repository.Classes
                     loadedGame.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
                     loadedGame.Player.Inventory.Capacity = 0;
                     loadedGame.Player.CurrentCoins = 0;
+                    loadedGame.Player.KillCounter = 0;
                     loadedGame.Player.CurrentXP = 0;
+                    loadedGame.Player.DeathCounter = 0;
                 }
 
                 loadedGame.Player.Name = saveName;
@@ -184,6 +202,12 @@ namespace Repository.Classes
 
                     // Save XP level
                     saveObject["xp"] = gameModel.Player.CurrentXP;
+
+                    // Save kill count
+                    saveObject["killCount"] = gameModel.Player.KillCounter;
+
+                    // Save death count
+                    saveObject["deathCount"] = gameModel.Player.DeathCounter;
 
                     //// Save K/D
                     //saveObject["kd"] = gameModel.Player.Kills - gameModel.Player.Deaths;

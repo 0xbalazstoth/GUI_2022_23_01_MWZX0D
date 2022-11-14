@@ -212,6 +212,8 @@ namespace Gunner.Controller
                             gameModel.Player.CurrentCoins = loadedSave.Player.CurrentCoins;
                             gameModel.Player.CurrentXP = loadedSave.Player.CurrentXP;
                             gameModel.Player.Name = loadedSave.Player.Name;
+                            gameModel.Player.KillCounter = loadedSave.Player.KillCounter;
+                            gameModel.Player.DeathCounter = loadedSave.Player.DeathCounter;
 
                             menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                         }
@@ -267,6 +269,9 @@ namespace Gunner.Controller
                             gameModel.Gates[j].IsGateReady = false;
                         }
                     }
+
+                    // Remove bullets from enemies
+                    gameModel.Enemies.ForEach(x => x.Gun.Bullets.Clear());
                 }
             }
         }

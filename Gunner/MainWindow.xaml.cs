@@ -292,6 +292,7 @@ namespace Gunner
                     gameUILogic.UpdatePlayerCoinText();
                     gameUILogic.UpdateSpeedPotionTimeLeftText();
                     gameUILogic.UpdateKillCountText();
+                    gameUILogic.UpdateDeathCountText();
 
                     gameLogic.UpdateEnemies(window);
                 }

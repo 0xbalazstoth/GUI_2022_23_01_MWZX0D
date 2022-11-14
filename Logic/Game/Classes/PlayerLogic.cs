@@ -334,7 +334,6 @@ namespace Logic.Game.Classes
                     {
                         gameModel.Player.CurrentHP += gameModel.Player.MaxHP - gameModel.Player.CurrentHP;
                     }
-                    //gameModel.Player.CurrentHP += 10;
 
                     RemoveItemFromInventory(item);
                 }
@@ -508,6 +507,7 @@ namespace Logic.Game.Classes
                         if (gameModel.Player.CurrentHP <= 0)
                         {
                             gameModel.Player.IsDead = true;
+                            gameModel.Player.DeathCounter++;
                         }
                         return;
                     }
