@@ -632,6 +632,62 @@ namespace Logic.Game.Classes
             creatorName3.OutlineColor = Color.Black;
             creatorName3.OutlineThickness = 2;
             gameModel.CreatorTexts.Add(creatorName3);
+
+            gameModel.SettingsTexts = new List<Text>();
+            Text settingsTitle = new Text();
+            settingsTitle.DisplayedString = "Settings:";
+            settingsTitle.FillColor = Color.Red;
+            settingsTitle.CharacterSize = 80;
+            settingsTitle.Position = new Vector2f(1000, 950);
+            settingsTitle.OutlineColor = Color.Black;
+            settingsTitle.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsTitle);
+
+            Text settingsPlayerMove = new Text();
+            settingsPlayerMove.DisplayedString = "Moving: W A S D";
+            settingsPlayerMove.FillColor = Color.White;
+            settingsPlayerMove.CharacterSize = 40;
+            settingsPlayerMove.Position = new Vector2f(1000, 1050);
+            settingsPlayerMove.OutlineColor = Color.Black;
+            settingsPlayerMove.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerMove);
+
+            Text settingsPlayerShoot = new Text();
+            settingsPlayerShoot.DisplayedString = "Shooting: Left click";
+            settingsPlayerShoot.FillColor = Color.White;
+            settingsPlayerShoot.CharacterSize = 40;
+            settingsPlayerShoot.Position = new Vector2f(1000, 1100);
+            settingsPlayerShoot.OutlineColor = Color.Black;
+            settingsPlayerShoot.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerShoot);
+
+            Text settingsPlayerReload = new Text();
+            settingsPlayerReload.DisplayedString = "Reloading: R";
+            settingsPlayerReload.FillColor = Color.White;
+            settingsPlayerReload.CharacterSize = 40;
+            settingsPlayerReload.Position = new Vector2f(1000, 1150);
+            settingsPlayerReload.OutlineColor = Color.Black;
+            settingsPlayerReload.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerReload);
+
+            Text settingsPlayerSwitchWeapon = new Text();
+            settingsPlayerSwitchWeapon.DisplayedString = "Switching weapon: Mouse wheel";
+            settingsPlayerSwitchWeapon.FillColor = Color.White;
+            settingsPlayerSwitchWeapon.CharacterSize = 40;
+            settingsPlayerSwitchWeapon.Position = new Vector2f(1000, 1200);
+            settingsPlayerSwitchWeapon.OutlineColor = Color.Black;
+            settingsPlayerSwitchWeapon.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerSwitchWeapon);
+
+
+            Text inventory = new Text();
+            inventory.DisplayedString = "Inventory: I";
+            inventory.FillColor = Color.White;
+            inventory.CharacterSize = 40;
+            inventory.Position = new Vector2f(1500, 1050);
+            inventory.OutlineColor = Color.Black;
+            inventory.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(inventory);
         }
     }
 }

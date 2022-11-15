@@ -328,6 +328,11 @@ namespace Renderer
                 {
                     window.Draw(gameModel.CreatorTexts[i]);
                 }
+
+                for (int i = 0; i < gameModel.SettingsTexts.Count; i++)
+                {
+                    window.Draw(gameModel.SettingsTexts[i]);
+                }
             }
         }
     }

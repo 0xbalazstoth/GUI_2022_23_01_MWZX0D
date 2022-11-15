@@ -56,6 +56,11 @@ namespace Renderer
             {
                 gameModel.CreatorTexts[i].Font = uiModel.Font;
             }
+
+            for (int i = 0; i < gameModel.SettingsTexts.Count; i++)
+            {
+                gameModel.SettingsTexts[i].Font = uiModel.Font;
+            }
         }
 
         public void Draw(RenderTarget window)
