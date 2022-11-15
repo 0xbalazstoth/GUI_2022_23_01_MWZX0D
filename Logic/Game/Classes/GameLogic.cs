@@ -66,7 +66,8 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             
             CreateItems();
-            enemyLogic.CreateEnemies();
+            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40);
+            enemyLogic.CreateEnemies(EnemyType.Zombie, 5, 10, 20);
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
@@ -131,6 +132,23 @@ namespace Logic.Game.Classes
             gameModel.KillArenaMap.Size = new Vector2u(killArenaWidth, killArenaHeight);
             gameModel.KillArenaMap.TileSize = new Vector2u(killArenaTileWidth, killArenaHeight);
             tilemapLogic.InitializeVertices(gameModel.KillArenaMap);
+            #endregion
+
+            #region Boss arena
+            ManualTilemapLoadingHandler bossTilemapLoader = new ManualTilemapLoadingHandler();
+            var bossMap = bossTilemapLoader.LoadTMXFile("Assets/Textures/bossMap.tmx", tilesetFile);
+            tilemapLogic.InitializeVertices(bossMap);
+
+            gameModel.BossMap.CollidableIDs = new List<int>();
+            gameModel.BossMap.Vertices = bossMap.Vertices;
+            gameModel.BossMap.TilesetTexture = bossMap.TilesetTexture;
+            gameModel.BossMap.MapLayers = bossMap.MapLayers;
+            gameModel.BossMap.Width = bossMap.Width;
+            gameModel.BossMap.Height = bossMap.Height;
+            gameModel.BossMap.TileWidth = bossMap.TileWidth;
+            gameModel.BossMap.TileHeight = bossMap.TileHeight;
+            gameModel.BossMap.Size = new Vector2u(bossMap.Width, bossMap.Height);
+            gameModel.BossMap.TileSize = new Vector2u(bossMap.TileWidth, bossMap.TileHeight);
             #endregion
 
             #region Set lobby as default map
@@ -635,7 +653,7 @@ namespace Logic.Game.Classes
 
             gameModel.SettingsTexts = new List<Text>();
             Text settingsTitle = new Text();
-            settingsTitle.DisplayedString = "Settings:";
+            settingsTitle.DisplayedString = "Hotkeys:";
             settingsTitle.FillColor = Color.Red;
             settingsTitle.CharacterSize = 80;
             settingsTitle.Position = new Vector2f(1000, 950);

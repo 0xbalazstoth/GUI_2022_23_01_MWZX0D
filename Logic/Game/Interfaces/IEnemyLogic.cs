@@ -1,4 +1,5 @@
 ﻿using Model.Game.Classes;
+using Model.Game.Enums;
 using SFML.Graphics;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Logic.Game.Interfaces
         void UpdateHP();
         void Shoot(int enemyIdx);
         void FlipAndRotateGun();
-        void CreateEnemies();
+        void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount);
         void HandleMapCollision(int enemyIdx);
         void ReloadGun(int enemyIdx);
         float DistanceBetweenPlayer(int enemyIdx);

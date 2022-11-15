@@ -15,6 +15,7 @@ namespace Model.Game.Classes
         public TilemapModel CurrentMap { get; set; }
         public TilemapModel KillArenaMap { get; set; }
         public TilemapModel LobbyMap { get; set; }
+        public TilemapModel BossMap { get; set; }
         public List<int> MapCollidibleIDs
         {
             get

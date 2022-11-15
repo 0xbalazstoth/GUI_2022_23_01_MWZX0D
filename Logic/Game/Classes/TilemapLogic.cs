@@ -26,6 +26,7 @@ namespace Logic.Game.Classes
             gameModel.CurrentMap = new TilemapModel();
             gameModel.KillArenaMap = new TilemapModel();
             gameModel.LobbyMap = new TilemapModel();
+            gameModel.BossMap = new TilemapModel();
         }
 
         public int[] GroundMapGeneration(uint height, uint width, float scale, int seed = 209323094)

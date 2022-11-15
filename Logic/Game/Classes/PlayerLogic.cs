@@ -559,6 +559,22 @@ namespace Logic.Game.Classes
                         if (gameModel.Gates[i].GateState == GateState.InBossArena)
                         {
                             gameModel.Player.PlayerState = GateState.InBossArena;
+
+                            gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.BossMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.BossMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
+                            gameModel.Player.Position = new Vector2f(300f, 150f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                gameModel.Gates[j].IsGateReady = false;
+                            }
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InShop)

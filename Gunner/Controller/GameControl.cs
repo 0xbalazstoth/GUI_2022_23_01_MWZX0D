@@ -82,10 +82,13 @@ namespace Gunner.Controller
 
         public void HandleInventoryInput(KeyEventArgs eventKey)
         {
-            if (eventKey.Key == System.Windows.Input.Key.I)
-            {
-                InventoryWindow inventoryWindow = new InventoryWindow(gameModel, playerLogic);
-                inventoryWindow.ShowDialog();
+            if (gameModel.Player.IsDead == false)
+            { 
+                if (eventKey.Key == System.Windows.Input.Key.I)
+                {
+                    InventoryWindow inventoryWindow = new InventoryWindow(gameModel, playerLogic);
+                    inventoryWindow.ShowDialog();
+                }
             }
         }
 

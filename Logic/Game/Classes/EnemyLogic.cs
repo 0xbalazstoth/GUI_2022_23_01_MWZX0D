@@ -136,21 +136,21 @@ namespace Logic.Game.Classes
 
                 HandleMapCollision(enemyIdx);
 
-                //var currentRect = new FloatRect(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y, gameModel.Enemies[enemyIdx].Hitbox.Size.X, gameModel.Enemies[enemyIdx].Hitbox.Size.Y);
+                var currentRect = new FloatRect(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y, gameModel.Enemies[enemyIdx].Hitbox.Size.X, gameModel.Enemies[enemyIdx].Hitbox.Size.Y);
 
-                //// Check if current enemy colliding with other enemies
-                //for (int i = 0; i < gameModel.Enemies.Count; i++)
-                //{
-                //    if (i != enemyIdx)
-                //    {
-                //        var otherRect = new FloatRect(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y, gameModel.Enemies[i].Hitbox.Size.X, gameModel.Enemies[i].Hitbox.Size.Y);
+                // Check if current enemy colliding with other enemies
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
+                {
+                    if (i != enemyIdx)
+                    {
+                        var otherRect = new FloatRect(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y, gameModel.Enemies[i].Hitbox.Size.X, gameModel.Enemies[i].Hitbox.Size.Y);
 
-                //        if (currentRect.Intersects(otherRect))
-                //        {
-                //            gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
-                //        }
-                //    }
-                //}
+                        if (currentRect.Intersects(otherRect))
+                        {
+                            gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
+                        }
+                    }
+                }
             }
 
             // Clear the path
@@ -295,20 +295,18 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void CreateEnemies()
+        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount)
         {
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < spawnCount; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                // Minimum x and y position is 100
                 enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
-                //enemy.Position = new Vector2f(new Random().Next() % gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight);
                 enemy.Speed = 30f;
                 enemy.SightDistance = 300f;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
-                enemy.Gun.Damage = 5;
-                enemy.Gun.MaxAmmo = 5;
+                enemy.Gun.Damage = damage;
+                enemy.Gun.MaxAmmo = maxAmmo;
                 enemy.Gun.Recoil = 5f;
                 enemy.Hitbox = new RectangleShape();
                 enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
@@ -330,7 +328,7 @@ namespace Logic.Game.Classes
 
                 enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
-                enemy.EnemyType = Model.Game.Enums.EnemyType.Eye;
+                enemy.EnemyType = enemyType;
 
                 gameModel.Enemies.Add(enemy);
                 for (int j = 0; j < i - 1; j++)
