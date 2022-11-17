@@ -56,17 +56,17 @@ namespace Logic.UI.Classes
         #region Main menu
         public void UpdateMainMenu(Vector2u windowSize)
         {
+            // Place game name text in the top center of the screen
+            menuUIModel.GameNameText.Position = new Vector2f(windowSize.X / 2 - menuUIModel.GameNameText.GetLocalBounds().Width / 2, 50);
+
             for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
             {
                 // Center horizontally and vertically
-                menuUIModel.MainMenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.MainMenuTexts[i].GetLocalBounds().Width / 2, windowSize.Y / (MAIN_MENU_MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
+                menuUIModel.MainMenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.MainMenuTexts[i].GetLocalBounds().Width / 2, menuUIModel.GameNameText.Position.Y + windowSize.Y / (MAIN_MENU_MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
             }
 
             // Place arrow keys sprite in the bottom left of the screen
             menuUIModel.ArrowKeysSprite.Position = new Vector2f(50, windowSize.Y - (menuUIModel.ArrowKeysSprite.GetLocalBounds().Height + 50));
-
-            // Place game name text in the top center of the screen
-            menuUIModel.GameNameText.Position = new Vector2f(windowSize.X / 2 - menuUIModel.GameNameText.GetLocalBounds().Width / 2, 50);
         }
 
         public void MoveUpMainMenu()
@@ -115,17 +115,17 @@ namespace Logic.UI.Classes
         #region Pause menu
         public void UpdatePauseMenu(Vector2u windowSize)
         {
+            // Place game name text in the top center of the screen
+            menuUIModel.GameNameText.Position = new Vector2f(windowSize.X / 2 - menuUIModel.GameNameText.GetLocalBounds().Width / 2, 50);
+
             for (int i = 0; i < menuUIModel.PauseMenuTexts.Count; i++)
             {
                 // Center horizontally and vertically
-                menuUIModel.PauseMenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.PauseMenuTexts[i].GetLocalBounds().Width / 2, windowSize.Y / (PAUSE_MENU_MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
+                menuUIModel.PauseMenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.PauseMenuTexts[i].GetLocalBounds().Width / 2, menuUIModel.GameNameText.Position.Y + windowSize.Y / (PAUSE_MENU_MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
             }
 
             // Place arrow keys sprite in the bottom left of the screen
             menuUIModel.ArrowKeysSprite.Position = new Vector2f(50, windowSize.Y - (menuUIModel.ArrowKeysSprite.GetLocalBounds().Height + 50));
-
-            // Place game name text in the top center of the screen
-            menuUIModel.GameNameText.Position = new Vector2f(windowSize.X / 2 - menuUIModel.GameNameText.GetLocalBounds().Width / 2, 50);
         }
 
         public void MoveUpPauseMenu()

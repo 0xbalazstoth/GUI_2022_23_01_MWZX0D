@@ -118,51 +118,54 @@ namespace Gunner.Controller
 
         public void HandlePauseMenuInput(KeyEventArgs eventKey)
         {
-            if (eventKey.Key == System.Windows.Input.Key.Escape)
+            if (gameModel.Player.IsDead == false)
             {
-                gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
-                if (!gameModel.Player.IsFocusedInGame)
+                if (eventKey.Key == System.Windows.Input.Key.Escape)
                 {
-                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InPauseMenu;
-                }
-                else
-                {
-                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
-                }
-
-                saveHandler.Save(gameModel.Player.Name, gameModel);
-            }
-
-            if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InPauseMenu)
-            {
-                if (eventKey.Key == System.Windows.Input.Key.Up)
-                {
-                    menuUILogic.MoveUpPauseMenu();
-                }
-
-                if (eventKey.Key == System.Windows.Input.Key.Down)
-                {
-                    menuUILogic.MoveDownPauseMenu();
-                }
-
-                if (eventKey.Key == System.Windows.Input.Key.Enter)
-                {
-                    var selectedMenu = menuUILogic.GetSelectedPauseMenuOption();
-
-                    if (selectedMenu == Model.Game.Enums.MenuOptionsState.InGame)
+                    gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
+                    if (!gameModel.Player.IsFocusedInGame)
                     {
-                        gameModel.Player.IsFocusedInGame = true;
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InPauseMenu;
+                    }
+                    else
+                    {
                         menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                     }
-                    else if (selectedMenu == Model.Game.Enums.MenuOptionsState.InMainMenu)
+
+                    saveHandler.Save(gameModel.Player.Name, gameModel);
+                }
+
+                if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InPauseMenu)
+                {
+                    if (eventKey.Key == System.Windows.Input.Key.Up)
                     {
-                        // Restart app
-                        Application.Current.Shutdown();
-                        System.Windows.Forms.Application.Restart();
+                        menuUILogic.MoveUpPauseMenu();
                     }
-                    else if (selectedMenu == Model.Game.Enums.MenuOptionsState.QuitGame)
+
+                    if (eventKey.Key == System.Windows.Input.Key.Down)
                     {
-                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.QuitGame;
+                        menuUILogic.MoveDownPauseMenu();
+                    }
+
+                    if (eventKey.Key == System.Windows.Input.Key.Enter)
+                    {
+                        var selectedMenu = menuUILogic.GetSelectedPauseMenuOption();
+
+                        if (selectedMenu == Model.Game.Enums.MenuOptionsState.InGame)
+                        {
+                            gameModel.Player.IsFocusedInGame = true;
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                        }
+                        else if (selectedMenu == Model.Game.Enums.MenuOptionsState.InMainMenu)
+                        {
+                            // Restart app
+                            Application.Current.Shutdown();
+                            System.Windows.Forms.Application.Restart();
+                        }
+                        else if (selectedMenu == Model.Game.Enums.MenuOptionsState.QuitGame)
+                        {
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.QuitGame;
+                        }
                     }
                 }
             }
