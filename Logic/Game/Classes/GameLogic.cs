@@ -67,7 +67,7 @@ namespace Logic.Game.Classes
             
             CreateItems();
             enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40);
-            enemyLogic.CreateEnemies(EnemyType.Zombie, 5, 10, 20);
+            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1);
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
@@ -576,7 +576,7 @@ namespace Logic.Game.Classes
             bossArenaGate.GateTexts.Add(bossArenaGateNameText);
 
             Text bossArenaGateMsgText = new Text();
-            bossArenaGateMsgText.DisplayedString = "Come in to fight against the boss!";
+            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!";
             bossArenaGateMsgText.CharacterSize = 28;
             bossArenaGateMsgText.OutlineColor = Color.Black;
             bossArenaGateMsgText.OutlineThickness = 2;

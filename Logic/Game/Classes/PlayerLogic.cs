@@ -554,6 +554,18 @@ namespace Logic.Game.Classes
                                     gameModel.Gates[j].IsGateReady = false;
                                 }
                             }
+
+                            for (int j = 0; j < gameModel.Enemies.Count; j++)
+                            {
+                                if (gameModel.Enemies[j].EnemyType == EnemyType.Eye)
+                                {
+                                    gameModel.Enemies[j].CanSpawn = true;
+                                }
+                                else
+                                {
+                                    gameModel.Enemies[j].CanSpawn = false;
+                                }
+                            }
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InBossArena)
@@ -574,6 +586,18 @@ namespace Logic.Game.Classes
                             for (int j = 0; j < gameModel.Gates.Count; j++)
                             {
                                 gameModel.Gates[j].IsGateReady = false;
+                            }
+
+                            for (int j = 0; j < gameModel.Enemies.Count; j++)
+                            {
+                                if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
+                                {
+                                    gameModel.Enemies[j].CanSpawn = true;
+                                }
+                                else
+                                {
+                                    gameModel.Enemies[j].CanSpawn = false;
+                                }
                             }
                         }
 

@@ -25,7 +25,8 @@ namespace Renderer
         private Texture healthPotionTexture;
         private Texture speedPotionTexture;
         private Dictionary<MovementDirection, Texture> playerTextures;
-        private Dictionary<MovementDirection, Texture> enemyTextures;
+        private Dictionary<MovementDirection, Texture> eyeEnemyTexture;
+        private Dictionary<MovementDirection, Texture> bossEnemyTexture;
         private Texture pistolTexture;
         private Texture shotgunTexture;
         private Texture hpTexture;
@@ -52,9 +53,13 @@ namespace Renderer
             playerTextures.Add(MovementDirection.Up, new Texture("Assets/Textures/move_up.png"));
             playerTextures.Add(MovementDirection.Down, new Texture("Assets/Textures/move_down.png"));
 
-            enemyTextures = new Dictionary<MovementDirection, Texture>();
-            enemyTextures.Add(MovementDirection.Left, new Texture("Assets/Textures/enemy_eye_left.png"));
-            enemyTextures.Add(MovementDirection.Right, new Texture("Assets/Textures/enemy_eye_right.png"));
+            eyeEnemyTexture = new Dictionary<MovementDirection, Texture>();
+            eyeEnemyTexture.Add(MovementDirection.Left, new Texture("Assets/Textures/enemy_eye_left.png"));
+            eyeEnemyTexture.Add(MovementDirection.Right, new Texture("Assets/Textures/enemy_eye_right.png"));
+
+            bossEnemyTexture = new Dictionary<MovementDirection, Texture>();
+            bossEnemyTexture.Add(MovementDirection.Left, new Texture("Assets/Textures/enemy_boss_left.png"));
+            bossEnemyTexture.Add(MovementDirection.Right, new Texture("Assets/Textures/enemy_boss_right.png"));
 
             pistolTexture = new Texture("Assets/Textures/pistol.png");
             shotgunTexture = new Texture("Assets/Textures/shotgun.png");
@@ -68,9 +73,12 @@ namespace Renderer
         {
             DrawTilemap(window);
             DrawObjects(window);
+            if (gameModel.Player.PlayerState == GateState.InKillArena)
+            { 
+                DrawCollectibleItems(window);
+            }
             if (gameModel.Player.PlayerState == Model.Game.Enums.GateState.InKillArena || gameModel.Player.PlayerState == Model.Game.Enums.GateState.InBossArena)
             {
-                DrawCollectibleItems(window);
                 DrawEnemy(window);
             }
             DrawPlayer(window);
@@ -106,32 +114,38 @@ namespace Renderer
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
+                if (gameModel.Enemies[i].CanSpawn)
                 {
-                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                    if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
                     {
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture = bulletSheetTexture;
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture);
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
+                        for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                        {
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture = bulletSheetTexture;
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].Texture);
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Pistol].GetSpriteSize.Y);
+                        }
                     }
-                }
-                
-                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
-                {
-                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+
+                    if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
                     {
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture = bulletSheetTexture;
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture);
-                        gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
+                        for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                        {
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture = bulletSheetTexture;
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Sprite = new Sprite(gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].Texture);
+                            gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.X, gameModel.Enemies[i].Gun.Bullets[j].Animations[Model.Game.Enums.GunType.Shotgun].GetSpriteSize.Y);
+                        }
                     }
                 }
             }
 
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                if (gameModel.Enemies[i].CanSpawn)
                 {
-                    window.Draw(gameModel.Enemies[i].Gun.Bullets[j].Bullet);
+                    for (int j = 0; j < gameModel.Enemies[i].Gun.Bullets.Count; j++)
+                    {
+                        window.Draw(gameModel.Enemies[i].Gun.Bullets[j].Bullet);
+                    }
                 }
             }
 
@@ -195,46 +209,62 @@ namespace Renderer
         {
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].Animations[MovementDirection.Left].Texture = enemyTextures[MovementDirection.Left];
-                gameModel.Enemies[i].Animations[MovementDirection.Left].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Left].Texture);
-                gameModel.Enemies[i].Animations[MovementDirection.Left].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.Y);
-
-                gameModel.Enemies[i].Animations[MovementDirection.Right].Texture = enemyTextures[MovementDirection.Right];
-                gameModel.Enemies[i].Animations[MovementDirection.Right].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Right].Texture);
-                gameModel.Enemies[i].Animations[MovementDirection.Right].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.Y);
-
-                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
+                if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
                 {
-                    gameModel.Enemies[i].Gun.Texture = pistolTexture;
-                    gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 12, 3);
+                    gameModel.Enemies[i].Animations[MovementDirection.Left].Texture = eyeEnemyTexture[MovementDirection.Left];
+                    gameModel.Enemies[i].Animations[MovementDirection.Left].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Left].Texture);
+                    gameModel.Enemies[i].Animations[MovementDirection.Left].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.Y);
+
+                    gameModel.Enemies[i].Animations[MovementDirection.Right].Texture = eyeEnemyTexture[MovementDirection.Right];
+                    gameModel.Enemies[i].Animations[MovementDirection.Right].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Right].Texture);
+                    gameModel.Enemies[i].Animations[MovementDirection.Right].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.Y);
                 }
-                
-                if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
+                else if (gameModel.Enemies[i].EnemyType == EnemyType.Boss)
                 {
-                    gameModel.Enemies[i].Gun.Texture = shotgunTexture;
-                    gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 16, 6);
-                }
+                    gameModel.Enemies[i].Animations[MovementDirection.Left].Texture = bossEnemyTexture[MovementDirection.Left];
+                    gameModel.Enemies[i].Animations[MovementDirection.Left].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Left].Texture);
+                    gameModel.Enemies[i].Animations[MovementDirection.Left].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Left].GetSpriteSize.Y);
 
-                gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
-
-                if (gameModel.DebugMode)
-                {
-                    gameModel.Enemies[i].Hitbox.FillColor = Color.Transparent;
-                    gameModel.Enemies[i].Hitbox.OutlineColor = Color.Red;
-                    gameModel.Enemies[i].Hitbox.OutlineThickness = 1.0f;
-                    window.Draw(gameModel.Enemies[i].Hitbox);
+                    gameModel.Enemies[i].Animations[MovementDirection.Right].Texture = bossEnemyTexture[MovementDirection.Right];
+                    gameModel.Enemies[i].Animations[MovementDirection.Right].Sprite = new Sprite(gameModel.Enemies[i].Animations[MovementDirection.Right].Texture);
+                    gameModel.Enemies[i].Animations[MovementDirection.Right].TextureRect = new IntRect(0, 0, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.X, gameModel.Enemies[i].Animations[MovementDirection.Right].GetSpriteSize.Y);
                 }
 
-                window.Draw(gameModel.Enemies[i]);
-                gameModel.Enemies[i].HPSprite.Texture = hpTexture;
-                
-                if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
+                if (gameModel.Enemies[i].CanSpawn)
                 {
-                    window.Draw(gameModel.Enemies[i].Gun);
+                    if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Pistol)
+                    {
+                        gameModel.Enemies[i].Gun.Texture = pistolTexture;
+                        gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 12, 3);
+                    }
 
-                    // Draw HP
-                    window.Draw(gameModel.Enemies[i].HPSprite);
-                    window.Draw(gameModel.Enemies[i].HPText);
+                    if (gameModel.Enemies[i].Gun.GunType == Model.Game.Enums.GunType.Shotgun)
+                    {
+                        gameModel.Enemies[i].Gun.Texture = shotgunTexture;
+                        gameModel.Enemies[i].Gun.TextureRect = new IntRect(0, 0, 16, 6);
+                    }
+
+                    gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
+
+                    if (gameModel.DebugMode)
+                    {
+                        gameModel.Enemies[i].Hitbox.FillColor = Color.Transparent;
+                        gameModel.Enemies[i].Hitbox.OutlineColor = Color.Red;
+                        gameModel.Enemies[i].Hitbox.OutlineThickness = 1.0f;
+                        window.Draw(gameModel.Enemies[i].Hitbox);
+                    }
+
+                    window.Draw(gameModel.Enemies[i]);
+                    gameModel.Enemies[i].HPSprite.Texture = hpTexture;
+
+                    if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
+                    {
+                        window.Draw(gameModel.Enemies[i].Gun);
+
+                        // Draw HP
+                        window.Draw(gameModel.Enemies[i].HPSprite);
+                        window.Draw(gameModel.Enemies[i].HPText);
+                    }
                 }
             }
         }

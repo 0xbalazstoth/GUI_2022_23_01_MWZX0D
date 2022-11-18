@@ -3,7 +3,6 @@
     public enum EnemyType
     {
         Eye,
-        Zombie,
         Boss
     }
 }
