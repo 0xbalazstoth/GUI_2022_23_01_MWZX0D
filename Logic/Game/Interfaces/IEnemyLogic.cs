@@ -17,7 +17,7 @@ namespace Logic.Game.Interfaces
         void UpdateHP();
         void Shoot(int enemyIdx);
         void FlipAndRotateGun();
-        void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount);
+        void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance);
         void HandleMapCollision(int enemyIdx);
         void ReloadGun(int enemyIdx);
         float DistanceBetweenPlayer(int enemyIdx);

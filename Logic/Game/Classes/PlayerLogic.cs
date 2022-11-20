@@ -581,7 +581,7 @@ namespace Logic.Game.Classes
                             gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
                             gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
                             gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
-                            gameModel.Player.Position = new Vector2f(300f, 150f);
+                            gameModel.Player.Position = new Vector2f(300f, 500f);
 
                             for (int j = 0; j < gameModel.Gates.Count; j++)
                             {

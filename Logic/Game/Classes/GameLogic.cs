@@ -66,8 +66,8 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             
             CreateItems();
-            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40);
-            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1);
+            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40, 300f);
+            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f);
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
@@ -113,8 +113,8 @@ namespace Logic.Game.Classes
             #endregion
 
             #region Kill arena
-            uint killArenaWidth = 100;
-            uint killArenaHeight = 100;
+            uint killArenaWidth = 80;
+            uint killArenaHeight = 80;
             float killArenaScale = 1f;
             uint killArenaTileWidth = 32;
             uint killArenaTileHeight = 32;
@@ -321,11 +321,13 @@ namespace Logic.Game.Classes
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < new Random().Next(50, 130); i++)
+            for (int i = 0; i < new Random().Next(30, 70); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.KillArenaMap.GetMapWidth, new Random().Next() % gameModel.CurrentMap.GetMapHeight);
+                // Set random position for item
+                coinItem.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
+                //coinItem.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.CurrentMap.GetMapHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
                 coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
@@ -338,7 +340,9 @@ namespace Logic.Game.Classes
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.KillArenaMap.GetMapWidth, new Random().Next() % gameModel.KillArenaMap.GetMapHeight);
+                // Set random position for item
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
+                //healtPotionItem.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.KillArenaMap.GetMapHeight);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
                 healtPotionItem.IconFileName = "health_potion.png";
@@ -350,7 +354,9 @@ namespace Logic.Game.Classes
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
-                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.KillArenaMap.GetMapWidth, new Random().Next() % gameModel.KillArenaMap.GetMapHeight);
+                // Set random position for item
+                speedPotion.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
+                //speedPotion.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.KillArenaMap.GetMapHeight);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
                 speedPotion.IconFileName = "speed_potion.png";

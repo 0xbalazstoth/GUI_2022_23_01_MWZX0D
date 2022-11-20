@@ -275,34 +275,35 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(-2.5f, 2.5f);
                     gameModel.Enemies[i].Gun.Rotation = angle + 180;
 
-                    if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
-                    {
-                        // Center gun position by enemy texture
-                        gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
-                    }
+                    // Center gun position by enemy texture
+                    gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
                 }
                 else
                 {
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                     gameModel.Enemies[i].Gun.Rotation = angle;
 
-                    if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
-                    {
-                        // Center gun position by enemy texture
-                        gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
-                    }
+                    // Center gun position by enemy texture
+                    gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
                 }
             }
         }
 
-        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount)
+        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance)
         {
             for (int i = 0; i < spawnCount; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
+                if (enemyType == EnemyType.Boss)
+                {
+                    enemy.Position = new Vector2f(1500f, 500f);
+                }
+                else
+                { 
+                    enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
+                }
                 enemy.Speed = 30f;
-                enemy.SightDistance = 300f;
+                enemy.SightDistance = sightDistance;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
                 enemy.Gun.Damage = damage;
