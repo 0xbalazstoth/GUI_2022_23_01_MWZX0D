@@ -588,6 +588,9 @@ namespace Logic.Game.Classes
                                 gameModel.Gates[j].IsGateReady = false;
                             }
 
+                            // Remove every enemy except boss type
+                            gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
+
                             for (int j = 0; j < gameModel.Enemies.Count; j++)
                             {
                                 if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
@@ -598,7 +601,7 @@ namespace Logic.Game.Classes
                                 {
                                     gameModel.Enemies[j].CanSpawn = false;
                                 }
-                            }
+                            } 
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InShop)
@@ -632,6 +635,9 @@ namespace Logic.Game.Classes
                                     gameModel.Gates[j].IsGateReady = false;
                                 }
                             }
+
+                            // Set player's HP to max
+                            gameModel.Player.CurrentHP = gameModel.Player.MaxHP;
                         }
                     }
                 }

@@ -95,8 +95,9 @@ namespace Logic.Game.Classes
                 gameModel.CurrentMap.CollidableIDs.Add(id);
             }
 
-            #region Lobby
             ManualTilemapLoadingHandler tilemapLoader = new ManualTilemapLoadingHandler();
+
+            #region Lobby
             var lobbyMap = tilemapLoader.LoadTMXFile(tmxFile, tilesetFile);
             tilemapLogic.InitializeVertices(lobbyMap);
 
@@ -135,8 +136,7 @@ namespace Logic.Game.Classes
             #endregion
 
             #region Boss arena
-            ManualTilemapLoadingHandler bossTilemapLoader = new ManualTilemapLoadingHandler();
-            var bossMap = bossTilemapLoader.LoadTMXFile("Assets/Textures/bossMap.tmx", tilesetFile);
+            var bossMap = tilemapLoader.LoadTMXFile("Assets/Textures/bossMap.tmx", tilesetFile);
             tilemapLogic.InitializeVertices(bossMap);
 
             gameModel.BossMap.CollidableIDs = new List<int>();

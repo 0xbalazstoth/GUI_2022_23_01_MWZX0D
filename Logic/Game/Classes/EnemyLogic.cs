@@ -165,13 +165,13 @@ namespace Logic.Game.Classes
                 {
                     if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                     {
-                        gameModel.Player.Gun.Bullets.Remove(bullet);
-
                         // Damage enemy if it is not dead
                         if (enemy.CurrentHP >= 1)
                         {
                             enemy.CurrentHP -= gameModel.Player.Gun.Damage;
                         }
+
+                        gameModel.Player.Gun.Bullets.Remove(bullet);
 
                         if (enemy.CurrentHP <= 0)
                         {
@@ -180,7 +180,7 @@ namespace Logic.Game.Classes
                             gameModel.Player.KillCounter++;
                         }
 
-                        break;
+                        return;
                     }
                 }
             }

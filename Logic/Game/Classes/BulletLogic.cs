@@ -113,7 +113,7 @@ namespace Logic.Game.Classes
                 float distX = gameModel.Player.Gun.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
                 float distY = gameModel.Player.Gun.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
 
-                if (Math.Sqrt(distX * distX + distY * distY) > 600)
+                if (Math.Sqrt(distX * distX + distY * distY) > gameModel.CurrentMap.GetMapWidth)
                 {
                     gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
