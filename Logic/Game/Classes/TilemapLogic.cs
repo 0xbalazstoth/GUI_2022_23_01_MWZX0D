@@ -26,6 +26,7 @@ namespace Logic.Game.Classes
             gameModel.CurrentMap = new TilemapModel();
             gameModel.KillArenaMap = new TilemapModel();
             gameModel.LobbyMap = new TilemapModel();
+            gameModel.BossMap = new TilemapModel();
         }
 
         public int[] GroundMapGeneration(uint height, uint width, float scale, int seed = 209323094)
@@ -36,7 +37,6 @@ namespace Logic.Game.Classes
 
             int[] generatedMap = new int[height * width];
 
-            // Generate map by noise values and set tile textures by percentage
             for (int x = 0; x < height; x++)
             {
                 for (int y = 0; y < width; y++)
@@ -106,7 +106,7 @@ namespace Logic.Game.Classes
                     {
                         generatedMap[x + y * height] = 151;
                     }
-                    else if (x == 11 && (y >= 0 && y <= 10) && !(y >= 5 && y <= 7)) // top to bottom
+                    else if (x == 11 && (y >= 0 && y <= 10) && !(y >= 4 && y <= 8)) // top to bottom
                     {
                         generatedMap[x + y * height] = 102;
                     }

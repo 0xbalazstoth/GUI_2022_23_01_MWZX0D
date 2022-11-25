@@ -82,10 +82,13 @@ namespace Gunner.Controller
 
         public void HandleInventoryInput(KeyEventArgs eventKey)
         {
-            if (eventKey.Key == System.Windows.Input.Key.I)
-            {
-                InventoryWindow inventoryWindow = new InventoryWindow(gameModel, playerLogic);
-                inventoryWindow.ShowDialog();
+            if (gameModel.Player.IsDead == false)
+            { 
+                if (eventKey.Key == System.Windows.Input.Key.I)
+                {
+                    InventoryWindow inventoryWindow = new InventoryWindow(gameModel, playerLogic);
+                    inventoryWindow.ShowDialog();
+                }
             }
         }
 
@@ -115,51 +118,54 @@ namespace Gunner.Controller
 
         public void HandlePauseMenuInput(KeyEventArgs eventKey)
         {
-            if (eventKey.Key == System.Windows.Input.Key.Escape)
+            if (gameModel.Player.IsDead == false)
             {
-                gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
-                if (!gameModel.Player.IsFocusedInGame)
+                if (eventKey.Key == System.Windows.Input.Key.Escape)
                 {
-                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InPauseMenu;
-                }
-                else
-                {
-                    menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
-                }
-
-                saveHandler.Save(gameModel.Player.Name, gameModel);
-            }
-
-            if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InPauseMenu)
-            {
-                if (eventKey.Key == System.Windows.Input.Key.Up)
-                {
-                    menuUILogic.MoveUpPauseMenu();
-                }
-
-                if (eventKey.Key == System.Windows.Input.Key.Down)
-                {
-                    menuUILogic.MoveDownPauseMenu();
-                }
-
-                if (eventKey.Key == System.Windows.Input.Key.Enter)
-                {
-                    var selectedMenu = menuUILogic.GetSelectedPauseMenuOption();
-
-                    if (selectedMenu == Model.Game.Enums.MenuOptionsState.InGame)
+                    gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
+                    if (!gameModel.Player.IsFocusedInGame)
                     {
-                        gameModel.Player.IsFocusedInGame = true;
+                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InPauseMenu;
+                    }
+                    else
+                    {
                         menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                     }
-                    else if (selectedMenu == Model.Game.Enums.MenuOptionsState.InMainMenu)
+
+                    saveHandler.Save(gameModel.Player.Name, gameModel);
+                }
+
+                if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InPauseMenu)
+                {
+                    if (eventKey.Key == System.Windows.Input.Key.Up)
                     {
-                        // Restart app
-                        Application.Current.Shutdown();
-                        System.Windows.Forms.Application.Restart();
+                        menuUILogic.MoveUpPauseMenu();
                     }
-                    else if (selectedMenu == Model.Game.Enums.MenuOptionsState.QuitGame)
+
+                    if (eventKey.Key == System.Windows.Input.Key.Down)
                     {
-                        menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.QuitGame;
+                        menuUILogic.MoveDownPauseMenu();
+                    }
+
+                    if (eventKey.Key == System.Windows.Input.Key.Enter)
+                    {
+                        var selectedMenu = menuUILogic.GetSelectedPauseMenuOption();
+
+                        if (selectedMenu == Model.Game.Enums.MenuOptionsState.InGame)
+                        {
+                            gameModel.Player.IsFocusedInGame = true;
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
+                        }
+                        else if (selectedMenu == Model.Game.Enums.MenuOptionsState.InMainMenu)
+                        {
+                            // Restart app
+                            Application.Current.Shutdown();
+                            System.Windows.Forms.Application.Restart();
+                        }
+                        else if (selectedMenu == Model.Game.Enums.MenuOptionsState.QuitGame)
+                        {
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.QuitGame;
+                        }
                     }
                 }
             }
@@ -212,6 +218,8 @@ namespace Gunner.Controller
                             gameModel.Player.CurrentCoins = loadedSave.Player.CurrentCoins;
                             gameModel.Player.CurrentXP = loadedSave.Player.CurrentXP;
                             gameModel.Player.Name = loadedSave.Player.Name;
+                            gameModel.Player.KillCounter = loadedSave.Player.KillCounter;
+                            gameModel.Player.DeathCounter = loadedSave.Player.DeathCounter;
 
                             menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                         }
@@ -255,6 +263,21 @@ namespace Gunner.Controller
                     gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
                     gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
                     gameModel.Player.PlayerState = GateState.InLobby;
+
+                    for (int j = 0; j < gameModel.Gates.Count; j++)
+                    {
+                        if (gameModel.Gates[j].GateState != GateState.InLobby)
+                        {
+                            gameModel.Gates[j].IsGateReady = true;
+                        }
+                        else
+                        {
+                            gameModel.Gates[j].IsGateReady = false;
+                        }
+                    }
+
+                    // Remove bullets from enemies
+                    gameModel.Enemies.ForEach(x => x.Gun.Bullets.Clear());
                 }
             }
         }

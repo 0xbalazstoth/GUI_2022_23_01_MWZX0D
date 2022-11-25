@@ -34,6 +34,7 @@ namespace Renderer
             uiModel.PlayerCoinText.Font = uiModel.Font;
             uiModel.PlayerSpeedTimerText.Font = uiModel.Font;
             uiModel.PlayerKillCountText.Font = uiModel.Font;
+            uiModel.PlayerDeathCountText.Font = uiModel.Font;
             uiModel.GameOverText.Font = uiModel.Font;
 
             gameModel.Player.HPText.Font = uiModel.Font;
@@ -49,6 +50,16 @@ namespace Renderer
                 {
                     gameModel.Gates[i].GateTexts[j].Font = uiModel.Font;
                 }
+            }
+
+            for (int i = 0; i < gameModel.CreatorTexts.Count; i++)
+            {
+                gameModel.CreatorTexts[i].Font = uiModel.Font;
+            }
+
+            for (int i = 0; i < gameModel.SettingsTexts.Count; i++)
+            {
+                gameModel.SettingsTexts[i].Font = uiModel.Font;
             }
         }
 
@@ -69,6 +80,7 @@ namespace Renderer
                 }
 
                 window.Draw(DrawablePlayerKillCountText());
+                window.Draw(DrawablePlayerDeathCountText());
             }
             else
             {
@@ -119,6 +131,11 @@ namespace Renderer
         private Drawable DrawableGameOverText()
         {
             return uiModel.GameOverText;
+        }
+
+        private Drawable DrawablePlayerDeathCountText()
+        {
+            return uiModel.PlayerDeathCountText;
         }
     }
 }

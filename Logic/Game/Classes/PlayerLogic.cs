@@ -334,7 +334,6 @@ namespace Logic.Game.Classes
                     {
                         gameModel.Player.CurrentHP += gameModel.Player.MaxHP - gameModel.Player.CurrentHP;
                     }
-                    //gameModel.Player.CurrentHP += 10;
 
                     RemoveItemFromInventory(item);
                 }
@@ -508,6 +507,7 @@ namespace Logic.Game.Classes
                         if (gameModel.Player.CurrentHP <= 0)
                         {
                             gameModel.Player.IsDead = true;
+                            gameModel.Player.DeathCounter++;
                         }
                         return;
                     }
@@ -517,9 +517,9 @@ namespace Logic.Game.Classes
 
         public void HandleGateCollision()
         {
-            if (gameModel.Player.PlayerState == GateState.InLobby || gameModel.Player.PlayerState == GateState.InShop)
+            for (int i = 0; i < gameModel.Gates.Count; i++)
             {
-                for (int i = 0; i < gameModel.Gates.Count; i++)
+                if (gameModel.Gates[i].IsGateReady)
                 {
                     if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].Hitbox.GetGlobalBounds()))
                     {
@@ -541,7 +541,7 @@ namespace Logic.Game.Classes
                             gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
                             gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
                             gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InKillArena;
-                            gameModel.Player.Position = new Vector2f(100f, 150f);
+                            gameModel.Player.Position = new Vector2f(300f, 150f);
 
                             for (int j = 0; j < gameModel.Gates.Count; j++)
                             {
@@ -554,16 +554,90 @@ namespace Logic.Game.Classes
                                     gameModel.Gates[j].IsGateReady = false;
                                 }
                             }
+
+                            for (int j = 0; j < gameModel.Enemies.Count; j++)
+                            {
+                                if (gameModel.Enemies[j].EnemyType == EnemyType.Eye)
+                                {
+                                    gameModel.Enemies[j].CanSpawn = true;
+                                }
+                                else
+                                {
+                                    gameModel.Enemies[j].CanSpawn = false;
+                                }
+                            }
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InBossArena)
                         {
                             gameModel.Player.PlayerState = GateState.InBossArena;
+
+                            gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.BossMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.BossMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
+                            gameModel.Player.Position = new Vector2f(300f, 500f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                gameModel.Gates[j].IsGateReady = false;
+                            }
+
+                            // Remove every enemy except boss type
+                            gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
+
+                            for (int j = 0; j < gameModel.Enemies.Count; j++)
+                            {
+                                if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
+                                {
+                                    gameModel.Enemies[j].CanSpawn = true;
+                                }
+                                else
+                                {
+                                    gameModel.Enemies[j].CanSpawn = false;
+                                }
+                            } 
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InShop)
                         {
                             gameModel.Player.PlayerState = GateState.InShop;
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InLobby)
+                        {
+                            gameModel.Player.PlayerState = GateState.InLobby;
+
+                            gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InLobby;
+                            gameModel.Player.Position = new Vector2f(300f, 300f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                if (gameModel.Gates[j].GateState != GateState.InLobby)
+                                {
+                                    gameModel.Gates[j].IsGateReady = true;
+                                }
+                                else
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+                            }
+
+                            // Set player's HP to max
+                            gameModel.Player.CurrentHP = gameModel.Player.MaxHP;
                         }
                     }
                 }

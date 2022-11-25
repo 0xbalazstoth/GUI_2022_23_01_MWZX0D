@@ -18,6 +18,9 @@
     <None Remove="Assets\Sounds\menuMusic.ogg" />
     <None Remove="Assets\Sounds\pistol.ogg" />
     <None Remove="Assets\Textures\arrow_keys.png" />
+    <None Remove="Assets\Textures\bossMap.tmx" />
+    <None Remove="Assets\Textures\boss_move_left.png" />
+    <None Remove="Assets\Textures\boss_move_right.png" />
     <None Remove="Assets\Textures\bullet_sheet.png" />
     <None Remove="Assets\Textures\chest.png" />
     <None Remove="Assets\Textures\coin.png" />
@@ -25,11 +28,14 @@
     <None Remove="Assets\Textures\cursor.png" />
     <None Remove="Assets\Textures\enemy1_move_left.png" />
     <None Remove="Assets\Textures\enemy1_move_right.png" />
+    <None Remove="Assets\Textures\enemy_boss_left.png" />
+    <None Remove="Assets\Textures\enemy_boss_right.png" />
     <None Remove="Assets\Textures\enemy_eye_ball.png" />
     <None Remove="Assets\Textures\enemy_eye_left.png" />
     <None Remove="Assets\Textures\enemy_eye_right.png" />
     <None Remove="Assets\Textures\enemy_move_left.png" />
     <None Remove="Assets\Textures\enemy_move_right.png" />
+    <None Remove="Assets\Textures\enemy_zombie_right.png" />
     <None Remove="Assets\Textures\gate.png" />
     <None Remove="Assets\Textures\health_potion.png" />
     <None Remove="Assets\Textures\health_potion_sheet.png" />
@@ -83,6 +89,9 @@
     <Content Include="Assets\Textures\arrow_keys.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\bossMap.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\bullet_sheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -93,6 +102,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\cursor.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\enemy_boss_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\enemy_boss_right.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\enemy_eye_left.png">

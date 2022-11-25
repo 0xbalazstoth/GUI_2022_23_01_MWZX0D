@@ -20,6 +20,7 @@ namespace Model.Game.Classes
         public TilemapModel KillArenaMap { get; set; }
         public List<int> MapCollidibleIDs { get; }
         public TilemapModel LobbyMap { get; set; }
+        public TilemapModel BossMap { get; set; }
         public PlayerModel Player { get; set; }
         public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get; set; }
@@ -31,5 +32,7 @@ namespace Model.Game.Classes
         public List<Music> Musics { get; set; }
         public bool DebugMode { get; set; }
         public List<GateModel> Gates { get; set; }
+        public List<Text> CreatorTexts { get; set; }
+        public List<Text> SettingsTexts { get; set; }
     }
 }

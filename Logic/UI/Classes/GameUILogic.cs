@@ -38,6 +38,7 @@ namespace Model.Tools
             uiModel.PlayerSpeedSprite = new Sprite();
             uiModel.PlayerKillCountText = new Text();
             uiModel.GameOverText = new Text();
+            uiModel.PlayerDeathCountText = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -68,7 +69,11 @@ namespace Model.Tools
             uiModel.PlayerKillCountText.CharacterSize = 28;
 
             uiModel.GameOverText.FillColor = Color.White;
-            uiModel.GameOverText.CharacterSize = 130;
+            uiModel.GameOverText.CharacterSize = 90;
+
+            uiModel.PlayerDeathCountText.FillColor = Color.Red;
+            uiModel.PlayerDeathCountText.Position = new Vector2f(10, 180);
+            uiModel.PlayerDeathCountText.CharacterSize = 28;
         }
 
         public void UpdateFPS(float dt)
@@ -116,13 +121,18 @@ namespace Model.Tools
 
         public void UpdateKillCountText()
         {
-            uiModel.PlayerKillCountText.DisplayedString = $"Kills: {gameModel.Player.KillCount}";
+            uiModel.PlayerKillCountText.DisplayedString = $"Kills: {gameModel.Player.KillCounter}";
         }
 
         public void UpdateGameOverText(RenderWindow window)
         {
-            uiModel.GameOverText.DisplayedString = "Game Over";
+            uiModel.GameOverText.DisplayedString = "Died, press SPACE to respawn!";
             uiModel.GameOverText.Position = new Vector2f((window.Size.X / 2) - (uiModel.GameOverText.GetGlobalBounds().Width / 2), (window.Size.Y / 2) - (uiModel.GameOverText.GetGlobalBounds().Height / 2));
+        }
+
+        public void UpdateDeathCountText()
+        {
+            uiModel.PlayerDeathCountText.DisplayedString = $"Deaths: {gameModel.Player.DeathCounter}";
         }
     }
 }
