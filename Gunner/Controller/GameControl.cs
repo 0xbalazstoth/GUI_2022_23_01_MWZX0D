@@ -200,6 +200,10 @@ namespace Gunner.Controller
                             menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                             gameModel.Player.Name = newGameWindow.PlayerName;
                         }
+                        else
+                        {
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMainMenu;
+                        }
                     }
                     else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.LoadGame)
                     {

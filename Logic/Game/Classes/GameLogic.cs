@@ -66,8 +66,8 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             
             CreateItems();
-            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40, 300f);
-            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f);
+            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40, 300f, 100);
+            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f, 1500);
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));

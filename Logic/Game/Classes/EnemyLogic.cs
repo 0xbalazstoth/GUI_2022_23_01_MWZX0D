@@ -289,7 +289,7 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance)
+        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance, int maxHP)
         {
             for (int i = 0; i < spawnCount; i++)
             {
@@ -323,6 +323,7 @@ namespace Logic.Game.Classes
                 enemy.Gun.ShootSounds = new List<Sound>();
                 enemy.HPSprite = new Sprite();
                 enemy.HPText = new Text();
+                enemy.MaxHP = maxHP;
                 enemy.CurrentHP = enemy.MaxHP;
                 enemy.HPText.CharacterSize = 16;
                 enemy.HPText.FillColor = Color.Red;
