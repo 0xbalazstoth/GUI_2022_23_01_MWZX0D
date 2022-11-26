@@ -12,6 +12,7 @@ using Model.UI.Classes;
 using Model.UI.Interfaces;
 using Renderer;
 using Repository.Classes;
+using Repository.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -100,6 +101,8 @@ namespace Gunner
         private IGameUILogic gameUILogic;
         private IMenuUILogic menuUILogic;
 
+        private ISaveHandler saveHandler;
+
         private IGameUIModel gameUIModel;
         private IMenuUIModel menuUIModel;
         
@@ -127,6 +130,8 @@ namespace Gunner
             this.gameUIModel = new GameUIModel();
             this.menuUIModel = new MenuUIModel();
 
+            this.saveHandler = new SaveHandler();
+
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic);
@@ -145,7 +150,7 @@ namespace Gunner
             InitSystem();
             InitGameplay();
 
-            this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel);
+            this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel, saveHandler);
         }
         
         private void InitGameplay()
@@ -300,6 +305,8 @@ namespace Gunner
                 {
                     gameUILogic.UpdateGameOverText(window);
                 }
+
+                saveHandler.Save(gameModel.Player.Name, gameModel);
             }
         }
 

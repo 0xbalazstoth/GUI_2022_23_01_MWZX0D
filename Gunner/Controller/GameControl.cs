@@ -31,14 +31,14 @@ namespace Gunner.Controller
         private ISaveHandler saveHandler;
         private IHighscoreHandler highscoreHandler;
 
-        public GameControl(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel)
+        public GameControl(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel, ISaveHandler saveHandler)
         {
             this.gameModel = gameModel;
             this.playerLogic = playerLogic;
             this.menuUILogic = menuUILogic;
             this.menuUIModel = menuUIModel;
+            this.saveHandler = saveHandler;
 
-            this.saveHandler = new SaveHandler();
             this.highscoreHandler = new HighscoreHandler();
         }
 
