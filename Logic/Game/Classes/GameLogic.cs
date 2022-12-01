@@ -582,7 +582,7 @@ namespace Logic.Game.Classes
             bossArenaGate.GateTexts.Add(bossArenaGateNameText);
 
             Text bossArenaGateMsgText = new Text();
-            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!";
+            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!\nRequired XP level: 200";
             bossArenaGateMsgText.CharacterSize = 28;
             bossArenaGateMsgText.OutlineColor = Color.Black;
             bossArenaGateMsgText.OutlineThickness = 2;

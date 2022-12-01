@@ -407,7 +407,6 @@ namespace Logic.Game.Classes
                     if (gameModel.Player.Gun.EmptySound.Status == SoundStatus.Stopped)
                     {
                         gameModel.Player.Gun.EmptySound.Play();
-
                     }
                 }
             }
@@ -568,41 +567,45 @@ namespace Logic.Game.Classes
                             }
                         }
 
-                        if (gameModel.Gates[i].GateState == GateState.InBossArena)
-                        {
-                            gameModel.Player.PlayerState = GateState.InBossArena;
-
-                            gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
-                            gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
-                            gameModel.CurrentMap.Width = gameModel.BossMap.Width;
-                            gameModel.CurrentMap.Height = gameModel.BossMap.Height;
-                            gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
-                            gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
-                            gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
-                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
-                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
-                            gameModel.Player.Position = new Vector2f(300f, 500f);
-
-                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                        if (gameModel.Player.CurrentXP >= 200)
+                        { 
+                            if (gameModel.Gates[i].GateState == GateState.InBossArena)
                             {
-                                gameModel.Gates[j].IsGateReady = false;
+                                gameModel.Player.PlayerState = GateState.InBossArena;
+
+                                gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
+                                gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
+                                gameModel.CurrentMap.Width = gameModel.BossMap.Width;
+                                gameModel.CurrentMap.Height = gameModel.BossMap.Height;
+                                gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
+                                gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
+                                gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
+                                gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
+                                gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
+                                gameModel.Player.Position = new Vector2f(300f, 500f);
+
+                                for (int j = 0; j < gameModel.Gates.Count; j++)
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+
+                                // Remove every enemy except boss type
+                                gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
+
+                                for (int j = 0; j < gameModel.Enemies.Count; j++)
+                                {
+                                    if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
+                                    {
+                                        gameModel.Enemies[j].CanSpawn = true;
+                                    }
+                                    else
+                                    {
+                                        gameModel.Enemies[j].CanSpawn = false;
+                                    }
+                                } 
                             }
-
-                            // Remove every enemy except boss type
-                            gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
-
-                            for (int j = 0; j < gameModel.Enemies.Count; j++)
-                            {
-                                if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
-                                {
-                                    gameModel.Enemies[j].CanSpawn = true;
-                                }
-                                else
-                                {
-                                    gameModel.Enemies[j].CanSpawn = false;
-                                }
-                            } 
                         }
+
 
                         if (gameModel.Gates[i].GateState == GateState.InShop)
                         {
