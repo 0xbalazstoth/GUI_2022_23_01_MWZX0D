@@ -276,7 +276,7 @@ namespace Gunner
                     isInWindow = true;
                 }
 
-                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false)
+                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
                 {
                     gameUILogic.UpdateFPS(gameLogic.GetDeltaTime);
                     animationLogic.Update(gameLogic.GetDeltaTime);
@@ -301,9 +301,16 @@ namespace Gunner
 
                     gameLogic.UpdateEnemies(window);
                 }
-                else if (gameModel.Player.IsDead)
+
+
+                if (gameModel.Player.IsDead)
                 {
                     gameUILogic.UpdateGameOverText(window);
+                }
+
+                if (gameModel.Player.IsGameWon)
+                {
+                    gameUILogic.UpdateGameWonText(window);
                 }
 
                 saveHandler.Save(gameModel.Player.Name, gameModel);
@@ -334,6 +341,7 @@ namespace Gunner
         {
             gameController.HandleInventoryInput(e);
             gameController.HandlePauseMenuInput(e);
+            gameController.HandleGameWonInput(e);
             gameController.HandleMainMenuInput(e);
             gameController.HandleRespawnInput(e);
             gameController.HandleGateInput(e);

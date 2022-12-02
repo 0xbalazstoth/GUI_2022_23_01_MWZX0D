@@ -294,33 +294,44 @@ namespace Logic.Game.Classes
             for (int i = 0; i < spawnCount; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                if (enemyType == EnemyType.Boss)
-                {
-                    enemy.Position = new Vector2f(1500f, 500f);
-                }
-                else
-                { 
-                    enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
-                }
-                enemy.Speed = 50f;
+                
                 enemy.SightDistance = sightDistance;
                 enemy.Gun = new GunModel();
+                enemy.Hitbox = new RectangleShape();
+
+                if (enemyType == EnemyType.Boss)
+                {
+                    enemy.Speed = 90f;
+
+                    enemy.Position = new Vector2f(1500f, 500f);
+                    enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(500);
+                    enemy.Gun.ReloadTime = TimeSpan.FromSeconds(4);
+                }
+                else
+                {
+                    enemy.Speed = 50f;
+
+                    enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
+                    enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(750);
+                    enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
+                }
+
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Rifle;
                 enemy.Gun.Damage = damage;
                 enemy.Gun.MaxAmmo = maxAmmo;
                 enemy.Gun.Recoil = 5f;
-                enemy.Hitbox = new RectangleShape();
-                enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
+                
                 enemy.Gun.Scale = new Vector2f(2, 2);
                 enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/rifle_shot.ogg");
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
                 enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/rifle_empty.ogg");
                 enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
-                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(750);
+                
                 enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
                 enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/rifle_reload.ogg");
                 enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
                 enemy.Gun.ShootSounds = new List<Sound>();
+
                 enemy.HPSprite = new Sprite();
                 enemy.HPText = new Text();
                 enemy.MaxHP = maxHP;

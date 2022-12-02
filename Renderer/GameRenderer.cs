@@ -88,6 +88,11 @@ namespace Renderer
             {
                 window.Clear(Color.Black);
             }
+
+            if (gameModel.Player.IsGameWon)
+            {
+                window.Clear(Color.Black);
+            }
         }
 
         private void DrawBullets(RenderTarget window)

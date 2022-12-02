@@ -82,7 +82,7 @@ namespace Gunner.Controller
 
         public void HandleInventoryInput(KeyEventArgs eventKey)
         {
-            if (gameModel.Player.IsDead == false)
+            if (gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
             { 
                 if (eventKey.Key == System.Windows.Input.Key.I)
                 {
@@ -118,7 +118,7 @@ namespace Gunner.Controller
 
         public void HandlePauseMenuInput(KeyEventArgs eventKey)
         {
-            if (gameModel.Player.IsDead == false)
+            if (gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
             {
                 if (eventKey.Key == System.Windows.Input.Key.Escape)
                 {
@@ -167,6 +167,19 @@ namespace Gunner.Controller
                             menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.QuitGame;
                         }
                     }
+                }
+            }
+        }
+
+        public void HandleGameWonInput(KeyEventArgs eventKey)
+        {
+            if (gameModel.Player.IsGameWon)
+            {
+                if (eventKey.Key == System.Windows.Input.Key.Space)
+                {
+                    // Restart app
+                    Application.Current.Shutdown();
+                    System.Windows.Forms.Application.Restart();
                 }
             }
         }

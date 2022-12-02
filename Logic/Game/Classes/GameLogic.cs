@@ -193,6 +193,21 @@ namespace Logic.Game.Classes
             playerLogic.UpdateSpeedPotionTimer();
             playerLogic.HandleEnemyBulletCollision();
             playerLogic.HandleGateCollision();
+
+            if (gameModel.Player.PlayerState == GateState.InBossArena)
+            {
+                // Check if enemy type boss is dead
+                var bossEnemy = gameModel.Enemies.Where(x => x.EnemyType == EnemyType.Boss).FirstOrDefault();
+
+                if (bossEnemy == null)
+                {
+                    gameModel.Player.IsGameWon = true;
+                }
+                else
+                {
+                    gameModel.Player.IsGameWon = false;
+                }
+            }
         }
         
         public void UpdateBullets(RenderWindow window)
