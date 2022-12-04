@@ -23,7 +23,6 @@ namespace Logic.Game.Interfaces
         float GetDeltaTime { get; }
         void CreateItems();
         void SpawnItems();
-        void Music();
         void CameraEdges();
         List<Vector2f> GetSafeSpawnPoints();
         void CreateMaps();
