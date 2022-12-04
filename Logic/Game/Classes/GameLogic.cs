@@ -67,6 +67,8 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             
             CreateItems();
+            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40, 300f);
+            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f);
 
             gameModel.Songs = new List<Music>();
             gameModel.Songs.Add(new Music("Assets/Sounds/gameplaymusic1.ogg"));
@@ -84,75 +86,102 @@ namespace Logic.Game.Classes
             var spawnPoints = GetSafeSpawnPoints();
             Random rnd = new Random();
             int spawnPointIndex = rnd.Next(0, spawnPoints.Count);
-            gameModel.Player.Position = spawnPoints[spawnPointIndex];
+            //gameModel.Player.Position = spawnPoints[spawnPointIndex];
+            
+            gameModel.Player.Position = new Vector2f(300, 500);
+            gameModel.Player.PlayerState = GateState.InLobby;
+
+            CreateMaps();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
         {
-            //var tilemapModel = tilemapRepository.LoadTMXFile(tmxFile);
-            //TilemapLoader tmapLoader = new TilemapLoader(tilesetFile);
-            //tmapLoader.LoadTMXFile(tmxFile);
-            //tmapLoader.InitializeVertices();
+            gameModel.CurrentMap.CollidableIDs = new List<int>();
+            gameModel.CurrentMap.TilesetTexture = new Texture(tilesetFile);
+            foreach (var id in gameModel.MapCollidibleIDs)
+            {
+                gameModel.CurrentMap.CollidableIDs.Add(id);
+            }
 
-            //gameModel.Map.CollidableIDs = new List<int>();
-            //gameModel.Map.CollidableIDs.Add(4);
-            //gameModel.Map.TilesetTexture = new Texture(tilesetFile);
-            //gameModel.Map.Vertices = tmapLoader.Vertices;
-            //gameModel.Map.MapLayers = tmapLoader.MapLayers;
-            //gameModel.Map.Width = tmapLoader.Width;
-            //gameModel.Map.Height = tmapLoader.Height;
-            //gameModel.Map.TileWidth = tmapLoader.TileWidth;
-            //gameModel.Map.TileHeight = tmapLoader.TileHeight;
-            //gameModel.Map.Size = new Vector2u(tmapLoader.Width, tmapLoader.Height);
-            //gameModel.Map.TileSize = new Vector2u(tmapLoader.TileWidth, tmapLoader.TileHeight);
+            ManualTilemapLoadingHandler tilemapLoader = new ManualTilemapLoadingHandler();
 
-            gameModel.Map.CollidableIDs = new List<int>();
-            gameModel.Map.CollidableIDs.Add(4);
-            gameModel.Map.TilesetTexture = new Texture(tilesetFile);
+            #region Lobby
+            var lobbyMap = tilemapLoader.LoadTMXFile(tmxFile, tilesetFile);
+            tilemapLogic.InitializeVertices(lobbyMap);
 
-            // Kill Arena map
-            uint killArenaWidth = 100;
-            uint killArenaHeight = 100;
+            gameModel.LobbyMap.CollidableIDs = new List<int>();
+            gameModel.LobbyMap.Vertices = lobbyMap.Vertices;
+            gameModel.LobbyMap.TilesetTexture = lobbyMap.TilesetTexture;
+            gameModel.LobbyMap.MapLayers = lobbyMap.MapLayers;
+            gameModel.LobbyMap.Width = lobbyMap.Width;
+            gameModel.LobbyMap.Height = lobbyMap.Height;
+            gameModel.LobbyMap.TileWidth = lobbyMap.TileWidth;
+            gameModel.LobbyMap.TileHeight = lobbyMap.TileHeight;
+            gameModel.LobbyMap.Size = new Vector2u(lobbyMap.Width, lobbyMap.Height);
+            gameModel.LobbyMap.TileSize = new Vector2u(lobbyMap.TileWidth, lobbyMap.TileHeight);
+            #endregion
+
+            #region Kill arena
+            uint killArenaWidth = 80;
+            uint killArenaHeight = 80;
             float killArenaScale = 1f;
             uint killArenaTileWidth = 32;
             uint killArenaTileHeight = 32;
-            int[] collisionLayer = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
+            int[] mapGeneration = tilemapLogic.MapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
+            int[] groundMapGeneration = tilemapLogic.GroundMapGeneration(killArenaHeight, killArenaWidth, killArenaScale);
             gameModel.KillArenaMap.CollidableIDs = new List<int>();
-            gameModel.KillArenaMap.CollidableIDs.Add(4);
-            gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
             gameModel.KillArenaMap.MapLayers = new List<int[]>();
-            gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
-            gameModel.KillArenaMap.MapLayers.Add(collisionLayer);
+            gameModel.KillArenaMap.MapLayers.Add(groundMapGeneration);
+            gameModel.KillArenaMap.MapLayers.Add(mapGeneration);
+            gameModel.KillArenaMap.TilesetTexture = new Texture(tilesetFile);
             gameModel.KillArenaMap.Width = killArenaWidth;
             gameModel.KillArenaMap.Height = killArenaHeight;
             gameModel.KillArenaMap.TileWidth = killArenaTileWidth;
             gameModel.KillArenaMap.TileHeight = killArenaTileHeight;
             gameModel.KillArenaMap.Size = new Vector2u(killArenaWidth, killArenaHeight);
             gameModel.KillArenaMap.TileSize = new Vector2u(killArenaTileWidth, killArenaHeight);
-
             tilemapLogic.InitializeVertices(gameModel.KillArenaMap);
+            #endregion
 
-            gameModel.Map.Vertices = gameModel.KillArenaMap.Vertices;
-            gameModel.Map.MapLayers = gameModel.KillArenaMap.MapLayers;
-            gameModel.Map.Width = gameModel.KillArenaMap.Width;
-            gameModel.Map.Height = gameModel.KillArenaMap.Height;
-            gameModel.Map.TileWidth = gameModel.KillArenaMap.TileWidth;
-            gameModel.Map.TileHeight = gameModel.KillArenaMap.TileHeight;
-            gameModel.Map.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
-            gameModel.Map.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
+            #region Boss arena
+            var bossMap = tilemapLoader.LoadTMXFile("Assets/Textures/bossMap.tmx", tilesetFile);
+            tilemapLogic.InitializeVertices(bossMap);
+
+            gameModel.BossMap.CollidableIDs = new List<int>();
+            gameModel.BossMap.Vertices = bossMap.Vertices;
+            gameModel.BossMap.TilesetTexture = bossMap.TilesetTexture;
+            gameModel.BossMap.MapLayers = bossMap.MapLayers;
+            gameModel.BossMap.Width = bossMap.Width;
+            gameModel.BossMap.Height = bossMap.Height;
+            gameModel.BossMap.TileWidth = bossMap.TileWidth;
+            gameModel.BossMap.TileHeight = bossMap.TileHeight;
+            gameModel.BossMap.Size = new Vector2u(bossMap.Width, bossMap.Height);
+            gameModel.BossMap.TileSize = new Vector2u(bossMap.TileWidth, bossMap.TileHeight);
+            #endregion
+
+            #region Set lobby as default map
+            gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+            gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+            gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+            gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+            gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+            gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+            gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+            #endregion
         }
 
         public void UpdatePlayer(RenderWindow window)
         {
-            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 2f, gameModel.Player.GetGlobalBounds().Height - 2f);
+            gameModel.Player.Hitbox.Size = new Vector2f(gameModel.Player.GetGlobalBounds().Width - 15f, gameModel.Player.GetGlobalBounds().Height - 10f);
             gameModel.Player.Hitbox.Position = new Vector2f(gameModel.Player.Position.X, gameModel.Player.Position.Y);
             gameModel.Player.Hitbox.Origin = new Vector2f(gameModel.Player.Origin.X, gameModel.Player.Origin.Y);
 
             playerLogic.UpdateAnimationTextures();
             playerLogic.UpdateWorldPositionByMouse(window);
             playerLogic.UpdateDeltaTime(deltaTime);
-            playerLogic.UpdateTilePosition(gameModel.Map);
-            playerLogic.HandleMapCollision(gameModel.Map);
+            playerLogic.UpdateTilePosition(gameModel.CurrentMap);
+            playerLogic.HandleMapCollision(gameModel.CurrentMap);
             playerLogic.HandleEnemyCollision();
 
             foreach (ObjectEntityModel chest in gameModel.Objects)
@@ -164,9 +193,14 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun.Origin = new Vector2f(gameModel.Player.Gun.Texture.Size.X / 2, gameModel.Player.Gun.Texture.Size.Y / 2);
 
             playerLogic.FlipAndRotateGun();
-            playerLogic.HandleInventory();
+            if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
+            {
+                playerLogic.HandleInventory();
+            }
             playerLogic.UpdateHP();
             playerLogic.UpdateSpeedPotionTimer();
+            playerLogic.HandleEnemyBulletCollision();
+            playerLogic.HandleGateCollision();
         }
         
         public void UpdateBullets(RenderWindow window)
@@ -189,38 +223,68 @@ namespace Logic.Game.Classes
 
         public void UpdateEnemies(RenderWindow window)
         {
-            enemyLogic.UpdateAnimationTextures();
-            enemyLogic.HandleBulletCollision();
-
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            if (gameModel.Player.PlayerState == GateState.InKillArena || gameModel.Player.PlayerState == GateState.InBossArena)
             {
-                gameModel.Enemies[i].Hitbox.Size = new Vector2f(gameModel.Enemies[i].GetGlobalBounds().Width - 1f, gameModel.Enemies[i].GetGlobalBounds().Height - 1f);
-                gameModel.Enemies[i].Hitbox.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-                gameModel.Enemies[i].Hitbox.Origin = new Vector2f(gameModel.Enemies[i].Origin.X, gameModel.Enemies[i].Origin.Y);
+                enemyLogic.UpdateAnimationTextures();
+                enemyLogic.HandleBulletCollision();
 
-                float distance = enemyLogic.DistanceBetweenPlayer(i);
-
-                if (distance < gameModel.Enemies[i].SightDistance)
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
                 {
-                    enemyLogic.Shoot(i);
-                    enemyLogic.PathToPlayer(i);
+                    gameModel.Enemies[i].Hitbox.Size = new Vector2f(gameModel.Enemies[i].GetGlobalBounds().Width - 5f, gameModel.Enemies[i].GetGlobalBounds().Height - 5f);
+                    gameModel.Enemies[i].Hitbox.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
+                    gameModel.Enemies[i].Hitbox.Origin = new Vector2f(gameModel.Enemies[i].Origin.X, gameModel.Enemies[i].Origin.Y);
+
+                    float distance = enemyLogic.DistanceBetweenPlayer(i);
+
+                    if (distance < gameModel.Enemies[i].SightDistance)
+                    {
+                        enemyLogic.Shoot(i);
+                        enemyLogic.PathToPlayer(i);
+                    }
+
+                    gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                 }
-            }
 
-            enemyLogic.SpawnEnemies(deltaTime);
-
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
-            {
-                gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
-                gameModel.Enemies[i].Gun.Origin = new Vector2f(gameModel.Enemies[i].Gun.Texture.Size.X / 2f, gameModel.Enemies[i].Gun.Texture.Size.Y / 2f);
+                enemyLogic.UpdateHP();
+                enemyLogic.FlipAndRotateGun();
             }
-            enemyLogic.UpdateHP();
-            enemyLogic.FlipAndRotateGun();
         }
 
         public void UpdateTilemap()
         {
-            tilemapLogic.UpdateItemAnimationTextures();
+            if (gameModel.Player.PlayerState == Model.Game.Enums.GateState.InKillArena || gameModel.Player.PlayerState == Model.Game.Enums.GateState.InBossArena)
+            {
+                tilemapLogic.UpdateItemAnimationTextures();
+            }
+            
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                if (gameModel.Gates[i].IsGateReady)
+                {
+                    gameModel.Gates[i].Hitbox.Size = new Vector2f(gameModel.Gates[i].GateSprite.GetGlobalBounds().Width, gameModel.Gates[i].GateSprite.GetGlobalBounds().Height - 95f);
+                    gameModel.Gates[i].Hitbox.Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X, gameModel.Gates[i].GateSprite.Position.Y + 30f);
+                    gameModel.Gates[i].Hitbox.Origin = new Vector2f(gameModel.Gates[i].GateSprite.Origin.X, gameModel.Gates[i].GateSprite.Origin.Y);
+
+                    gameModel.Gates[i].InteractArea.Size = new Vector2f(gameModel.Gates[i].GateSprite.GetGlobalBounds().Width, 50f);
+                    gameModel.Gates[i].InteractArea.Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X, gameModel.Gates[i].GateSprite.GetGlobalBounds().Height - 32f);
+
+                    gameModel.Gates[i].GateSprite.Texture = gameModel.Gates[i].Animations[0].Texture;
+                    gameModel.Gates[i].GateSprite.TextureRect = gameModel.Gates[i].Animations[0].TextureRect;
+
+                    for (int j = 0; j < gameModel.Gates[i].GateTexts.Count; j++)
+                    {
+                        // Center texts by gate sprite
+                        if (j % 2 != 0)
+                        {
+                            gameModel.Gates[i].GateTexts[j].Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X - (gameModel.Gates[i].Hitbox.Size.X / 2f) + 5, gameModel.Gates[i].InteractArea.Position.Y + 10f);
+                        }
+                        else
+                        {
+                            gameModel.Gates[i].GateTexts[j].Position = new Vector2f(gameModel.Gates[i].GateSprite.Position.X - (gameModel.Gates[i].Hitbox.Size.X / 2f) + 5, gameModel.Gates[i].InteractArea.Position.Y - 10f);
+                        }
+                    }
+                }
+            }
         }
 
         public void UpdateDeltaTime()
@@ -261,85 +325,51 @@ namespace Logic.Game.Classes
             CameraEdges();
         }
 
-        public void SetView(ref View view, Vector2f size, Vector2f? center = null, FloatRect? viewport = null)
-        {
-            view = new View();
-            view.Size = size;
-
-            if (center != null)
-            {
-                view.Center = center.Value;
-            }
-
-            if (viewport != null)
-            {
-                view.Viewport = viewport.Value;
-            }
-        }
-
         public void CreateItems()
         {
             gameModel.CollectibleItems = new List<ICollectibleItem>();
 
-            for (int i = 0; i < new Random().Next(30, 80); i++)
+            for (int i = 0; i < new Random().Next(30, 70); i++)
             {
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
-                coinItem.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                // Set random position for item
+                coinItem.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
+                //coinItem.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.CurrentMap.GetMapHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
                 coinItem.CoinSoundBuffer = new SoundBuffer("Assets/Sounds/coin.ogg");
                 coinItem.CoinSound = new Sound(coinItem.CoinSoundBuffer);
                 coinItem.Id = (int)coinItem.ItemType;
                 
                 gameModel.CollectibleItems.Add(coinItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
-                        j = 0;
-                    }
-                }
             }
 
-            for (int i = 0; i < new Random().Next(15, 40); i++)
+            for (int i = 0; i < new Random().Next(30, 70); i++)
             {
                 CollectibleItemModel healtPotionItem = new CollectibleItemModel();
                 healtPotionItem.Item = new Sprite();
-                healtPotionItem.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                // Set random position for item
+                healtPotionItem.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
+                //healtPotionItem.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.KillArenaMap.GetMapHeight);
                 healtPotionItem.ItemType = Model.Game.Enums.ItemType.Health_Potion;
                 healtPotionItem.Id = (int)healtPotionItem.ItemType;
                 healtPotionItem.IconFileName = "health_potion.png";
                 
                 gameModel.CollectibleItems.Add(healtPotionItem);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
-                        j = 0;
-                    }
-                }
             }
 
-            for (int i = 0; i < new Random().Next(15, 40); i++)
+            for (int i = 0; i < new Random().Next(30, 70); i++)
             {
                 CollectibleItemModel speedPotion = new CollectibleItemModel();
                 speedPotion.Item = new Sprite();
-                speedPotion.Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
+                // Set random position for item
+                speedPotion.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
+                //speedPotion.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.KillArenaMap.GetMapHeight);
                 speedPotion.ItemType = Model.Game.Enums.ItemType.Speed_Potion;
                 speedPotion.Id = (int)speedPotion.ItemType;
                 speedPotion.IconFileName = "speed_potion.png";
 
                 gameModel.CollectibleItems.Add(speedPotion);
-                for (int j = 0; j < i - 1; j++)
-                {
-                    if (gameModel.CollectibleItems[i].Item.GetGlobalBounds().Intersects(gameModel.CollectibleItems[j].Item.GetGlobalBounds()))
-                    {
-                        gameModel.CollectibleItems[i].Item.Position = new Vector2f(new Random().Next() % gameModel.Map.GetMapWidth, new Random().Next() % gameModel.Map.GetMapHeight);
-                        j = 0;
-                    }
-                }
             }
         }
 
@@ -353,30 +383,30 @@ namespace Logic.Game.Classes
                     {
                         var xTilePosition = item.Item.Position.X;
                         var yTilePosition = item.Item.Position.Y;
-                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
+                        var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.CurrentMap.TileSize.X), (int)((int)yTilePosition / gameModel.CurrentMap.TileSize.Y)) + new Vector2i(x, y);
                         var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                        if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                        if (gameModel.CurrentMap.CollidableIDs.Contains(currentTileID) == false)
                         {
                             continue;
                         }
 
                         var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                        var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.CurrentMap.TileSize.X, gameModel.CurrentMap.TileSize.Y);
                         var rect = item.Item.GetGlobalBounds();
 
                         if (tileRect.Intersects(rect))
                         {
                             gameModel.CollectibleItems.Remove(item);
 
-                            var optimalPosition = new Vector2f(); 
+                            var optimalPosition = new Vector2f();
                             var optimalDistance = float.MaxValue;
 
-                            for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
+                            for (int xP = 0; xP < gameModel.CurrentMap.Size.X; xP++)
                             {
-                                for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
+                                for (int yP = 0; yP < gameModel.CurrentMap.Size.Y; yP++)
                                 {
                                     var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
-                                    if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
+                                    if (gameModel.CurrentMap.CollidableIDs.Contains(tileID) == false)
                                     {
                                         var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
                                         var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
@@ -398,13 +428,14 @@ namespace Logic.Game.Classes
                 }
 
                 // Spawn items inside the map
-                if (item.Item.Position.X < 0 || item.Item.Position.X > gameModel.Map.Size.X * gameModel.Map.TileSize.X || item.Item.Position.Y < 0 || item.Item.Position.Y > gameModel.Map.Size.Y * gameModel.Map.TileSize.Y)
+                if (item.Item.Position.X < 0 || item.Item.Position.X > gameModel.CurrentMap.Size.X * gameModel.CurrentMap.TileSize.X || item.Item.Position.Y < 0 || item.Item.Position.Y > gameModel.CurrentMap.Size.Y * gameModel.CurrentMap.TileSize.Y)
                 {
                     gameModel.CollectibleItems.Remove(item);
+                    return;
                 }
             }
         }
-        
+
         public void Music()
         {
             int random = r.Next(0, gameModel.Songs.Count);
@@ -424,18 +455,18 @@ namespace Logic.Game.Classes
             {
                 gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
             }
-            if (gameModel.CameraView.Center.X > gameModel.Map.GetMapWidth - gameModel.CameraView.Size.X / 2f)
+            if (gameModel.CameraView.Center.X > gameModel.CurrentMap.GetMapWidth - gameModel.CameraView.Size.X / 2f)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.Map.GetMapWidth - gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CurrentMap.GetMapWidth - gameModel.CameraView.Size.X / 2f, gameModel.CameraView.Center.Y);
             }
 
             if (gameModel.CameraView.Center.Y < gameModel.CameraView.Size.Y / 2f)
             {
                 gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.CameraView.Size.Y / 2f);
             }
-            if (gameModel.CameraView.Center.Y > gameModel.Map.GetMapHeight - gameModel.CameraView.Size.Y / 2f)
+            if (gameModel.CameraView.Center.Y > gameModel.CurrentMap.GetMapHeight - gameModel.CameraView.Size.Y / 2f)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.Map.GetMapWidth - gameModel.CameraView.Size.Y / 2f);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X, gameModel.CurrentMap.GetMapHeight - gameModel.CameraView.Size.Y / 2f);
             }
         }
 
@@ -443,28 +474,230 @@ namespace Logic.Game.Classes
         {
             // Find spawn points in map
             var spawnPoints = new List<Vector2f>();
-            for (int i = 0; i < gameModel.Map.MapLayers[0].Length; i++)
+            for (int i = 0; i < gameModel.CurrentMap.MapLayers[0].Length; i++)
             {
-                if (gameModel.Map.MapLayers[0][i] == 0)
+                if (gameModel.CurrentMap.MapLayers[0][i] == 0)
                 {
                     // Check if its not outside the map
-                    if (i % gameModel.Map.Width != 0 && i % gameModel.Map.Width != gameModel.Map.Width - 5)
+                    if (i % gameModel.CurrentMap.Width != 0 && i % gameModel.CurrentMap.Width != gameModel.CurrentMap.Width - 1)
                     {
                         // Check if its not on the edge of the map
-                        if (i > gameModel.Map.Width && i < gameModel.Map.MapLayers[0].Length - gameModel.Map.Width - 5)
+                        if (i > gameModel.CurrentMap.Width && i < gameModel.CurrentMap.MapLayers[0].Length - gameModel.CurrentMap.Width - 1)
                         {
-                            // Check if its not on the edge of the map
-                            //spawnPoints.Add(new Vector2f((i % gameModel.Map.Width) * gameModel.Map.TileWidth, (i / gameModel.Map.Width) * gameModel.Map.TileHeight));
+                            int x = i % (int)gameModel.CurrentMap.Width;
+                            int y = i / (int)gameModel.CurrentMap.Width;
 
-                            int x = i % (int)gameModel.Map.Width;
-                            int y = i / (int)gameModel.Map.Width;
-                            spawnPoints.Add(new Vector2f(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight));
+                            if (x > gameModel.CurrentMap.TileWidth && y > gameModel.CurrentMap.TileHeight)
+                            { 
+                                spawnPoints.Add(new Vector2f(x * gameModel.CurrentMap.TileWidth, y * gameModel.CurrentMap.TileHeight));
+                            }
                         }
                     }
                 }
             }
 
             return spawnPoints;
+        }
+
+        public void CreateMaps()
+        {
+            List<GateModel> gates = new List<GateModel>();
+            GateModel shopGate = new GateModel();
+            shopGate.GateSprite = new Sprite();
+            shopGate.GateSprite.Position = new Vector2f(173, 20);
+            shopGate.Hitbox = new RectangleShape();
+            shopGate.InteractArea = new RectangleShape();
+            shopGate.GateState = GateState.InShop;
+            shopGate.IsGateReady = true;
+
+            shopGate.GateTexts = new List<Text>();
+            Text shopGateNameText = new Text();
+            shopGateNameText.DisplayedString = "Shop gate";
+            shopGateNameText.FillColor = Color.Red;
+            shopGateNameText.CharacterSize = 28;
+            shopGateNameText.OutlineColor = Color.Black;
+            shopGateNameText.OutlineThickness = 2;
+            shopGate.GateTexts.Add(shopGateNameText);
+
+            Text shopGateMsgText = new Text();
+            shopGateMsgText.DisplayedString = "Press E to enter the shop!";
+            shopGateMsgText.CharacterSize = 28;
+            shopGateMsgText.OutlineThickness = 2;
+            shopGateMsgText.OutlineColor = Color.Black;
+            shopGate.GateTexts.Add(shopGateMsgText);
+
+            GateModel killArenaGate = new GateModel();
+            killArenaGate.GateSprite = new Sprite();
+            killArenaGate.GateSprite.Position = new Vector2f(900, 20);
+            killArenaGate.Hitbox = new RectangleShape();
+            killArenaGate.InteractArea = new RectangleShape();
+            killArenaGate.GateState = GateState.InKillArena;
+            killArenaGate.IsGateReady = true;
+
+            killArenaGate.GateTexts = new List<Text>();
+            Text killArenaGateNameText = new Text();
+            killArenaGateNameText.DisplayedString = "Kill arena gate";
+            killArenaGateNameText.FillColor = Color.Red;
+            killArenaGateNameText.CharacterSize = 28;
+            killArenaGateNameText.OutlineColor = Color.Black;
+            killArenaGateNameText.OutlineThickness = 2;
+            killArenaGate.GateTexts.Add(killArenaGateNameText);
+
+            Text killArenaGateMsgText = new Text();
+            killArenaGateMsgText.DisplayedString = "Come in to fight against enemies!";
+            killArenaGateMsgText.CharacterSize = 28;
+            killArenaGateMsgText.OutlineThickness = 2;
+            killArenaGateMsgText.OutlineColor = Color.Black;
+            killArenaGate.GateTexts.Add(killArenaGateMsgText);
+
+            GateModel bossArenaGate = new GateModel();
+            bossArenaGate.GateSprite = new Sprite();
+            bossArenaGate.GateSprite.Position = new Vector2f(1650, 20);
+            bossArenaGate.Hitbox = new RectangleShape();
+            bossArenaGate.InteractArea = new RectangleShape();
+            bossArenaGate.GateState = GateState.InBossArena;
+            bossArenaGate.IsGateReady = true;
+
+            bossArenaGate.GateTexts = new List<Text>();
+            Text bossArenaGateNameText = new Text();
+            bossArenaGateNameText.DisplayedString = "Boss arena gate";
+            bossArenaGateNameText.FillColor = Color.Red;
+            bossArenaGateNameText.CharacterSize = 28;
+            bossArenaGateNameText.OutlineColor = Color.Black;
+            bossArenaGateNameText.OutlineThickness = 2;
+            bossArenaGate.GateTexts.Add(bossArenaGateNameText);
+
+            Text bossArenaGateMsgText = new Text();
+            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!";
+            bossArenaGateMsgText.CharacterSize = 28;
+            bossArenaGateMsgText.OutlineColor = Color.Black;
+            bossArenaGateMsgText.OutlineThickness = 2;
+            bossArenaGate.GateTexts.Add(bossArenaGateMsgText);
+
+            GateModel backToLobbyGate = new GateModel();
+            backToLobbyGate.GateSprite = new Sprite();
+            backToLobbyGate.GateSprite.Position = new Vector2f(120, 20);
+            backToLobbyGate.Hitbox = new RectangleShape();
+            backToLobbyGate.InteractArea = new RectangleShape();
+            backToLobbyGate.GateState = GateState.InLobby;
+            backToLobbyGate.IsGateReady = false;
+
+            backToLobbyGate.GateTexts = new List<Text>();
+            Text backToLobbyGateNameText = new Text();
+            backToLobbyGateNameText.DisplayedString = "Lobby gate";
+            backToLobbyGateNameText.FillColor = Color.Red;
+            backToLobbyGateNameText.CharacterSize = 28;
+            backToLobbyGateNameText.OutlineColor = Color.Black;
+            backToLobbyGateNameText.OutlineThickness = 2;
+            backToLobbyGate.GateTexts.Add(backToLobbyGateNameText);
+
+            Text backToLobbyGateMsgText = new Text();
+            backToLobbyGateMsgText.DisplayedString = "Come back to lobby!";
+            backToLobbyGateMsgText.CharacterSize = 28;
+            backToLobbyGateMsgText.OutlineColor = Color.Black;
+            backToLobbyGateMsgText.OutlineThickness = 2;
+            backToLobbyGate.GateTexts.Add(backToLobbyGateMsgText);
+
+            gates.Add(shopGate);
+            gates.Add(killArenaGate);
+            gates.Add(bossArenaGate);
+            gates.Add(backToLobbyGate);
+
+            gameModel.Gates = gates;
+
+            // Texts
+            gameModel.CreatorTexts = new List<Text>();
+            Text creatorTitle = new Text();
+            creatorTitle.DisplayedString = "Creators:";
+            creatorTitle.FillColor = Color.Red;
+            creatorTitle.CharacterSize = 80;
+            creatorTitle.Position = new Vector2f(100, 950);
+            creatorTitle.OutlineColor = Color.Black;
+            creatorTitle.OutlineThickness = 2;
+            gameModel.CreatorTexts.Add(creatorTitle);
+
+            Text creatorName1 = new Text();
+            creatorName1.DisplayedString = "Tóth Balázs - MWZX0D";
+            creatorName1.FillColor = Color.White;
+            creatorName1.CharacterSize = 40;
+            creatorName1.Position = new Vector2f(100, 1050);
+            creatorName1.OutlineColor = Color.Black;
+            creatorName1.OutlineThickness = 2;
+            gameModel.CreatorTexts.Add(creatorName1);
+
+            Text creatorName2 = new Text();
+            creatorName2.DisplayedString = "Horváth Zsolt - PBVGD1";
+            creatorName2.FillColor = Color.White;
+            creatorName2.CharacterSize = 40;
+            creatorName2.Position = new Vector2f(100, 1100);
+            creatorName2.OutlineThickness = 2;
+            creatorName2.OutlineColor = Color.Black;
+            gameModel.CreatorTexts.Add(creatorName2);
+
+            Text creatorName3 = new Text();
+            creatorName3.DisplayedString = "Ecseki Tamás - MAFWZU";
+            creatorName3.FillColor = Color.White;
+            creatorName3.CharacterSize = 40;
+            creatorName3.Position = new Vector2f(100, 1150);
+            creatorName3.OutlineColor = Color.Black;
+            creatorName3.OutlineThickness = 2;
+            gameModel.CreatorTexts.Add(creatorName3);
+
+            gameModel.SettingsTexts = new List<Text>();
+            Text settingsTitle = new Text();
+            settingsTitle.DisplayedString = "Hotkeys:";
+            settingsTitle.FillColor = Color.Red;
+            settingsTitle.CharacterSize = 80;
+            settingsTitle.Position = new Vector2f(1000, 950);
+            settingsTitle.OutlineColor = Color.Black;
+            settingsTitle.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsTitle);
+
+            Text settingsPlayerMove = new Text();
+            settingsPlayerMove.DisplayedString = "Moving: W A S D";
+            settingsPlayerMove.FillColor = Color.White;
+            settingsPlayerMove.CharacterSize = 40;
+            settingsPlayerMove.Position = new Vector2f(1000, 1050);
+            settingsPlayerMove.OutlineColor = Color.Black;
+            settingsPlayerMove.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerMove);
+
+            Text settingsPlayerShoot = new Text();
+            settingsPlayerShoot.DisplayedString = "Shooting: Left click";
+            settingsPlayerShoot.FillColor = Color.White;
+            settingsPlayerShoot.CharacterSize = 40;
+            settingsPlayerShoot.Position = new Vector2f(1000, 1100);
+            settingsPlayerShoot.OutlineColor = Color.Black;
+            settingsPlayerShoot.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerShoot);
+
+            Text settingsPlayerReload = new Text();
+            settingsPlayerReload.DisplayedString = "Reloading: R";
+            settingsPlayerReload.FillColor = Color.White;
+            settingsPlayerReload.CharacterSize = 40;
+            settingsPlayerReload.Position = new Vector2f(1000, 1150);
+            settingsPlayerReload.OutlineColor = Color.Black;
+            settingsPlayerReload.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerReload);
+
+            Text settingsPlayerSwitchWeapon = new Text();
+            settingsPlayerSwitchWeapon.DisplayedString = "Switching weapon: Mouse wheel";
+            settingsPlayerSwitchWeapon.FillColor = Color.White;
+            settingsPlayerSwitchWeapon.CharacterSize = 40;
+            settingsPlayerSwitchWeapon.Position = new Vector2f(1000, 1200);
+            settingsPlayerSwitchWeapon.OutlineColor = Color.Black;
+            settingsPlayerSwitchWeapon.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(settingsPlayerSwitchWeapon);
+
+
+            Text inventory = new Text();
+            inventory.DisplayedString = "Inventory: I";
+            inventory.FillColor = Color.White;
+            inventory.CharacterSize = 40;
+            inventory.Position = new Vector2f(1500, 1050);
+            inventory.OutlineColor = Color.Black;
+            inventory.OutlineThickness = 2;
+            gameModel.SettingsTexts.Add(inventory);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Model.Game.Classes;
+using Model.Game.Enums;
+using Model.Game.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Repository.Exceptions;
@@ -14,12 +16,123 @@ namespace Repository.Classes
 {
     public class SaveHandler : ISaveHandler
     {
-
         private const string SAVE_FOLDER = "Saves";
 
-        public void LoadSaves()
+        public IGameModel LoadSave(string saveName)
         {
+            IGameModel loadedGame = new GameModel();
 
+            string saveFileName = $"{SAVE_FOLDER}\\{saveName}.json";
+
+            if (!File.Exists(saveFileName))
+            {
+                throw new NoSaveException($"Save {saveName} not exists!");
+            }
+            else
+            {
+                // Read json file
+                string json = File.ReadAllText(saveFileName);
+
+                // Deserialize json to object
+                JObject jsonObj = JObject.Parse(json);
+                loadedGame.Player = new PlayerModel();
+
+                if (jsonObj.ContainsKey("inventory"))
+                {
+                    // Inventory items
+                    JArray inventoryArray = (JArray)jsonObj["inventory"];
+
+                    if (inventoryArray.HasValues)
+                    {
+                        InventoryModel inventory = new InventoryModel();
+                        inventory.Items = new Dictionary<int, ICollectibleItem>();
+
+                        foreach (JObject itemObj in inventoryArray)
+                        {
+                            JObject item = (JObject)itemObj["item"];
+                            string itemTypeStr = (string)item["itemType"];
+                            ItemType itemType = (ItemType)Enum.Parse(typeof(ItemType), itemTypeStr);
+                            int itemQuantity = (int)item["itemQuantity"];
+                            int itemId = (int)item["itemId"];
+                            inventory.Items.Add(itemId, new CollectibleItemModel() { Id = itemId, Quantity = itemQuantity, ItemType = itemType });
+                        }
+
+                        // Inventory current capacity
+                        int inventoryCurrentCapacity = (int)jsonObj["inventoryCurrentCapacity"];
+
+                        // Coins
+                        int coins = (int)jsonObj["coins"];
+
+                        // XP
+                        int xp = (int)jsonObj["xp"];
+
+                        // Kill count
+                        int killCount = (int)jsonObj["killCount"];
+
+                        // Death count
+                        int deathCount = (int)jsonObj["deathCount"];
+
+                        loadedGame.Player.Inventory = inventory;
+                        loadedGame.Player.CurrentCoins = coins;
+                        loadedGame.Player.CurrentXP = xp;
+                        loadedGame.Player.Inventory.Capacity = inventoryCurrentCapacity;
+                        loadedGame.Player.KillCounter = killCount;
+                        loadedGame.Player.DeathCounter = deathCount;
+                    }
+                    else
+                    {
+                        // Player saved, but inventory is empty
+                        loadedGame.Player.Inventory = new InventoryModel();
+                        loadedGame.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
+                        loadedGame.Player.Inventory.Capacity = 0;
+
+                        // Coins
+                        int coins = (int)jsonObj["coins"];
+
+                        // XP
+                        int xp = (int)jsonObj["xp"];
+
+                        // Kill count
+                        int killCount = (int)jsonObj["killCount"];
+
+                        // Death count
+                        int deathCount = (int)jsonObj["deathCount"];
+
+                        loadedGame.Player.CurrentCoins = coins;
+                        loadedGame.Player.CurrentXP = xp;
+                        loadedGame.Player.KillCounter = killCount;
+                        loadedGame.Player.DeathCounter = deathCount;
+                    }
+                }
+                else
+                {
+                    // Player do not have any save data or inventory is empty
+                    loadedGame.Player.Inventory = new InventoryModel();
+                    loadedGame.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
+                    loadedGame.Player.Inventory.Capacity = 0;
+                    loadedGame.Player.CurrentCoins = 0;
+                    loadedGame.Player.KillCounter = 0;
+                    loadedGame.Player.CurrentXP = 0;
+                    loadedGame.Player.DeathCounter = 0;
+                }
+
+                loadedGame.Player.Name = saveName;
+            }
+
+            return loadedGame;
+        }
+
+        public string[] LoadSaves()
+        {
+            bool exists = Directory.Exists(SAVE_FOLDER);
+            if (exists)
+            {
+                return Directory.GetFiles(SAVE_FOLDER).Select(Path.GetFileNameWithoutExtension).ToArray();
+            }
+            else
+            {
+                throw new NoSaveException("Save folder not exists!");
+            } 
         }
 
         public void NewGame(string saveName)
@@ -39,7 +152,6 @@ namespace Repository.Classes
                 {
                     JObject saveObject = new JObject(new JProperty("player", saveName));
 
-                    //string json = JsonConvert.SerializeObject(saveName);
                     File.WriteAllText(SAVE_FOLDER + "/" + saveName + ".json", saveObject.ToString());
                 }
                 else
@@ -53,18 +165,65 @@ namespace Repository.Classes
             }
         }
 
-        public void Save(string saveName, GameModel gameModel)
+        public void Save(string saveName, IGameModel gameModel)
         {
-            // Name
-            // Inventory items
-            // Gun
-            // Coins
-            // HP
-            // K/D = Kills - Deaths ratio
+            // Check if saves folder exists
+            bool exists = Directory.Exists(SAVE_FOLDER);
 
-            // 1. Create save window
-            // 2. Get saves from folder
-            // 3. Load save
+            if (exists)
+            {
+                // Check if save exists
+                if (File.Exists(SAVE_FOLDER + "/" + saveName + ".json"))
+                {
+                    // Load save
+                    JObject saveObject = JObject.Parse(File.ReadAllText(SAVE_FOLDER + "/" + saveName + ".json"));
+
+                    // Save player name
+                    saveObject["player"] = saveName;
+
+                    // Save inventory current capacity
+                    saveObject["inventoryCurrentCapacity"] = gameModel.Player.Inventory.Capacity;
+
+                    // Save inventory items
+                    var inventory = gameModel.Player.Inventory.Items;
+                    JArray inventoryItems = new JArray();
+                    foreach (var item in inventory)
+                    {
+                        // Create JObject with itemType and itemAmount
+                        JObject itemObject = new JObject(new JProperty("itemType", item.Value.ItemType.ToString()), new JProperty("itemQuantity", item.Value.Quantity), new JProperty("itemId", item.Value.Id));
+
+                        // Add JObject named as item to JArray
+                        inventoryItems.Add(new JObject(new JProperty("item", itemObject)));
+                    }
+                    saveObject["inventory"] = inventoryItems;
+
+                    // Save coins
+                    saveObject["coins"] = gameModel.Player.CurrentCoins;
+
+                    // Save XP level
+                    saveObject["xp"] = gameModel.Player.CurrentXP;
+
+                    // Save kill count
+                    saveObject["killCount"] = gameModel.Player.KillCounter;
+
+                    // Save death count
+                    saveObject["deathCount"] = gameModel.Player.DeathCounter;
+
+                    //// Save K/D
+                    //saveObject["kd"] = gameModel.Player.Kills - gameModel.Player.Deaths;
+
+                    // Save
+                    File.WriteAllText(SAVE_FOLDER + "/" + saveName + ".json", saveObject.ToString());
+                }
+                else
+                {
+                    throw new NoSaveException("Save not exists!");
+                }
+            }
+            else
+            {
+                throw new NoSaveException("Save folder not exists!");
+            }
         }
     }
 }

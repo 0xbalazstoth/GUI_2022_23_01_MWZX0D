@@ -14,12 +14,10 @@ namespace Logic.Game.Interfaces
         void HandleMovement(Vector2f direction);
         void UpdateAnimationTextures();
         Vector2f GetDirectionFromInput(Vector2f direction);
-        MovementDirection GetMovementByDirection(Vector2f movementDirection);
         void UpdateTilePosition(TilemapModel tilemap);
         void UpdateWorldPositionByMouse(RenderWindow window);
-        void LoadTexture(string filename);
-        void LoadTexture(Texture filename);
         void HandleEnemyCollision();
+        void HandleEnemyBulletCollision();
         void HandleObjectCollision(Sprite item);
         void HandleMapCollision(TilemapModel tilemap);
         void FlipAndRotateGun();
@@ -33,5 +31,7 @@ namespace Logic.Game.Interfaces
         void UpdateSpeedPotionTimer();
         void PushbackByRecoil(float pushbackValue);
         void ShakeCameraByRecoil();
+        void HandleGateCollision();
+        void BuyItemFromShop(ICollectibleItem item);
     }
 }

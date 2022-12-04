@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gunner"
         mc:Ignorable="d"
-        Title="Gunner" MinHeight="1024" MinWidth="1280" KeyDown="Window_KeyDown" WindowState="Normal" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+        Title="Gunner" MinHeight="768" MinWidth="1280" KeyDown="Window_KeyDown" WindowState="Normal" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
     <DockPanel x:Name="dockPanel" LastChildFill="True">
         <!--<WindowsFormsHost PreviewMouseWheel="SfmlSurfaceHost_PreviewMouseWheel" x:Name="SfmlSurfaceHost" />-->
     </DockPanel>

@@ -14,8 +14,10 @@ namespace Logic.Game.Interfaces
         Vector2f GetTileWorldPosition(int x, int y);
         void UpdateItemAnimationTextures();
         int[] MapGeneration(uint height, uint width, float scale, int seed = 209323094);
-        int[] CollisionMapGeneration(uint height, uint width, float scale, int seed = 209323094);
+        int[] GroundMapGeneration(uint height, uint width, float scale, int seed = 209323094);
         void InitializeVertices(TilemapModel map);
         Vector2f GetTextureCoordinatesByTileID(TilemapModel map, int id);
+        List<Vector2f> GetTileIdCoordinatesByMapLayer(TilemapModel map, int layer, List<int> tileIds);
+        List<int> GetSafeTileIDs();
     }
 }

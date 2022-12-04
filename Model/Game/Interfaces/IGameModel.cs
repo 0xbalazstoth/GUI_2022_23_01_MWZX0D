@@ -1,4 +1,5 @@
-﻿using Model.Game.Interfaces;
+﻿using Model.Game.Enums;
+using Model.Game.Interfaces;
 using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
@@ -15,8 +16,11 @@ namespace Model.Game.Classes
         public Movement Movement { get; set; }
         public View CameraView { get; set; }
         public View UIView { get; set; }
-        public TilemapModel Map { get; set; }
+        public TilemapModel CurrentMap { get; set; }
         public TilemapModel KillArenaMap { get; set; }
+        public List<int> MapCollidibleIDs { get; }
+        public TilemapModel LobbyMap { get; set; }
+        public TilemapModel BossMap { get; set; }
         public PlayerModel Player { get; set; }
         public List<EnemyModel> Enemies { get; set; }
         public List<IObjectEntity> Objects { get; set; }
@@ -27,5 +31,8 @@ namespace Model.Game.Classes
         public List<ICollectibleItem> CollectibleItems { get; set; }
         public List<Music> Songs { get; set; }
         public bool DebugMode { get; set; }
+        public List<GateModel> Gates { get; set; }
+        public List<Text> CreatorTexts { get; set; }
+        public List<Text> SettingsTexts { get; set; }
     }
 }

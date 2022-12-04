@@ -19,7 +19,6 @@ using System.Timers;
 
 namespace Logic.Game.Classes
 {
-
     public class PlayerLogic : IPlayerLogic
     {
         private IGameModel gameModel;
@@ -47,7 +46,6 @@ namespace Logic.Game.Classes
 
             this.gameModel.Player.Inventory = new InventoryModel();
             this.gameModel.Player.Inventory.Items = new Dictionary<int, ICollectibleItem>();
-            this.gameModel.Player.Inventory.Quantities = new Dictionary<int, int>();
 
             this.gameModel.Player.HPSprite = new Sprite();
             this.gameModel.Player.HPSprite.Position = new Vector2f(this.gameModel.Player.Position.X, this.gameModel.Player.Position.Y);
@@ -62,17 +60,6 @@ namespace Logic.Game.Classes
         {
             Vector2 numericsVector = Vector2.Normalize(new(direction.X, direction.Y));
             return new(numericsVector.X, numericsVector.Y);
-        }
-
-        public MovementDirection GetMovementByDirection(Vector2f movementDirection)
-        {
-            return gameModel.MovementDirections.Where(x => x.Value.Direction == movementDirection).FirstOrDefault().Key;
-        }
-
-        public void LoadTexture(string filename)
-        {
-            gameModel.Player.Texture = new Texture(filename);
-            gameModel.Player.Origin = new Vector2f(gameModel.Player.Texture.Size.X / 2, gameModel.Player.Texture.Size.Y / 2);
         }
 
         public void UpdateTilePosition(TilemapModel tilemap)
@@ -94,25 +81,11 @@ namespace Logic.Game.Classes
             this.movementDirection = movementDirection;
         }
 
-        public void LoadTexture(Texture texture)
-        {
-            
-        }
-
         public void UpdateAnimationTextures()
         {
             gameModel.Player.Texture = gameModel.Player.Animations[MovementDirection.IdleRight].Texture;
             gameModel.Player.TextureRect = gameModel.Player.Animations[MovementDirection.IdleRight].TextureRect;
             gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-
-            //var movement = GetMovementByDirection(movementDirection);
-
-            //if ((previousPosition.X != gameModel.Player.Position.X && previousPosition.Y != gameModel.Player.Position.Y))
-            //{
-            //    gameModel.Player.Texture = gameModel.Player.Animations[movement].Texture;
-            //    gameModel.Player.TextureRect = gameModel.Player.Animations[movement].TextureRect;
-            //    gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-            //}
         }
 
         public void UpdateDeltaTime(float dt)
@@ -351,7 +324,16 @@ namespace Logic.Game.Classes
                if (gameModel.Player.CurrentHP < gameModel.Player.MaxHP)
                 {
                     // Increment player HP
-                    gameModel.Player.CurrentHP += 10;
+                    // Check the difference, if its more than 10, calculate the difference and add it to the player HP
+                    // If its less than 10, add 10 to the player HP
+                    if (gameModel.Player.MaxHP - gameModel.Player.CurrentHP >= 10)
+                    {
+                        gameModel.Player.CurrentHP += 10;
+                    }
+                    else
+                    {
+                        gameModel.Player.CurrentHP += gameModel.Player.MaxHP - gameModel.Player.CurrentHP;
+                    }
 
                     RemoveItemFromInventory(item);
                 }
@@ -384,7 +366,7 @@ namespace Logic.Game.Classes
 
         public void Shoot()
         {
-            // Player can shoot every 1 seconds
+            // Player can shoot every x seconds
             if (gameModel.Player.Gun.LastFired + gameModel.Player.Gun.FiringInterval < DateTime.Now)
             {
                 // Check if player has ammo based on max ammo
@@ -393,7 +375,7 @@ namespace Logic.Game.Classes
                     if (gameModel.Player.Gun.GunType == GunType.Shotgun)
                     {
                         CreateTemporaryShotgunBullet();
-                        PushbackByRecoil(30f);
+                        PushbackByRecoil(25f);
                     }
                     
                     if (gameModel.Player.Gun.GunType == GunType.Pistol)
@@ -443,7 +425,7 @@ namespace Logic.Game.Classes
             // Shake camera
             if (gameModel.Player.Gun.CurrentAmmo > 0)
             {
-                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 5f);
+                gameModel.CameraView.Center = new Vector2f(gameModel.CameraView.Center.X + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 2f, gameModel.CameraView.Center.Y + (float)new Random().NextDouble() * gameModel.Player.Gun.Recoil - 2f);
             }
         }
 
@@ -504,6 +486,179 @@ namespace Logic.Game.Classes
             });
 
             gameModel.Player.Gun.Bullets.Add(tempBullet);
+        }
+
+        public void HandleEnemyBulletCollision()
+        {
+            // Check if player is hit by enemy bullet
+            foreach (var enemy in gameModel.Enemies)
+            {
+                foreach (var bullet in enemy.Gun.Bullets)
+                {
+                    if (bullet.Bullet.GetGlobalBounds().Intersects(gameModel.Player.Hitbox.GetGlobalBounds()))
+                    {
+                        if (gameModel.Player.CurrentHP >= 1)
+                        {
+                            gameModel.Player.CurrentHP -= enemy.Gun.Damage;
+                        }
+
+                        enemy.Gun.Bullets.Remove(bullet);
+
+                        if (gameModel.Player.CurrentHP <= 0)
+                        {
+                            gameModel.Player.IsDead = true;
+                            gameModel.Player.DeathCounter++;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void HandleGateCollision()
+        {
+            for (int i = 0; i < gameModel.Gates.Count; i++)
+            {
+                if (gameModel.Gates[i].IsGateReady)
+                {
+                    if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].Hitbox.GetGlobalBounds()))
+                    {
+                        gameModel.Player.Position = previousPosition;
+                    }
+
+                    if (gameModel.Player.GetGlobalBounds().Intersects(gameModel.Gates[i].InteractArea.GetGlobalBounds()))
+                    {
+                        if (gameModel.Gates[i].GateState == GateState.InKillArena)
+                        {
+                            gameModel.Player.PlayerState = GateState.InKillArena;
+
+                            gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.KillArenaMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.KillArenaMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.KillArenaMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.KillArenaMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.KillArenaMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.KillArenaMap.Width, gameModel.KillArenaMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.KillArenaMap.TileWidth, gameModel.KillArenaMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InKillArena;
+                            gameModel.Player.Position = new Vector2f(300f, 150f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                if (gameModel.Gates[j].GateState == GateState.InLobby)
+                                {
+                                    gameModel.Gates[j].IsGateReady = true;
+                                }
+                                else
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+                            }
+
+                            for (int j = 0; j < gameModel.Enemies.Count; j++)
+                            {
+                                if (gameModel.Enemies[j].EnemyType == EnemyType.Eye)
+                                {
+                                    gameModel.Enemies[j].CanSpawn = true;
+                                }
+                                else
+                                {
+                                    gameModel.Enemies[j].CanSpawn = false;
+                                }
+                            }
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InBossArena)
+                        {
+                            gameModel.Player.PlayerState = GateState.InBossArena;
+
+                            gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.BossMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.BossMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
+                            gameModel.Player.Position = new Vector2f(300f, 500f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                gameModel.Gates[j].IsGateReady = false;
+                            }
+
+                            // Remove every enemy except boss type
+                            gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
+
+                            for (int j = 0; j < gameModel.Enemies.Count; j++)
+                            {
+                                if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
+                                {
+                                    gameModel.Enemies[j].CanSpawn = true;
+                                }
+                                else
+                                {
+                                    gameModel.Enemies[j].CanSpawn = false;
+                                }
+                            } 
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InShop)
+                        {
+                            gameModel.Player.PlayerState = GateState.InShop;
+                        }
+
+                        if (gameModel.Gates[i].GateState == GateState.InLobby)
+                        {
+                            gameModel.Player.PlayerState = GateState.InLobby;
+
+                            gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;
+                            gameModel.CurrentMap.MapLayers = gameModel.LobbyMap.MapLayers;
+                            gameModel.CurrentMap.Width = gameModel.LobbyMap.Width;
+                            gameModel.CurrentMap.Height = gameModel.LobbyMap.Height;
+                            gameModel.CurrentMap.TileWidth = gameModel.LobbyMap.TileWidth;
+                            gameModel.CurrentMap.TileHeight = gameModel.LobbyMap.TileHeight;
+                            gameModel.CurrentMap.Size = new Vector2u(gameModel.LobbyMap.Width, gameModel.LobbyMap.Height);
+                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.LobbyMap.TileWidth, gameModel.LobbyMap.TileHeight);
+                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InLobby;
+                            gameModel.Player.Position = new Vector2f(300f, 300f);
+
+                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                            {
+                                if (gameModel.Gates[j].GateState != GateState.InLobby)
+                                {
+                                    gameModel.Gates[j].IsGateReady = true;
+                                }
+                                else
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+                            }
+
+                            // Set player's HP to max
+                            gameModel.Player.CurrentHP = gameModel.Player.MaxHP;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void BuyItemFromShop(ICollectibleItem item)
+        {
+            if (gameModel.Player.Inventory.Capacity < gameModel.Player.Inventory.MaxCapacity && gameModel.Player.CurrentCoins >= item.Price)
+            {
+                AddItemToInventory(item);
+
+                if (item.ItemType == ItemType.Speed_Potion)
+                {
+                    gameModel.Player.CurrentCoins -= item.Price;
+                }
+                else if (item.ItemType == ItemType.Health_Potion)
+                {
+                    gameModel.Player.CurrentCoins -= item.Price;
+                }
+            }
         }
     }
 }

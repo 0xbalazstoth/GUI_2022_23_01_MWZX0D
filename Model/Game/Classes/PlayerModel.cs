@@ -1,3 +1,4 @@
+using Model.Game.Enums;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,10 @@ namespace Model.Game.Classes
         public int CurrentCoins { get; set; }
         public DateTime LastPotionEffect { get; set; }
         public bool IsSpeedPotionIsInUse { get; set; }
+        public int KillCounter { get; set; }
+        public int DeathCounter { get; set; }
+        public bool IsDead { get; set; }
+        public DateTime RespawnTimer { get; set; }
+        public GateState PlayerState { get; set; }
     }
 }

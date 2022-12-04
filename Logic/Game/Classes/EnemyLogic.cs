@@ -19,7 +19,6 @@ namespace Logic.Game.Classes
     {
         private IGameModel gameModel;
         private ITilemapLogic tilemapLogic;
-        //List<Vector2i> path;
 
         public EnemyLogic(IGameModel gameModel, ITilemapLogic tilemapLogic)
         {
@@ -28,22 +27,10 @@ namespace Logic.Game.Classes
 
             gameModel.Enemies = new List<EnemyModel>();
 
-            CreateEnemies();
-
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].HPSprite = new Sprite();
-                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-
-                gameModel.Enemies[i].CurrentHP = gameModel.Enemies[i].MaxHP;
-
-                gameModel.Enemies[i].HPText = new Text();
-                gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y);
-                gameModel.Enemies[i].HPText.CharacterSize = 16;
-                gameModel.Enemies[i].HPText.FillColor = Color.Red;
+                gameModel.Enemies[i].PreviousPosition = gameModel.Enemies[i].Position;
             }
-
-            //path = new List<Vector2i>();
         }
 
         public void PathToPlayer(int enemyIdx)
@@ -53,20 +40,20 @@ namespace Logic.Game.Classes
             {
                 gameModel.Enemies[enemyIdx].Position = new Vector2f(0, gameModel.Enemies[enemyIdx].Position.Y);
             }
-            if (gameModel.Enemies[enemyIdx].Position.X > gameModel.Map.Width * gameModel.Map.TileSize.X)
+            if (gameModel.Enemies[enemyIdx].Position.X > gameModel.CurrentMap.Width * gameModel.CurrentMap.TileSize.X)
             {
-                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Map.Width * gameModel.Map.TileSize.X, gameModel.Enemies[enemyIdx].Position.Y);
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.CurrentMap.Width * gameModel.CurrentMap.TileSize.X, gameModel.Enemies[enemyIdx].Position.Y);
             }
             if (gameModel.Enemies[enemyIdx].Position.Y < 0)
             {
                 gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, 0);
             }
-            if (gameModel.Enemies[enemyIdx].Position.Y > gameModel.Map.Height * gameModel.Map.TileSize.Y)
+            if (gameModel.Enemies[enemyIdx].Position.Y > gameModel.CurrentMap.Height * gameModel.CurrentMap.TileSize.Y)
             {
-                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Map.Height * gameModel.Map.TileSize.Y);
+                gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.CurrentMap.Height * gameModel.CurrentMap.TileSize.Y);
             }
 
-            int[] grid = gameModel.Map.MapLayers[1];
+            int[] grid = gameModel.CurrentMap.MapLayers[1];
 
             gameModel.Enemies[enemyIdx].Path = new List<Vector2i>();
 
@@ -92,12 +79,12 @@ namespace Logic.Game.Classes
                 foreach (Vector2i point in adjacent)
                 {
                     // check if the point is in the grid
-                    if (point.X >= 0 && point.X < gameModel.Map.Width && point.Y >= 0 && point.Y < gameModel.Map.Height)
+                    if (point.X >= 0 && point.X < gameModel.CurrentMap.Width && point.Y >= 0 && point.Y < gameModel.CurrentMap.Height)
                     {
                         // check if the point is not a wall
-                        foreach (var collidibleId in gameModel.Map.CollidableIDs)
+                        foreach (var collidibleId in gameModel.CurrentMap.CollidableIDs)
                         {
-                            if (grid[point.X + point.Y * gameModel.Map.Width] != collidibleId)
+                            if (grid[point.X + point.Y * gameModel.CurrentMap.Width] != collidibleId)
                             {
                                 // check if the point is not already in the list
                                 if (!gameModel.Enemies[enemyIdx].Path.Contains(point))
@@ -122,28 +109,50 @@ namespace Logic.Game.Classes
             // Remove the first point in the path
             pathCopy.RemoveAt(0);
 
-            // Move the enemy
+            // Move enemy
             if (pathCopy.Count > 0)
             {
-                if (pathCopy[0].X < gameModel.Enemies[enemyIdx].Position.X / gameModel.Map.TileWidth)
+                gameModel.Enemies[enemyIdx].PreviousPosition = gameModel.Enemies[enemyIdx].Position;
+
+                // left, right
+                if (pathCopy[0].X < gameModel.Enemies[enemyIdx].Position.X / gameModel.CurrentMap.TileWidth)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X - 1, gameModel.Enemies[enemyIdx].Position.Y);
                 }
-                else if (pathCopy[0].X > gameModel.Enemies[enemyIdx].Position.X / gameModel.Map.TileWidth)
+                else if (pathCopy[0].X > gameModel.Enemies[enemyIdx].Position.X / gameModel.CurrentMap.TileWidth)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X + 1, gameModel.Enemies[enemyIdx].Position.Y);
                 }
 
-                if (pathCopy[0].Y < gameModel.Enemies[enemyIdx].Position.Y / gameModel.Map.TileHeight)
+                // up, down
+                if (pathCopy[0].Y < gameModel.Enemies[enemyIdx].Position.Y / gameModel.CurrentMap.TileHeight)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y - 1);
                 }
-                else if (pathCopy[0].Y > gameModel.Enemies[enemyIdx].Position.Y / gameModel.Map.TileHeight)
+                else if (pathCopy[0].Y > gameModel.Enemies[enemyIdx].Position.Y / gameModel.CurrentMap.TileHeight)
                 {
                     gameModel.Enemies[enemyIdx].Position = new Vector2f(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y + 1);
                 }
+
+                HandleMapCollision(enemyIdx);
+
+                var currentRect = new FloatRect(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y, gameModel.Enemies[enemyIdx].Hitbox.Size.X, gameModel.Enemies[enemyIdx].Hitbox.Size.Y);
+
+                // Check if current enemy colliding with other enemies
+                for (int i = 0; i < gameModel.Enemies.Count; i++)
+                {
+                    if (i != enemyIdx)
+                    {
+                        var otherRect = new FloatRect(gameModel.Enemies[i].Position.X, gameModel.Enemies[i].Position.Y, gameModel.Enemies[i].Hitbox.Size.X, gameModel.Enemies[i].Hitbox.Size.Y);
+
+                        if (currentRect.Intersects(otherRect))
+                        {
+                            gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
+                        }
+                    }
+                }
             }
-            
+
             // Clear the path
             gameModel.Enemies[enemyIdx].Path.Clear();
         }
@@ -156,39 +165,25 @@ namespace Logic.Game.Classes
                 {
                     if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                     {
-                        gameModel.Player.Gun.Bullets.Remove(bullet);
-
                         // Damage enemy if it is not dead
                         if (enemy.CurrentHP >= 1)
                         {
                             enemy.CurrentHP -= gameModel.Player.Gun.Damage;
                         }
 
-                        if (enemy.CurrentHP == 0)
+                        gameModel.Player.Gun.Bullets.Remove(bullet);
+
+                        if (enemy.CurrentHP <= 0)
                         {
                             gameModel.Enemies.Remove(enemy);
                             gameModel.Player.CurrentXP += enemy.RewardXP;
+                            gameModel.Player.KillCounter++;
                         }
 
-                        break;
+                        return;
                     }
                 }
             }
-        }
-
-        public void HandleMovement()
-        {
-            
-        }
-
-        public void LoadTexture(string filename)
-        {
-
-        }
-
-        public void LoadTexture(Texture texture)
-        {
-
         }
 
         public void UpdateAnimationTextures()
@@ -201,16 +196,11 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void UpdateDeltaTime(float dt)
-        {
-
-        }
-
         public void UpdateHP()
         {
             for (int i = 0; i < gameModel.Enemies.Count; i++)
             {
-                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X - (gameModel.Enemies[i].GetGlobalBounds().Width / 2f), gameModel.Enemies[i].Position.Y - (gameModel.Enemies[i].GetGlobalBounds().Height / 2f));
+                gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X + gameModel.Enemies[i].TextureRect.Width / 2 - gameModel.Enemies[i].HPSprite.TextureRect.Width, gameModel.Enemies[i].Position.Y - gameModel.Enemies[i].HPSprite.TextureRect.Height);
                 gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].HPSprite.Position.X + 18f, gameModel.Enemies[i].HPSprite.Position.Y - (gameModel.Enemies[i].HPSprite.GetGlobalBounds().Height / 2f) + 4f);
 
                 gameModel.Enemies[i].HPText.DisplayedString = $"{gameModel.Enemies[i].CurrentHP}";
@@ -228,7 +218,7 @@ namespace Logic.Game.Classes
                 {
                     BulletModel tempBullet = new BulletModel();
                     tempBullet.Bullet = new Sprite();
-                    tempBullet.Speed = 4f;
+                    tempBullet.Speed = 5f;
                     tempBullet.Bullet.Position = gameModel.Enemies[enemyIdx].Position;
                     tempBullet.Velocity = gameModel.Enemies[enemyIdx].AimDirectionNormalized * tempBullet.Speed;
                     tempBullet.Bullet.Origin = new Vector2f(tempBullet.Bullet.TextureRect.Width / 2, tempBullet.Bullet.TextureRect.Height / 2);
@@ -285,38 +275,39 @@ namespace Logic.Game.Classes
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(-2.5f, 2.5f);
                     gameModel.Enemies[i].Gun.Rotation = angle + 180;
 
-                    if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
-                    {
-                        // Center gun position by enemy texture
-                        gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
-                    }
+                    // Center gun position by enemy texture
+                    gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
                 }
                 else
                 {
                     gameModel.Enemies[i].Gun.Scale = new Vector2f(2.5f, 2.5f);
                     gameModel.Enemies[i].Gun.Rotation = angle;
 
-                    if (gameModel.Enemies[i].EnemyType == EnemyType.Eye)
-                    {
-                        // Center gun position by enemy texture
-                        gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
-                    }
+                    // Center gun position by enemy texture
+                    gameModel.Enemies[i].Gun.Position = new Vector2f(gameModel.Enemies[i].Position.X + (gameModel.Enemies[i].TextureRect.Width / 2f), gameModel.Enemies[i].Position.Y + (gameModel.Enemies[i].TextureRect.Height / 2f));
                 }
             }
         }
 
-        public void CreateEnemies()
+        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < spawnCount; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                enemy.Position = new Vector2f(new Random().Next() % 600, new Random().Next() % 600);
+                if (enemyType == EnemyType.Boss)
+                {
+                    enemy.Position = new Vector2f(1500f, 500f);
+                }
+                else
+                { 
+                    enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
+                }
                 enemy.Speed = 30f;
-                enemy.SightDistance = 300f;
+                enemy.SightDistance = sightDistance;
                 enemy.Gun = new GunModel();
                 enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
-                enemy.Gun.Damage = 10;
-                enemy.Gun.MaxAmmo = 15;
+                enemy.Gun.Damage = damage;
+                enemy.Gun.MaxAmmo = maxAmmo;
                 enemy.Gun.Recoil = 5f;
                 enemy.Hitbox = new RectangleShape();
                 enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
@@ -325,17 +316,21 @@ namespace Logic.Game.Classes
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
                 enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
                 enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
-                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(300);
+                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(750);
                 enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
                 enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
                 enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
                 enemy.Gun.ShootSounds = new List<Sound>();
+                enemy.HPSprite = new Sprite();
+                enemy.HPText = new Text();
+                enemy.CurrentHP = enemy.MaxHP;
+                enemy.HPText.CharacterSize = 16;
+                enemy.HPText.FillColor = Color.Red;
 
                 enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
-                enemy.EnemyType = Model.Game.Enums.EnemyType.Eye;
-                //gameModel.Player.Origin = new Vector2f(gameModel.Player.TextureRect.Width / 2, gameModel.Player.TextureRect.Height / 2);
-                
+                enemy.EnemyType = enemyType;
+
                 gameModel.Enemies.Add(enemy);
                 for (int j = 0; j < i - 1; j++)
                 {
@@ -348,62 +343,34 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void SpawnEnemies(float dt)
+        public void HandleMapCollision(int enemyIdx)
         {
-            // ENEMY COLLISION DETECTION WITH WALL!!!
-            //foreach (var enemy in gameModel.Enemies)
-            //{
-            //    for (int y = -2; y < 2; y++)
-            //    {
-            //        for (int x = -2; x < 2; x++)
-            //        {
-            //            var xTilePosition = enemy.Position.X;
-            //            var yTilePosition = enemy.Position.Y;
-            //            var tilePosition = new Vector2i((int)((int)xTilePosition / gameModel.Map.TileSize.X), (int)((int)yTilePosition / gameModel.Map.TileSize.Y)) + new Vector2i(x, y);
-            //            var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-            //            if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
-            //            {
-            //                continue;
-            //            }
+            // Check if enemy is on a collidable tile
+            for (int y = -2; y < 2; y++)
+            {
+                for (int x = -2; x < 2; x++)
+                {
+                    var xTilePosition = gameModel.Enemies[enemyIdx].Position.X;
+                    var yTilePosition = gameModel.Enemies[enemyIdx].Position.Y;
+                    var currentTilePosition = new Vector2i((int)((int)xTilePosition / gameModel.CurrentMap.TileSize.X), (int)((int)yTilePosition / gameModel.CurrentMap.TileSize.Y)) + new Vector2i(x, y);
+                    var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, currentTilePosition.X, currentTilePosition.Y);
 
-            //            var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-            //            var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
-            //            var rect = enemy.GetGlobalBounds();
+                    if (gameModel.CurrentMap.CollidableIDs.Contains(currentTileID) == false)
+                    {
+                        continue;
+                    }
 
-            //            if (tileRect.Intersects(rect))
-            //            {
-            //                gameModel.Enemies.Remove(enemy);
-            //                enemy.IsShooting = true;
+                    var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(currentTilePosition.X, currentTilePosition.Y);
+                    var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.CurrentMap.TileSize.X, gameModel.CurrentMap.TileSize.Y);
+                    var rect = new FloatRect(gameModel.Enemies[enemyIdx].Position.X, gameModel.Enemies[enemyIdx].Position.Y, gameModel.Enemies[enemyIdx].Hitbox.Size.X, gameModel.Enemies[enemyIdx].Hitbox.Size.Y);
 
-            //                var optimalPosition = new Vector2f();
-            //                var optimalDistance = float.MaxValue;
-
-            //                for (int xP = 0; xP < gameModel.Map.Size.X; xP++)
-            //                {
-            //                    for (int yP = 0; yP < gameModel.Map.Size.Y; yP++)
-            //                    {
-            //                        var tileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, xP, yP);
-            //                        if (gameModel.Map.CollidableIDs.Contains(tileID) == false)
-            //                        {
-            //                            var tileWorldPosition = tilemapLogic.GetTileWorldPosition(xP, yP);
-            //                            var distance = Vector2.Distance(new Vector2(rect.Left, rect.Top), new Vector2(tileWorldPosition.X, tileWorldPosition.Y));
-            //                            if (distance < optimalDistance)
-            //                            {
-            //                                optimalDistance = distance;
-            //                                optimalPosition = tileWorldPosition;
-            //                            }
-            //                        }
-            //                    }
-            //                }
-
-            //                enemy.Position = optimalPosition;
-            //                gameModel.Enemies.Add(enemy);
-
-            //                return;
-            //            }
-            //        }
-            //    }
-            //}
+                    if (tileRect.Intersects(rect))
+                    {
+                        gameModel.Enemies[enemyIdx].Position = gameModel.Enemies[enemyIdx].PreviousPosition;
+                        return;
+                    }
+                }
+            }
         }
 
         public void ReloadGun(int enemyIdx)

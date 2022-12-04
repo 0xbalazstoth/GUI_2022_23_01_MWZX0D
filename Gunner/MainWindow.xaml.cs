@@ -2,7 +2,8 @@
 using Logic.Game;
 using Logic.Game.Classes;
 using Logic.Game.Interfaces;
-using Logic.Tools;
+using Logic.UI.Classes;
+using Logic.UI.Interfaces;
 using Model.Game;
 using Model.Game.Classes;
 using Model.Game.Enums;
@@ -10,6 +11,7 @@ using Model.Tools;
 using Model.UI.Classes;
 using Model.UI.Interfaces;
 using Renderer;
+using Repository.Classes;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -93,60 +95,26 @@ namespace Gunner
         private IBulletLogic bulletLogic;
         private IAnimationLogic animationLogic;
 
-        private GameController gameController;
+        private GameControl gameController;
 
-        private IUILogic uiLogic;
-        private IUIModel uiModel;
-        private UIRenderer uiRenderer;
+        private IGameUILogic gameUILogic;
+        private IMenuUILogic menuUILogic;
+
+        private IGameUIModel gameUIModel;
+        private IMenuUIModel menuUIModel;
+        
+        private GameUIRenderer gameUIRenderer;
+        private MenuUIRenderer menuUIRenderer;
 
         private TimeSpan lastRenderTime;
 
-        public MainWindow(string playerUsername)
+        public MainWindow()
         {
             InitializeComponent();
-
+            
             host = new WindowsFormsHost();
             host.Name = "SfmlSurfaceHost";
             sfmlSurface = new SFMLSurface();
-            //SfmlSurfaceHost.Child = sfmlSurface;
-            window = new RenderWindow(sfmlSurface.Handle);
-
-            host.Child = sfmlSurface;
-            dockPanel.Children.Add(host);
-
-            Trace.WriteLine(playerUsername);
-
-            //CompositionTarget.Rendering += RunGame;
-            CompositionTargetEx.Rendering += RunGame;
-
-            this.gameModel = new GameModel();
-            this.uiModel = new UIModel();
-
-            this.tilemapLogic = new TilemapLogic(gameModel);
-            this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
-            this.playerLogic = new PlayerLogic(gameModel, tilemapLogic);
-            this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
-
-            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
-            this.uiLogic = new UILogic(uiModel, gameModel);
-
-            this.animationLogic = new AnimationLogic(gameModel);
-
-            this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
-            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "VT323.ttf");
-
-            InitSystem();
-            InitGameplay();
-
-            this.gameController = new GameController(gameModel, playerLogic);
-        }
-
-        private void HostGame()
-        {
-            host = new WindowsFormsHost();
-            host.Name = "SfmlSurfaceHost";
-            sfmlSurface = new SFMLSurface();
-            //SfmlSurfaceHost.Child = sfmlSurface;
             window = new RenderWindow(sfmlSurface.Handle);
 
             host.Child = sfmlSurface;
@@ -156,7 +124,8 @@ namespace Gunner
             CompositionTargetEx.Rendering += RunGame;
 
             this.gameModel = new GameModel();
-            this.uiModel = new UIModel();
+            this.gameUIModel = new GameUIModel();
+            this.menuUIModel = new MenuUIModel();
 
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
@@ -164,19 +133,21 @@ namespace Gunner
             this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
 
             this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
-            this.uiLogic = new UILogic(uiModel, gameModel);
+            this.gameUILogic = new GameUILogic(gameUIModel, gameModel);
+            this.menuUILogic = new MenuUILogic(menuUIModel);
 
             this.animationLogic = new AnimationLogic(gameModel);
-
             this.gameRenderer = new GameRenderer(gameModel, "Assets/Textures");
-            this.uiRenderer = new UIRenderer(uiModel, gameModel, "Assets/Fonts", "VT323.ttf");
+            
+            this.gameUIRenderer = new GameUIRenderer(gameUIModel, gameModel, "Assets/Fonts", "VT323.ttf");
+            this.menuUIRenderer = new MenuUIRenderer(menuUIModel, "Assets/Fonts", "VT323.ttf");
 
             InitSystem();
             InitGameplay();
 
-            this.gameController = new GameController(gameModel, playerLogic);
+            this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel);
         }
-
+        
         private void InitGameplay()
         {
             chestLogic = new ObjectEntityLogic(gameModel);
@@ -229,19 +200,35 @@ namespace Gunner
             gameLogic.UpdateDeltaTime();
 
             window.DispatchEvents();
-            window.SetActive(true);
+            //window.SetActive(true);
             window.Size = new Vector2u((uint)sfmlSurface.Size.Width, (uint)sfmlSurface.Size.Height);
             window.SetView(new View(new FloatRect(0, 0, sfmlSurface.Size.Width, sfmlSurface.Size.Height)));
 
             Update();
 
             window.Clear();
-
+            
             window.SetView(gameModel.CameraView);
             DrawGame();
 
             window.SetView(gameModel.UIView);
-            DrawUI();
+            DrawGameUI();
+
+            if (menuUIModel.SelectedMenuOptionState != MenuOptionsState.InGame)
+            {
+                if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMainMenu || menuUIModel.SelectedMenuOptionState == MenuOptionsState.NewGame || menuUIModel.SelectedMenuOptionState == MenuOptionsState.LoadGame || menuUIModel.SelectedMenuOptionState == MenuOptionsState.Highscore)
+                {
+                    window.Clear(Color.Black);
+                    DrawMainMenuUI();
+                }
+                
+                if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InPauseMenu)
+                {
+                    // Make window's background half transparent
+                    window.Clear(new Color(0, 0, 0, 128));
+                    DrawPauseMenuUI();
+                }
+            }
 
             window.SetView(window.DefaultView);
 
@@ -255,68 +242,64 @@ namespace Gunner
             gameController.HandleReloadInput();
             gameController.HandleDebugMode();
             gameController.HandleGunSwitchInput(window);
-
-            //window.MouseWheelScrolled += (s, e) =>
-            //{
-            //    int gunIdx = 0;
-            //    gameModel.Player.Gun.Bullets = new List<BulletModel>();
-
-            //    if (e.Delta > 0)
-            //    {
-            //        gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
-            //        if (gunIdx >= gameModel.Guns.Count)
-            //        {
-            //            gunIdx = 0;
-            //        }
-            //    }
-            //    else if (e.Delta < 0)
-            //    {
-            //        gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
-            //        if (gunIdx < 0)
-            //        {
-            //            gunIdx = gameModel.Guns.Count - 1;
-            //        }
-            //    }
-
-            //    gameModel.Player.Gun = gameModel.Guns[gunIdx];
-            //};
         }
 
         public void Update()
         {
-            bool isInWindow = true;
-            if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)
+            if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMainMenu)
             {
-                isInWindow = false;
+                menuUILogic.UpdateMainMenu(window.Size);
             }
-            else
+            else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InPauseMenu)
             {
-                isInWindow = true;
+                menuUILogic.UpdatePauseMenu(window.Size);
             }
-
-            if (isInWindow && gameModel.Player.IsFocusedInGame)
+            else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.QuitGame)
             {
-                uiLogic.UpdateFPS(gameLogic.GetDeltaTime);
-                animationLogic.Update(gameLogic.GetDeltaTime);
+                window.Close();
+                this.Close();
+            }
+            else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InGame)
+            {
+                bool isInWindow = true;
+                if (Mouse.GetPosition(window).X < 0 || Mouse.GetPosition(window).X > window.Size.X || Mouse.GetPosition(window).Y < 0 || Mouse.GetPosition(window).Y > window.Size.Y)
+                {
+                    isInWindow = false;
+                }
+                else
+                {
+                    isInWindow = true;
+                }
 
-                gameLogic.UpdateBullets(window);
-                gameLogic.UpdateCamera(gameModel.CameraView);
-                gameLogic.MoveCamera(gameModel.Map.GetMapWidth, gameLogic.GetDeltaTime);
-                gameLogic.UpdatePlayer(window);
+                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false)
+                {
+                    gameUILogic.UpdateFPS(gameLogic.GetDeltaTime);
+                    animationLogic.Update(gameLogic.GetDeltaTime);
 
-                gameLogic.UpdateTilemap();
-                
-                Control();
+                    gameLogic.UpdateBullets(window);
+                    gameLogic.MoveCamera(gameModel.CurrentMap.GetMapWidth, gameLogic.GetDeltaTime);
+                    gameLogic.UpdateCamera(gameModel.CameraView);
+                    gameLogic.UpdatePlayer(window);
 
-                gameLogic.SpawnItems();
+                    gameLogic.UpdateTilemap();
 
-                uiLogic.UpdateAmmoText();
-                uiLogic.UpdateXPLevelText();
-                uiLogic.UpdatePlayerCoinText();
-                uiLogic.UpdateSpeedPotionTimeLeftText();
+                    Control();
 
-                gameLogic.UpdateEnemies(window);
-                enemyLogic.HandleMovement();
+                    gameLogic.SpawnItems();
+
+                    gameUILogic.UpdateAmmoText();
+                    gameUILogic.UpdateXPLevelText();
+                    gameUILogic.UpdatePlayerCoinText();
+                    gameUILogic.UpdateSpeedPotionTimeLeftText();
+                    gameUILogic.UpdateKillCountText();
+                    gameUILogic.UpdateDeathCountText();
+
+                    gameLogic.UpdateEnemies(window);
+                }
+                else if (gameModel.Player.IsDead)
+                {
+                    gameUILogic.UpdateGameOverText(window);
+                }
             }
         }
 
@@ -325,15 +308,28 @@ namespace Gunner
             gameRenderer.Draw(window);
         }
 
-        public void DrawUI()
+        public void DrawGameUI()
         {
-            uiRenderer.Draw(window);
+            gameUIRenderer.Draw(window);
+        }
+
+        public void DrawMainMenuUI()
+        {
+            menuUIRenderer.DrawMainMenu(window);
+        }
+
+        public void DrawPauseMenuUI()
+        {
+            menuUIRenderer.DrawPauseMenu(window);
         }
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             gameController.HandleInventoryInput(e);
             gameController.HandlePauseMenuInput(e);
+            gameController.HandleMainMenuInput(e);
+            gameController.HandleRespawnInput(e);
+            gameController.HandleGateInput(e);
 
             // Check if F11 is pressed
             if (e.Key == System.Windows.Input.Key.F11)
@@ -352,30 +348,6 @@ namespace Gunner
                     WindowStyle = WindowStyle.None;
                 }
             }
-        }
-
-        private void SfmlSurfaceHost_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
-        {
-            //// change gun by mouse wheel from gameModel.Guns list
-            //int gunIdx = 0;
-            //if (e.Delta > 0)
-            //{
-            //    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) + 1;
-            //    if (gunIdx >= gameModel.Guns.Count)
-            //    {
-            //        gunIdx = 0;
-            //    }
-            //}
-            //else if (e.Delta < 0)
-            //{
-            //    gunIdx = gameModel.Guns.IndexOf(gameModel.Player.Gun) - 1;
-            //    if (gunIdx < 0)
-            //    {
-            //        gunIdx = gameModel.Guns.Count - 1;
-            //    }
-            //}
-
-            //gameModel.Player.Gun = gameModel.Guns[gunIdx];
         }
     }
 }

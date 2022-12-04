@@ -21,6 +21,13 @@ namespace Gunner
     /// </summary>
     public partial class NewGameWindow : Window
     {
+        private string playerName;
+
+        public string PlayerName
+        {
+            get { return playerName; }
+        }
+
         public NewGameWindow()
         {
             InitializeComponent();
@@ -34,17 +41,10 @@ namespace Gunner
             try
             {
                 saveHandler.NewGame(txtBoxUsername.Text);
+                this.playerName = txtBoxUsername.Text;
+                this.DialogResult = true;
 
-                // Run game
-                MainWindow mainWindow = new MainWindow(txtBoxUsername.Text);
-                mainWindow.Show();
-
-                // Close this window
                 Close();
-
-                // Get MainMenuWindow and close it
-                MainMenuWindow mainMenuWindow = (MainMenuWindow)Application.Current.MainWindow;
-                mainMenuWindow.Close();
             }
             catch (SaveAlreadyExistsException error)
             {

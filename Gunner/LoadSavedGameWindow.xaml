@@ -1,0 +1,22 @@
+﻿<Window x:Class="Gunner.LoadSavedGameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Gunner"
+        mc:Ignorable="d"
+        Title="LoadSavedGame" Height="300" Width="300" ResizeMode="NoResize" WindowStyle="None" ShowInTaskbar="False" WindowStartupLocation="CenterScreen" Background="#273866">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Margin="10" Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListBox x:Name="lbSaves" Grid.Row="0" SelectionChanged="lbSaves_SelectionChanged"></ListBox>
+            <Button Grid.Row="1" x:Name="btnBack" Content="Back" Background="Orange" Margin="5" Click="btnBack_Click"></Button>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using SFML.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logic.Tools
+namespace Logic.UI.Interfaces
 {
-    public interface IUILogic
+    public interface IGameUILogic
     {
         public float GetFps { get; }
         public float GetFrameTime { get; }
@@ -15,5 +16,8 @@ namespace Logic.Tools
         public void UpdateXPLevelText();
         public void UpdatePlayerCoinText();
         public void UpdateSpeedPotionTimeLeftText();
+        public void UpdateKillCountText();
+        public void UpdateDeathCountText();
+        public void UpdateGameOverText(RenderWindow window);
     }
 }

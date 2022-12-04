@@ -14,9 +14,6 @@ using System.Xml.Linq;
 
 namespace Logic.Game.Classes
 {
-    // Possible tiles:
-    // - https://mportorodrigo.itch.io/the-lost-dungeon-tileset
-
     public class TilemapLogic : ITilemapLogic
     {
         public const int COLLISION_LAYER = 1;
@@ -26,49 +23,25 @@ namespace Logic.Game.Classes
         {
             this.gameModel = gameModel;
 
-            gameModel.Map = new TilemapModel();
+            gameModel.CurrentMap = new TilemapModel();
             gameModel.KillArenaMap = new TilemapModel();
+            gameModel.LobbyMap = new TilemapModel();
+            gameModel.BossMap = new TilemapModel();
         }
 
-        public int[] CollisionMapGeneration(uint height, uint width, float scale, int seed = 209323094)
+        public int[] GroundMapGeneration(uint height, uint width, float scale, int seed = 209323094)
         {
             SimplexNoise.Noise.Seed = new Random().Next(1111, 999999);
-            //int height = 10, width = 15;
-            //float scale = 0.10f;
-            float[,] noiseValues = SimplexNoise.Noise.Calc2D((int)width, (int)height, scale);
 
-            int grassType1 = 1;
-            int grassType2 = 2;
-            int grassType3 = 3;
-            int wall = 4;
+            int grassType1 = 169;
 
             int[] generatedMap = new int[height * width];
 
-            // Generate map by noise values and set tile textures by percentage
             for (int x = 0; x < height; x++)
             {
                 for (int y = 0; y < width; y++)
                 {
-                    if (noiseValues[x, y] < 10f)
-                    {
-                        generatedMap[x + y * height] = grassType1;
-                    }
-                    else if (noiseValues[x, y] < 20f)
-                    {
-                        generatedMap[x + y * height] = grassType2;
-                    }
-                    else if (noiseValues[x, y] < 30f)
-                    {
-                        generatedMap[x + y * height] = grassType3;
-                    }
-                    else if (noiseValues[x, y] < 40f)
-                    {
-                        generatedMap[x + y * height] = grassType3;
-                    }
-                    else
-                    {
-                        generatedMap[x + y * height] = wall;
-                    }
+                    generatedMap[x + y * height] = grassType1;
                 }
             }
 
@@ -83,10 +56,13 @@ namespace Logic.Game.Classes
             //float scale = 0.10f;
             float[,] noiseValues = SimplexNoise.Noise.Calc2D((int)width, (int)height, scale);
 
-            int grassType1 = 1;
-            int grassType2 = 2;
-            int grassType3 = 3;
-            int wall = 4;
+            int[] grassTerrainSets = new int[] { 169, 168, 170, 171};
+
+            int grassType1 = 169;
+            int grassType2 = 170;
+            int grassType3 = 171;
+            int wallTop = 9;
+            int wallBottom = 58;
 
             int[] generatedMap = new int[height * width];
 
@@ -95,17 +71,49 @@ namespace Logic.Game.Classes
             {
                 for (int y = 0; y < width; y++)
                 {
-                    if (noiseValues[x, y] < 70f)
+                    generatedMap[x + y * height] = grassTerrainSets[new Random().Next(0, grassTerrainSets.Length)];
+
+                    if (noiseValues[x, y] < 30f)
                     {
-                        generatedMap[x + y * height] = grassType1;
+                        generatedMap[x + y * height] = wallTop;
                     }
-                    else if (noiseValues[x, y] < 90f)
+
+                    if (x == 0 && y == 0) // top left to right
                     {
-                        generatedMap[x + y * height] = wall;
+                        generatedMap[x + y * height] = 1;
                     }
-                    else if (noiseValues[x, y] < 150f)
+                    else if ((x >= 1 && x <= 10) && y == 0) // top left
                     {
-                        generatedMap[x + y * height] = grassType2;
+                        generatedMap[x + y * height] = 2;
+                    }
+                    else if (x == 0 && (y >= 0 && y <= 10)) // top to bottom
+                    {
+                        generatedMap[x + y * height] = 98;
+                    }
+                    else if (x == 0 && y == 11) // bottom left
+                    {
+                        generatedMap[x + y * height] = 147;
+                    }
+                    else if ((x >= 1 && x <= 10) && y == 11) // bottom left to right
+                    {
+                        generatedMap[x + y * height] = 198;
+                    }
+                    else if (x == 11 && y == 0) // top right
+                    {
+                        generatedMap[x + y * height] = 3;
+                    }
+                    else if (x == 11 && y == 11) // bottom right
+                    {
+                        generatedMap[x + y * height] = 151;
+                    }
+                    else if (x == 11 && (y >= 0 && y <= 10) && !(y >= 4 && y <= 8)) // top to bottom
+                    {
+                        generatedMap[x + y * height] = 102;
+                    }
+
+                    if ((x >= 1 && x <= 10) && (y >= 1 && y <= 10))
+                    {
+                        generatedMap[x + y * height] = 100;
                     }
                 }
             }
@@ -115,15 +123,15 @@ namespace Logic.Game.Classes
 
         public int GetTileID(int layer, int x, int y)
         {
-            var paramsAreInvalid = layer < 0 || layer >= gameModel.Map.MapLayers.Count ||
-                x < 0 || x >= gameModel.Map.Width ||
-                y < 0 || y >= gameModel.Map.Height;
+            var paramsAreInvalid = layer < 0 || layer >= gameModel.CurrentMap.MapLayers.Count ||
+                x < 0 || x >= gameModel.CurrentMap.Width ||
+                y < 0 || y >= gameModel.CurrentMap.Height;
 
-            return paramsAreInvalid ? -1 : gameModel.Map.MapLayers[layer][y * (int)gameModel.Map.Width + x];
+            return paramsAreInvalid ? -1 : gameModel.CurrentMap.MapLayers[layer][y * (int)gameModel.CurrentMap.Width + x];
         }
         public Vector2f GetTileWorldPosition(int x, int y)
         {
-            return new(x * gameModel.Map.TileWidth, y * gameModel.Map.TileHeight);
+            return new(x * gameModel.CurrentMap.TileWidth, y * gameModel.CurrentMap.TileHeight);
         }
 
         public override string ToString()
@@ -176,6 +184,45 @@ namespace Logic.Game.Classes
             var texCoordsX = id % tilesetWidth;
             var texCoordsY = id / tilesetWidth;
             return new Vector2f(texCoordsX * map.TileWidth, texCoordsY * map.TileHeight);
+        }
+
+        public List<Vector2f> GetTileIdCoordinatesByMapLayer(TilemapModel map, int layer, List<int> tileIds)
+        {
+            var points = new List<Vector2f>();
+
+            // Get all tile coordinates by tile id from tileIds
+            for (int y = 0; y < map.Height; y++)
+            {
+                for (int x = 0; x < map.Width; x++)
+                {
+                    var tileId = map.MapLayers[layer][y * (int)map.Width + x];
+                    if (tileIds.Contains(tileId))
+                    {
+                        points.Add(new Vector2f(x, y));
+                    }
+                }
+            }
+            //for (int i = 0; i < map.MapLayers[layer].Length; i++)
+            //{
+            //    for (int t = 0; t < tileIds.Count; t++)
+            //    {
+            //        var tileId = map.MapLayers[layer][i];
+            //        var safeTileId = tileIds[t];
+            //        if (tileId == safeTileId)
+            //        {
+            //            var textureCoordinate = GetTextureCoordinatesByTileID(map, tileIds[t]);
+            //            points.Add(textureCoordinate);
+            //        }
+            //    }
+            //}
+
+            return points;
+        }
+
+        public List<int> GetSafeTileIDs()
+        {
+            var safeIDs = gameModel.CurrentMap.MapLayers[COLLISION_LAYER].Except(gameModel.CurrentMap.CollidableIDs).ToList();
+            return safeIDs;
         }
     }
 }

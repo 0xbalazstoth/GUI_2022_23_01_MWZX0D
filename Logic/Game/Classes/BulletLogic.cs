@@ -66,22 +66,22 @@ namespace Logic.Game.Classes
             {
                 var xTileposition = bullet.Bullet.Position.X;
                 var yTileposition = bullet.Bullet.Position.Y;
-                var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
+                var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.CurrentMap.TileSize.X), (int)((int)yTileposition / gameModel.CurrentMap.TileSize.Y));
 
-                if (tilePosition.X < 0 || tilePosition.X > gameModel.Map.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.Map.Size.Y)
+                if (tilePosition.X < 0 || tilePosition.X > gameModel.CurrentMap.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.CurrentMap.Size.Y)
                 {
                     gameModel.Player.Gun.Bullets.Remove(bullet);
                     return;
                 }
 
                 var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                if (gameModel.CurrentMap.CollidableIDs.Contains(currentTileID) == false)
                 {
                     continue;
                 }
 
                 var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.CurrentMap.TileSize.X, gameModel.CurrentMap.TileSize.Y);
                 var rect = bullet.Bullet.GetGlobalBounds();
 
                 if (rect.Intersects(tileRect))
@@ -113,7 +113,7 @@ namespace Logic.Game.Classes
                 float distX = gameModel.Player.Gun.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
                 float distY = gameModel.Player.Gun.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
 
-                if (Math.Sqrt(distX * distX + distY * distY) > 600)
+                if (Math.Sqrt(distX * distX + distY * distY) > gameModel.CurrentMap.GetMapWidth)
                 {
                     gameModel.Player.Gun.Bullets.RemoveAt(i);
                 }
@@ -131,7 +131,7 @@ namespace Logic.Game.Classes
                     float distX = enemy.Gun.Bullets[i].Bullet.Position.X - gameModel.Player.Center.X;
                     float distY = enemy.Gun.Bullets[i].Bullet.Position.Y - gameModel.Player.Center.Y;
 
-                    if (Math.Sqrt(distX * distX + distY * distY) > 600)
+                    if (Math.Sqrt(distX * distX + distY * distY) > gameModel.CurrentMap.GetMapWidth)
                     {
                         enemy.Gun.Bullets.RemoveAt(i);
                     }
@@ -156,22 +156,22 @@ namespace Logic.Game.Classes
                 {
                     var xTileposition = bullet.Bullet.Position.X;
                     var yTileposition = bullet.Bullet.Position.Y;
-                    var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.Map.TileSize.X), (int)((int)yTileposition / gameModel.Map.TileSize.Y));
+                    var tilePosition = new Vector2i((int)((int)xTileposition / gameModel.CurrentMap.TileSize.X), (int)((int)yTileposition / gameModel.CurrentMap.TileSize.Y));
 
-                    if (tilePosition.X < 0 || tilePosition.X > gameModel.Map.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.Map.Size.Y)
+                    if (tilePosition.X < 0 || tilePosition.X > gameModel.CurrentMap.Size.X || tilePosition.Y < 0 || tilePosition.Y > gameModel.CurrentMap.Size.Y)
                     {
                         enemy.Gun.Bullets.Remove(bullet);
                         return;
                     }
 
                     var currentTileID = tilemapLogic.GetTileID(TilemapLogic.COLLISION_LAYER, tilePosition.X, tilePosition.Y);
-                    if (gameModel.Map.CollidableIDs.Contains(currentTileID) == false)
+                    if (gameModel.CurrentMap.CollidableIDs.Contains(currentTileID) == false)
                     {
                         continue;
                     }
 
                     var currentTileWorldPosition = tilemapLogic.GetTileWorldPosition(tilePosition.X, tilePosition.Y);
-                    var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.Map.TileSize.X, gameModel.Map.TileSize.Y);
+                    var tileRect = new FloatRect(currentTileWorldPosition.X, currentTileWorldPosition.Y, gameModel.CurrentMap.TileSize.X, gameModel.CurrentMap.TileSize.Y);
                     var rect = bullet.Bullet.GetGlobalBounds();
 
                     if (rect.Intersects(tileRect))

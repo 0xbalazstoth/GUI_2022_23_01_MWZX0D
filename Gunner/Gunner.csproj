@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="127_silent_speaker_volume_mute-512_118314.png" />
     <None Remove="Assets\Fonts\FreeMono.ttf" />
     <None Remove="Assets\Fonts\VT323.ttf" />
     <None Remove="Assets\Sounds\coin.ogg" />
@@ -23,7 +24,12 @@
     <None Remove="Assets\Sounds\gameplaymusic9.ogg" />
     <None Remove="Assets\Sounds\gun_empty.ogg" />
     <None Remove="Assets\Sounds\gun_reload.ogg" />
+    <None Remove="Assets\Sounds\menuMusic.ogg" />
     <None Remove="Assets\Sounds\pistol.ogg" />
+    <None Remove="Assets\Textures\arrow_keys.png" />
+    <None Remove="Assets\Textures\bossMap.tmx" />
+    <None Remove="Assets\Textures\boss_move_left.png" />
+    <None Remove="Assets\Textures\boss_move_right.png" />
     <None Remove="Assets\Textures\bullet_sheet.png" />
     <None Remove="Assets\Textures\chest.png" />
     <None Remove="Assets\Textures\coin.png" />
@@ -31,11 +37,15 @@
     <None Remove="Assets\Textures\cursor.png" />
     <None Remove="Assets\Textures\enemy1_move_left.png" />
     <None Remove="Assets\Textures\enemy1_move_right.png" />
+    <None Remove="Assets\Textures\enemy_boss_left.png" />
+    <None Remove="Assets\Textures\enemy_boss_right.png" />
     <None Remove="Assets\Textures\enemy_eye_ball.png" />
     <None Remove="Assets\Textures\enemy_eye_left.png" />
     <None Remove="Assets\Textures\enemy_eye_right.png" />
     <None Remove="Assets\Textures\enemy_move_left.png" />
     <None Remove="Assets\Textures\enemy_move_right.png" />
+    <None Remove="Assets\Textures\enemy_zombie_right.png" />
+    <None Remove="Assets\Textures\gate.png" />
     <None Remove="Assets\Textures\health_potion.png" />
     <None Remove="Assets\Textures\health_potion_sheet.png" />
     <None Remove="Assets\Textures\heart.png" />
@@ -47,17 +57,18 @@
     <None Remove="Assets\Textures\move_left.png" />
     <None Remove="Assets\Textures\move_right.png" />
     <None Remove="Assets\Textures\move_up.png" />
+    <None Remove="Assets\Textures\mute.png" />
     <None Remove="Assets\Textures\pistol.png" />
     <None Remove="Assets\Textures\player.png" />
     <None Remove="Assets\Textures\shotgun.png" />
     <None Remove="Assets\Textures\speed_potion.png" />
     <None Remove="Assets\Textures\speed_potion_sheet.png" />
     <None Remove="Assets\Textures\tilemap.png" />
+    <None Remove="Assets\Textures\unmute.png" />
     <None Remove="csfml-Audio.dll" />
     <None Remove="csfml-Graphics.dll" />
     <None Remove="csfml-System.dll" />
     <None Remove="csfml-Window.dll" />
-    <None Remove="menu.png" />
     <None Remove="openal32.dll" />
     <None Remove="splash_screen.png" />
   </ItemGroup>
@@ -105,7 +116,16 @@
     <Content Include="Assets\Sounds\gun_reload.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Sounds\menuMusic.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Sounds\pistol.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\arrow_keys.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\bossMap.tmx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\bullet_sheet.png">
@@ -120,10 +140,19 @@
     <Content Include="Assets\Textures\cursor.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\enemy_boss_left.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\enemy_boss_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\enemy_eye_left.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\enemy_eye_right.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\gate.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\health_potion.png">
@@ -159,6 +188,9 @@
     <Content Include="Assets\Textures\move_up.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\mute.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\pistol.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -175,6 +207,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\tilemap.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\unmute.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="csfml-Audio.dll">
@@ -221,7 +256,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="menu.png" />
     <Resource Include="splash_screen.png" />
   </ItemGroup>
 
