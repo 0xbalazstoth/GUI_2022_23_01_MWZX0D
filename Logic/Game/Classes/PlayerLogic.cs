@@ -335,6 +335,12 @@ namespace Logic.Game.Classes
                         gameModel.Player.CurrentHP += gameModel.Player.MaxHP - gameModel.Player.CurrentHP;
                     }
 
+                    if (gameModel.HealthPotionSound.Status == SoundStatus.Stopped)
+                    {
+                        gameModel.HealthPotionSound.Volume = 50;
+                        gameModel.HealthPotionSound.Play();
+                    }
+
                     RemoveItemFromInventory(item);
                 }
             }
@@ -344,6 +350,12 @@ namespace Logic.Game.Classes
                 {
                     gameModel.Player.IsSpeedPotionIsInUse = true;
                     gameModel.Player.LastPotionEffect = DateTime.Now;
+
+                    if (gameModel.SpeedPotionSound.Status == SoundStatus.Stopped)
+                    {
+                        gameModel.SpeedPotionSound.Volume = 50;
+                        gameModel.SpeedPotionSound.Play();
+                    }
 
                     RemoveItemFromInventory(item);
                 }
@@ -529,6 +541,12 @@ namespace Logic.Game.Classes
                     {
                         if (gameModel.Gates[i].GateState == GateState.InKillArena)
                         {
+                            if (gameModel.TeleportSound.Status == SoundStatus.Stopped)
+                            {
+                                gameModel.TeleportSound.Volume = 30;
+                                gameModel.TeleportSound.Play();
+                            }
+
                             gameModel.Player.PlayerState = GateState.InKillArena;
 
                             gameModel.CurrentMap.Vertices = gameModel.KillArenaMap.Vertices;
@@ -571,6 +589,12 @@ namespace Logic.Game.Classes
                         { 
                             if (gameModel.Gates[i].GateState == GateState.InBossArena)
                             {
+                                if (gameModel.TeleportSound.Status == SoundStatus.Stopped)
+                                {
+                                    gameModel.TeleportSound.Volume = 30;
+                                    gameModel.TeleportSound.Play();
+                                }
+
                                 gameModel.Player.PlayerState = GateState.InBossArena;
 
                                 gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
@@ -609,11 +633,23 @@ namespace Logic.Game.Classes
 
                         if (gameModel.Gates[i].GateState == GateState.InShop)
                         {
+                            if (gameModel.TeleportSound.Status == SoundStatus.Stopped)
+                            { 
+                                gameModel.TeleportSound.Volume = 30;
+                                gameModel.TeleportSound.Play();
+                            }
+
                             gameModel.Player.PlayerState = GateState.InShop;
                         }
 
                         if (gameModel.Gates[i].GateState == GateState.InLobby)
                         {
+                            if (gameModel.TeleportSound.Status == SoundStatus.Stopped)
+                            {
+                                gameModel.TeleportSound.Volume = 30;
+                                gameModel.TeleportSound.Play();
+                            }
+
                             gameModel.Player.PlayerState = GateState.InLobby;
 
                             gameModel.CurrentMap.Vertices = gameModel.LobbyMap.Vertices;

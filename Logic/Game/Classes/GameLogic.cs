@@ -28,22 +28,21 @@ namespace Logic.Game.Classes
         private ITilemapLogic tilemapLogic;
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
-        private IObjectEntityLogic objectEntityLogic;
         private IBulletLogic bulletLogic;
 
         private Clock deltaTimeClock;
         private float deltaTime;
+        private Music music;
 
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic, IBulletLogic bulletLogic)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IBulletLogic bulletLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
             this.playerLogic = playerLogic;
             this.enemyLogic = enemyLogic;
-            this.objectEntityLogic = objectEntityLogic;
             this.bulletLogic = bulletLogic;
 
             deltaTimeClock = new Clock();
@@ -70,10 +69,8 @@ namespace Logic.Game.Classes
             enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f, 1500);
 
             //gameModel.Musics = new List<Music>();
-            //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
-            //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
-
-            Music();
+            //gameModel.Musics.Add(new Music("Assets/Sounds/music1.ogg"));
+            //Music();
 
             var spawnPoints = GetSafeSpawnPoints();
             Random rnd = new Random();
@@ -84,6 +81,25 @@ namespace Logic.Game.Classes
             gameModel.Player.PlayerState = GateState.InLobby;
 
             CreateMaps();
+
+            music = new Music("Assets/Sounds/music1.ogg");
+            music.Volume = 50;
+            music.Play();
+
+            gameModel.TeleportSoundBuffer = new SoundBuffer("Assets/Sounds/teleport.ogg");
+            gameModel.TeleportSound = new Sound(gameModel.TeleportSoundBuffer);
+
+            gameModel.GameOverSoundBuffer = new SoundBuffer("Assets/Sounds/gameover.ogg");
+            gameModel.GameOverSound = new Sound(gameModel.GameOverSoundBuffer);
+
+            gameModel.SpeedPotionSoundBuffer = new SoundBuffer("Assets/Sounds/speed.ogg");
+            gameModel.SpeedPotionSound = new Sound(gameModel.SpeedPotionSoundBuffer);
+
+            gameModel.HealthPotionSoundBuffer = new SoundBuffer("Assets/Sounds/health.ogg");
+            gameModel.HealthPotionSound = new Sound(gameModel.HealthPotionSoundBuffer);
+
+            gameModel.GameWonSoundBuffer = new SoundBuffer("Assets/Sounds/won.ogg");
+            gameModel.GameWonSound = new Sound(gameModel.GameWonSoundBuffer);
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -298,6 +314,8 @@ namespace Logic.Game.Classes
         {
             deltaTime = deltaTimeClock.ElapsedTime.AsSeconds();
             deltaTimeClock.Restart();
+
+            music.Loop = true;
         }
 
         public void UpdateCamera(View cameraView)
@@ -341,6 +359,8 @@ namespace Logic.Game.Classes
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
                 // Set random position for item
+                // Spawn items at random position with random distance each other
+
                 coinItem.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
                 //coinItem.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.CurrentMap.GetMapHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
@@ -445,12 +465,23 @@ namespace Logic.Game.Classes
 
         public void Music()
         {
-            //if (gameModel.Music == null)
+            //Music music = new Music("Assets/Sounds/music1.ogg");
+            //music.Loop = true;
+            //music.Volume = 50;
+            //music.Play();
+
+            //if (gameModel.Musics == null)
             //{
-            //    gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
-            //    gameModel.Music.Loop = true;
-            //    gameModel.Music.Volume = 50;
-            //    gameModel.Music.Play();
+            //    //gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
+            //    //gameModel.Music.Loop = true;
+            //    //gameModel.Music.Volume = 50;
+            //    //gameModel.Music.Play();
+
+            //    Music music = new Music("Resources/Music/music1.ogg");
+            //    music.Loop = true;
+            //    music.Volume = 50;
+            //    music.Play();
+
             //}
             //foreach (var music in gameModel.Musics)
             //{
@@ -727,6 +758,24 @@ namespace Logic.Game.Classes
             inventory.OutlineColor = Color.Black;
             inventory.OutlineThickness = 2;
             gameModel.SettingsTexts.Add(inventory);
+        }
+
+        public void PlayGameOverSound()
+        {
+            if (gameModel.GameOverSound.Status == SoundStatus.Stopped)
+            {
+                gameModel.GameOverSound.Volume = 70;
+                gameModel.GameOverSound.Play();
+            }
+        }
+
+        public void PlayGameWonSound()
+        {
+            if (gameModel.GameWonSound.Status == SoundStatus.Stopped)
+            {
+                gameModel.GameWonSound.Volume = 70;
+                gameModel.GameWonSound.Play();
+            }
         }
     }
 }

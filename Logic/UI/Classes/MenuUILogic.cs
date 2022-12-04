@@ -1,10 +1,13 @@
 ﻿using Logic.UI.Interfaces;
 using Model.Game.Enums;
 using Model.UI.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,26 +54,67 @@ namespace Logic.UI.Classes
             selectedMainMenuItemIndex = 0;
             selectedPauseMenuItemIndex = 0;
             menuUIModel.SelectedMenuOptionState = MenuOptionsState.InMainMenu;
+
+            menuUIModel.SelectSoundBuffer = new SoundBuffer("Assets/Sounds/menu_select.ogg");
+            menuUIModel.SelectSound = new Sound(menuUIModel.SelectSoundBuffer);
+
+            menuUIModel.ConfirmSoundBuffer = new SoundBuffer("Assets/Sounds/menu_confirm.ogg");
+            menuUIModel.ConfirmSound = new Sound(menuUIModel.ConfirmSoundBuffer);
+
+            menuUIModel.PauseSoundBuffer = new SoundBuffer("Assets/Sounds/menu_pause.ogg");
+            menuUIModel.PauseSound = new Sound(menuUIModel.PauseSoundBuffer);
         }
 
         #region Main menu
-        public void UpdateMainMenu(Vector2u windowSize)
+        public void UpdateMainMenu(RenderWindow window)
         {
             // Place game name text in the top center of the screen
-            menuUIModel.GameNameText.Position = new Vector2f(windowSize.X / 2 - menuUIModel.GameNameText.GetLocalBounds().Width / 2, 50);
+            menuUIModel.GameNameText.Position = new Vector2f(window.Size.X / 2 - menuUIModel.GameNameText.GetLocalBounds().Width / 2, 50);
+            var mouse = Mouse.GetPosition(window);
 
             for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
             {
                 // Center horizontally and vertically
-                menuUIModel.MainMenuTexts[i].Position = new Vector2f(windowSize.X / 2 - menuUIModel.MainMenuTexts[i].GetLocalBounds().Width / 2, menuUIModel.GameNameText.Position.Y + windowSize.Y / (MAIN_MENU_MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
+                menuUIModel.MainMenuTexts[i].Position = new Vector2f(window.Size.X / 2 - menuUIModel.MainMenuTexts[i].GetLocalBounds().Width / 2, menuUIModel.GameNameText.Position.Y + window.Size.Y / (MAIN_MENU_MAX_NUMBER_OF_ITEMS + 1) * (i + 1));
             }
 
             // Place arrow keys sprite in the bottom left of the screen
-            menuUIModel.ArrowKeysSprite.Position = new Vector2f(50, windowSize.Y - (menuUIModel.ArrowKeysSprite.GetLocalBounds().Height + 50));
+            menuUIModel.ArrowKeysSprite.Position = new Vector2f(50, window.Size.Y - (menuUIModel.ArrowKeysSprite.GetLocalBounds().Height + 50));
+
+            //for (int i = 0; i < menuUIModel.MainMenuTexts.Count; i++)
+            //{
+            //    float mouseX = mouse.X;
+            //    float mouseY = mouse.Y;
+            //    float textX = menuUIModel.MainMenuTexts[i].Position.X;
+            //    float textY = menuUIModel.MainMenuTexts[i].Position.Y;
+            //    float textXPosWidth = menuUIModel.MainMenuTexts[i].Position.X + menuUIModel.MainMenuTexts[i].GetLocalBounds().Width;
+            //    float textYPosHeight = menuUIModel.MainMenuTexts[i].Position.Y + menuUIModel.MainMenuTexts[i].GetLocalBounds().Height;
+
+            //    // Check if mouse is hovering over the text
+            //    if (mouseX < textXPosWidth && mouseX > textX && mouseY < textYPosHeight && mouseY > textY)
+            //    {
+            //        // Change color of the text
+            //        menuUIModel.MainMenuTexts[i].FillColor = selectionColor;
+
+            //        // Check if mouse is clicked
+            //        if (Mouse.IsButtonPressed(Mouse.Button.Left))
+            //        {
+            //            selectedMainMenuItemIndex = i;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // Change color of the text
+            //        menuUIModel.MainMenuTexts[i].FillColor = Color.White;
+            //    }
+            //}
         }
 
         public void MoveUpMainMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+
             // Move up
             if (selectedMainMenuItemIndex - 1 >= 0)
             {
@@ -82,6 +126,9 @@ namespace Logic.UI.Classes
 
         public void MoveDownMainMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+
             // Move down
             if (selectedMainMenuItemIndex + 1 < MAIN_MENU_MAX_NUMBER_OF_ITEMS)
             {
@@ -93,6 +140,9 @@ namespace Logic.UI.Classes
 
         public MenuOptionsState GetSelectedMainMenuOption()
         {
+            menuUIModel.ConfirmSound.Volume = 30;
+            menuUIModel.ConfirmSound.Play();
+
             if (selectedMainMenuItemIndex == 0)
             {
                 return MenuOptionsState.NewGame;
@@ -130,6 +180,9 @@ namespace Logic.UI.Classes
 
         public void MoveUpPauseMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+            
             // Move up
             if (selectedPauseMenuItemIndex - 1 >= 0)
             {
@@ -141,6 +194,9 @@ namespace Logic.UI.Classes
 
         public void MoveDownPauseMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+
             // Move down
             if (selectedPauseMenuItemIndex + 1 < PAUSE_MENU_MAX_NUMBER_OF_ITEMS)
             {
@@ -152,6 +208,9 @@ namespace Logic.UI.Classes
 
         public MenuOptionsState GetSelectedPauseMenuOption()
         {
+            menuUIModel.ConfirmSound.Volume = 30;
+            menuUIModel.ConfirmSound.Play();
+
             if (selectedPauseMenuItemIndex == 0)
             {
                 return MenuOptionsState.InGame;
@@ -163,6 +222,15 @@ namespace Logic.UI.Classes
             else
             {
                 return MenuOptionsState.QuitGame;
+            }
+        }
+
+        public void PlayPauseSound()
+        {
+            if (menuUIModel.PauseSound.Status == SoundStatus.Stopped)
+            {
+                menuUIModel.PauseSound.Volume = 30;
+                menuUIModel.PauseSound.Play();
             }
         }
         #endregion

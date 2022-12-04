@@ -27,5 +27,7 @@ namespace Logic.Game.Interfaces
         void CameraEdges();
         List<Vector2f> GetSafeSpawnPoints();
         void CreateMaps();
+        void PlayGameOverSound();
+        void PlayGameWonSound();
     }
 }
