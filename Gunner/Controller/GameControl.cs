@@ -6,6 +6,7 @@ using Model.Game.Enums;
 using Model.UI.Interfaces;
 using Repository.Classes;
 using Repository.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -122,6 +123,8 @@ namespace Gunner.Controller
             {
                 if (eventKey.Key == System.Windows.Input.Key.Escape)
                 {
+                    menuUILogic.PlayPauseSound();
+
                     gameModel.Player.IsFocusedInGame = !gameModel.Player.IsFocusedInGame;
                     if (!gameModel.Player.IsFocusedInGame)
                     {

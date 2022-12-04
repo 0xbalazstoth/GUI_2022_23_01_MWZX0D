@@ -34,5 +34,15 @@ namespace Model.Game.Classes
         public List<GateModel> Gates { get; set; }
         public List<Text> CreatorTexts { get; set; }
         public List<Text> SettingsTexts { get; set; }
+        public SoundBuffer TeleportSoundBuffer { get; set; }
+        public Sound TeleportSound { get; set; }
+        public SoundBuffer GameOverSoundBuffer { get; set; }
+        public Sound GameOverSound { get; set; }
+        public SoundBuffer SpeedPotionSoundBuffer { get; set; }
+        public Sound SpeedPotionSound { get; set; }
+        public SoundBuffer HealthPotionSoundBuffer { get; set; }
+        public Sound HealthPotionSound { get; set; }
+        public SoundBuffer GameWonSoundBuffer { get; set; }
+        public Sound GameWonSound { get; set; }
     }
 }

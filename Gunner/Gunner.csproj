@@ -13,10 +13,13 @@
     <None Remove="Assets\Fonts\FreeMono.ttf" />
     <None Remove="Assets\Fonts\VT323.ttf" />
     <None Remove="Assets\Sounds\coin.ogg" />
+    <None Remove="Assets\Sounds\gameover.ogg" />
     <None Remove="Assets\Sounds\gun_empty.ogg" />
     <None Remove="Assets\Sounds\gun_reload.ogg" />
+    <None Remove="Assets\Sounds\health.ogg" />
     <None Remove="Assets\Sounds\menuMusic.ogg" />
     <None Remove="Assets\Sounds\menu_cancel.ogg" />
+    <None Remove="Assets\Sounds\menu_confirm.ogg" />
     <None Remove="Assets\Sounds\menu_pause.ogg" />
     <None Remove="Assets\Sounds\menu_select.ogg" />
     <None Remove="Assets\Sounds\music1.ogg" />
@@ -31,6 +34,9 @@
     <None Remove="Assets\Sounds\shotgun_empty.ogg" />
     <None Remove="Assets\Sounds\shotgun_reload.ogg" />
     <None Remove="Assets\Sounds\shotgun_shot.ogg" />
+    <None Remove="Assets\Sounds\speed.ogg" />
+    <None Remove="Assets\Sounds\teleport.ogg" />
+    <None Remove="Assets\Sounds\won.ogg" />
     <None Remove="Assets\Textures\arrow_keys.png" />
     <None Remove="Assets\Textures\bossMap.tmx" />
     <None Remove="Assets\Textures\boss_move_left.png" />
@@ -88,10 +94,16 @@
     <Content Include="Assets\Sounds\coin.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Sounds\gameover.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\health.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Sounds\menuMusic.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sounds\menu_cancel.ogg">
+    <Content Include="Assets\Sounds\menu_confirm.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\menu_pause.ogg">
@@ -119,6 +131,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\shotgun_shot.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\speed.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\teleport.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\won.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\arrow_keys.png">

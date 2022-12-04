@@ -20,5 +20,9 @@ namespace Model.UI.Interfaces
         public Text GameNameText { get; set; }
         public SoundBuffer SelectSoundBuffer { get; set; }
         public Sound SelectSound { get; set; }
+        public SoundBuffer PauseSoundBuffer { get; set; }
+        public Sound PauseSound { get; set; }
+        public SoundBuffer ConfirmSoundBuffer { get; set; }
+        public Sound ConfirmSound { get; set; }
     }
 }

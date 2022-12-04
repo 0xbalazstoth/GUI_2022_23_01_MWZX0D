@@ -28,7 +28,6 @@ namespace Logic.Game.Classes
         private ITilemapLogic tilemapLogic;
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
-        private IObjectEntityLogic objectEntityLogic;
         private IBulletLogic bulletLogic;
 
         private Clock deltaTimeClock;
@@ -38,13 +37,12 @@ namespace Logic.Game.Classes
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
 
-        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IObjectEntityLogic objectEntityLogic, IBulletLogic bulletLogic)
+        public GameLogic(IGameModel gameModel, ITilemapLogic tilemapLogic, IPlayerLogic playerLogic, IEnemyLogic enemyLogic, IBulletLogic bulletLogic)
         {
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
             this.playerLogic = playerLogic;
             this.enemyLogic = enemyLogic;
-            this.objectEntityLogic = objectEntityLogic;
             this.bulletLogic = bulletLogic;
 
             deltaTimeClock = new Clock();
@@ -87,6 +85,21 @@ namespace Logic.Game.Classes
             music = new Music("Assets/Sounds/music1.ogg");
             music.Volume = 50;
             music.Play();
+
+            gameModel.TeleportSoundBuffer = new SoundBuffer("Assets/Sounds/teleport.ogg");
+            gameModel.TeleportSound = new Sound(gameModel.TeleportSoundBuffer);
+
+            gameModel.GameOverSoundBuffer = new SoundBuffer("Assets/Sounds/gameover.ogg");
+            gameModel.GameOverSound = new Sound(gameModel.GameOverSoundBuffer);
+
+            gameModel.SpeedPotionSoundBuffer = new SoundBuffer("Assets/Sounds/speed.ogg");
+            gameModel.SpeedPotionSound = new Sound(gameModel.SpeedPotionSoundBuffer);
+
+            gameModel.HealthPotionSoundBuffer = new SoundBuffer("Assets/Sounds/health.ogg");
+            gameModel.HealthPotionSound = new Sound(gameModel.HealthPotionSoundBuffer);
+
+            gameModel.GameWonSoundBuffer = new SoundBuffer("Assets/Sounds/won.ogg");
+            gameModel.GameWonSound = new Sound(gameModel.GameWonSoundBuffer);
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -745,6 +758,24 @@ namespace Logic.Game.Classes
             inventory.OutlineColor = Color.Black;
             inventory.OutlineThickness = 2;
             gameModel.SettingsTexts.Add(inventory);
+        }
+
+        public void PlayGameOverSound()
+        {
+            if (gameModel.GameOverSound.Status == SoundStatus.Stopped)
+            {
+                gameModel.GameOverSound.Volume = 70;
+                gameModel.GameOverSound.Play();
+            }
+        }
+
+        public void PlayGameWonSound()
+        {
+            if (gameModel.GameWonSound.Status == SoundStatus.Stopped)
+            {
+                gameModel.GameWonSound.Volume = 70;
+                gameModel.GameWonSound.Play();
+            }
         }
     }
 }

@@ -92,7 +92,6 @@ namespace Gunner
         private ITilemapLogic tilemapLogic;
         private IPlayerLogic playerLogic;
         private IEnemyLogic enemyLogic;
-        private IObjectEntityLogic chestLogic;
         private IBulletLogic bulletLogic;
         private IAnimationLogic animationLogic;
 
@@ -137,7 +136,7 @@ namespace Gunner
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic);
             this.enemyLogic = new EnemyLogic(gameModel, tilemapLogic);
 
-            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, chestLogic, bulletLogic);
+            this.gameLogic = new GameLogic(gameModel, tilemapLogic, playerLogic, enemyLogic, bulletLogic);
             this.gameUILogic = new GameUILogic(gameUIModel, gameModel);
             this.menuUILogic = new MenuUILogic(menuUIModel);
 
@@ -148,17 +147,8 @@ namespace Gunner
             this.menuUIRenderer = new MenuUIRenderer(menuUIModel, "Assets/Fonts", "VT323.ttf");
 
             InitSystem();
-            InitGameplay();
 
             this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel, saveHandler);
-        }
-        
-        private void InitGameplay()
-        {
-            chestLogic = new ObjectEntityLogic(gameModel);
-            chestLogic.LoadTexture("Assets/Textures/chest.png");
-
-            (gameModel.Objects[0] as ChestModel).Position = new Vector2f(100, 100);
         }
 
         private void InitSystem()
@@ -305,11 +295,13 @@ namespace Gunner
 
                 if (gameModel.Player.IsDead)
                 {
+                    gameLogic.PlayGameOverSound();
                     gameUILogic.UpdateGameOverText(window);
                 }
 
                 if (gameModel.Player.IsGameWon)
                 {
+                    gameLogic.PlayGameWonSound();
                     gameUILogic.UpdateGameWonText(window);
                 }
 

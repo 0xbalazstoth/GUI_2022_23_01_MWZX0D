@@ -57,6 +57,12 @@ namespace Logic.UI.Classes
 
             menuUIModel.SelectSoundBuffer = new SoundBuffer("Assets/Sounds/menu_select.ogg");
             menuUIModel.SelectSound = new Sound(menuUIModel.SelectSoundBuffer);
+
+            menuUIModel.ConfirmSoundBuffer = new SoundBuffer("Assets/Sounds/menu_confirm.ogg");
+            menuUIModel.ConfirmSound = new Sound(menuUIModel.ConfirmSoundBuffer);
+
+            menuUIModel.PauseSoundBuffer = new SoundBuffer("Assets/Sounds/menu_pause.ogg");
+            menuUIModel.PauseSound = new Sound(menuUIModel.PauseSoundBuffer);
         }
 
         #region Main menu
@@ -106,6 +112,9 @@ namespace Logic.UI.Classes
 
         public void MoveUpMainMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+
             // Move up
             if (selectedMainMenuItemIndex - 1 >= 0)
             {
@@ -117,6 +126,9 @@ namespace Logic.UI.Classes
 
         public void MoveDownMainMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+
             // Move down
             if (selectedMainMenuItemIndex + 1 < MAIN_MENU_MAX_NUMBER_OF_ITEMS)
             {
@@ -128,8 +140,8 @@ namespace Logic.UI.Classes
 
         public MenuOptionsState GetSelectedMainMenuOption()
         {
-            menuUIModel.SelectSound.Volume = 30;
-            menuUIModel.SelectSound.Play();
+            menuUIModel.ConfirmSound.Volume = 30;
+            menuUIModel.ConfirmSound.Play();
 
             if (selectedMainMenuItemIndex == 0)
             {
@@ -168,6 +180,9 @@ namespace Logic.UI.Classes
 
         public void MoveUpPauseMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+            
             // Move up
             if (selectedPauseMenuItemIndex - 1 >= 0)
             {
@@ -179,6 +194,9 @@ namespace Logic.UI.Classes
 
         public void MoveDownPauseMenu()
         {
+            menuUIModel.SelectSound.Volume = 30;
+            menuUIModel.SelectSound.Play();
+
             // Move down
             if (selectedPauseMenuItemIndex + 1 < PAUSE_MENU_MAX_NUMBER_OF_ITEMS)
             {
@@ -190,6 +208,9 @@ namespace Logic.UI.Classes
 
         public MenuOptionsState GetSelectedPauseMenuOption()
         {
+            menuUIModel.ConfirmSound.Volume = 30;
+            menuUIModel.ConfirmSound.Play();
+
             if (selectedPauseMenuItemIndex == 0)
             {
                 return MenuOptionsState.InGame;
@@ -201,6 +222,15 @@ namespace Logic.UI.Classes
             else
             {
                 return MenuOptionsState.QuitGame;
+            }
+        }
+
+        public void PlayPauseSound()
+        {
+            if (menuUIModel.PauseSound.Status == SoundStatus.Stopped)
+            {
+                menuUIModel.PauseSound.Volume = 30;
+                menuUIModel.PauseSound.Play();
             }
         }
         #endregion
