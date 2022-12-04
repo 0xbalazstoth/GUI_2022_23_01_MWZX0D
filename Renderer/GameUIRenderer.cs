@@ -40,11 +40,6 @@ namespace Renderer
 
             gameModel.Player.HPText.Font = uiModel.Font;
 
-            for (int i = 0; i < gameModel.Enemies.Count; i++)
-            {
-                gameModel.Enemies[i].HPText.Font = uiModel.Font;
-            }
-
             for (int i = 0; i < gameModel.Gates.Count; i++)
             {
                 for (int j = 0; j < gameModel.Gates[i].GateTexts.Count; j++)

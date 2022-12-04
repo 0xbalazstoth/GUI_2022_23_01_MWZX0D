@@ -614,7 +614,7 @@ namespace Logic.Game.Classes
                                 }
 
                                 // Remove every enemy except boss type
-                                gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
+                                //gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
 
                                 for (int j = 0; j < gameModel.Enemies.Count; j++)
                                 {
@@ -626,7 +626,7 @@ namespace Logic.Game.Classes
                                     {
                                         gameModel.Enemies[j].CanSpawn = false;
                                     }
-                                } 
+                                }
                             }
                         }
 
