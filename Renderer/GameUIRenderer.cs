@@ -36,6 +36,7 @@ namespace Renderer
             uiModel.PlayerKillCountText.Font = uiModel.Font;
             uiModel.PlayerDeathCountText.Font = uiModel.Font;
             uiModel.GameOverText.Font = uiModel.Font;
+            uiModel.GameWonText.Font = uiModel.Font;
 
             gameModel.Player.HPText.Font = uiModel.Font;
 
@@ -65,7 +66,7 @@ namespace Renderer
 
         public void Draw(RenderTarget window)
         {
-            if (gameModel.Player.IsDead == false)
+            if (gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
             {
                 window.Draw(DrawableFPSText());
                 window.Draw(DrawableAmmoText());
@@ -82,9 +83,15 @@ namespace Renderer
                 window.Draw(DrawablePlayerKillCountText());
                 window.Draw(DrawablePlayerDeathCountText());
             }
-            else
+            
+            if (gameModel.Player.IsDead == true)
             {
                 window.Draw(DrawableGameOverText());
+            }
+
+            if (gameModel.Player.IsGameWon)
+            {
+                window.Draw(DrawableGameWonText());
             }
         }
 
@@ -136,6 +143,11 @@ namespace Renderer
         private Drawable DrawablePlayerDeathCountText()
         {
             return uiModel.PlayerDeathCountText;
+        }
+
+        private Drawable DrawableGameWonText()
+        {
+            return uiModel.GameWonText;
         }
     }
 }

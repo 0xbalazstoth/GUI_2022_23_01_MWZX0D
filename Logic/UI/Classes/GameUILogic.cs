@@ -39,6 +39,7 @@ namespace Model.Tools
             uiModel.PlayerKillCountText = new Text();
             uiModel.GameOverText = new Text();
             uiModel.PlayerDeathCountText = new Text();
+            uiModel.GameWonText = new Text();
 
             uiModel.FPSText.FillColor = Color.Red;
             uiModel.FPSText.Position = new Vector2f(10, 10);
@@ -74,6 +75,9 @@ namespace Model.Tools
             uiModel.PlayerDeathCountText.FillColor = Color.Red;
             uiModel.PlayerDeathCountText.Position = new Vector2f(10, 180);
             uiModel.PlayerDeathCountText.CharacterSize = 28;
+
+            uiModel.GameWonText.FillColor = Color.White;
+            uiModel.GameWonText.CharacterSize = 90;
         }
 
         public void UpdateFPS(float dt)
@@ -133,6 +137,12 @@ namespace Model.Tools
         public void UpdateDeathCountText()
         {
             uiModel.PlayerDeathCountText.DisplayedString = $"Deaths: {gameModel.Player.DeathCounter}";
+        }
+
+        public void UpdateGameWonText(RenderWindow window)
+        {
+            uiModel.GameWonText.DisplayedString = "You won! press SPACE to restart game!";
+            uiModel.GameWonText.Position = new Vector2f((window.Size.X / 2) - (uiModel.GameWonText.GetGlobalBounds().Width / 2), (window.Size.Y / 2) - (uiModel.GameWonText.GetGlobalBounds().Height / 2));
         }
     }
 }

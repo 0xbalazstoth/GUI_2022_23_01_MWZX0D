@@ -225,7 +225,7 @@ namespace Logic.Game.Classes
                     tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
 
                     tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
-                    tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+                    tempBullet.Animations.Add(GunType.Rifle, new AnimationModel()
                     {
                         Row = 0,
                         ColumnsInRow = 8,
@@ -289,40 +289,52 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance)
+        public void CreateEnemies(EnemyType enemyType, int damage, int maxAmmo, int spawnCount, float sightDistance, int maxHP)
         {
             for (int i = 0; i < spawnCount; i++)
             {
                 EnemyModel enemy = new EnemyModel();
-                if (enemyType == EnemyType.Boss)
-                {
-                    enemy.Position = new Vector2f(1500f, 500f);
-                }
-                else
-                { 
-                    enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
-                }
-                enemy.Speed = 30f;
+                
                 enemy.SightDistance = sightDistance;
                 enemy.Gun = new GunModel();
-                enemy.Gun.GunType = Model.Game.Enums.GunType.Pistol;
+                enemy.Hitbox = new RectangleShape();
+
+                if (enemyType == EnemyType.Boss)
+                {
+                    enemy.Speed = 90f;
+
+                    enemy.Position = new Vector2f(1500f, 500f);
+                    enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(500);
+                    enemy.Gun.ReloadTime = TimeSpan.FromSeconds(4);
+                }
+                else
+                {
+                    enemy.Speed = 50f;
+
+                    enemy.Position = new Vector2f(new Random().Next(400, (int)(gameModel.CurrentMap.GetMapWidth - gameModel.CurrentMap.TileWidth)), new Random().Next(400, (int)(gameModel.CurrentMap.GetMapHeight - gameModel.CurrentMap.TileHeight)));
+                    enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(750);
+                    enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
+                }
+
+                enemy.Gun.GunType = Model.Game.Enums.GunType.Rifle;
                 enemy.Gun.Damage = damage;
                 enemy.Gun.MaxAmmo = maxAmmo;
                 enemy.Gun.Recoil = 5f;
-                enemy.Hitbox = new RectangleShape();
-                enemy.Gun.ReloadTime = TimeSpan.FromSeconds(5);
+                
                 enemy.Gun.Scale = new Vector2f(2, 2);
-                enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
+                enemy.Gun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/rifle_shot.ogg");
                 enemy.Gun.ShootSound = new Sound(enemy.Gun.ShootSoundBuffer);
-                enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
+                enemy.Gun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/rifle_empty.ogg");
                 enemy.Gun.EmptySound = new Sound(enemy.Gun.EmptySoundBuffer);
-                enemy.Gun.FiringInterval = TimeSpan.FromMilliseconds(750);
+                
                 enemy.Gun.CurrentAmmo = enemy.Gun.MaxAmmo;
-                enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
+                enemy.Gun.ReloadSoundBuffer = new("Assets/Sounds/rifle_reload.ogg");
                 enemy.Gun.ReloadSound = new Sound(enemy.Gun.ReloadSoundBuffer);
                 enemy.Gun.ShootSounds = new List<Sound>();
+
                 enemy.HPSprite = new Sprite();
                 enemy.HPText = new Text();
+                enemy.MaxHP = maxHP;
                 enemy.CurrentHP = enemy.MaxHP;
                 enemy.HPText.CharacterSize = 16;
                 enemy.HPText.FillColor = Color.Red;

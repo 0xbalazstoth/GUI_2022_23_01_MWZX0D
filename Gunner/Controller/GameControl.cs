@@ -31,14 +31,14 @@ namespace Gunner.Controller
         private ISaveHandler saveHandler;
         private IHighscoreHandler highscoreHandler;
 
-        public GameControl(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel)
+        public GameControl(IGameModel gameModel, IPlayerLogic playerLogic, IMenuUILogic menuUILogic, IMenuUIModel menuUIModel, ISaveHandler saveHandler)
         {
             this.gameModel = gameModel;
             this.playerLogic = playerLogic;
             this.menuUILogic = menuUILogic;
             this.menuUIModel = menuUIModel;
+            this.saveHandler = saveHandler;
 
-            this.saveHandler = new SaveHandler();
             this.highscoreHandler = new HighscoreHandler();
         }
 
@@ -82,7 +82,7 @@ namespace Gunner.Controller
 
         public void HandleInventoryInput(KeyEventArgs eventKey)
         {
-            if (gameModel.Player.IsDead == false)
+            if (gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
             { 
                 if (eventKey.Key == System.Windows.Input.Key.I)
                 {
@@ -118,7 +118,7 @@ namespace Gunner.Controller
 
         public void HandlePauseMenuInput(KeyEventArgs eventKey)
         {
-            if (gameModel.Player.IsDead == false)
+            if (gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
             {
                 if (eventKey.Key == System.Windows.Input.Key.Escape)
                 {
@@ -171,6 +171,19 @@ namespace Gunner.Controller
             }
         }
 
+        public void HandleGameWonInput(KeyEventArgs eventKey)
+        {
+            if (gameModel.Player.IsGameWon)
+            {
+                if (eventKey.Key == System.Windows.Input.Key.Space)
+                {
+                    // Restart app
+                    Application.Current.Shutdown();
+                    System.Windows.Forms.Application.Restart();
+                }
+            }
+        }
+
         public void HandleMainMenuInput(KeyEventArgs eventKey)
         {
             if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.InMainMenu)
@@ -199,6 +212,10 @@ namespace Gunner.Controller
                         {
                             menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InGame;
                             gameModel.Player.Name = newGameWindow.PlayerName;
+                        }
+                        else
+                        {
+                            menuUIModel.SelectedMenuOptionState = Model.Game.Enums.MenuOptionsState.InMainMenu;
                         }
                     }
                     else if (menuUIModel.SelectedMenuOptionState == Model.Game.Enums.MenuOptionsState.LoadGame)

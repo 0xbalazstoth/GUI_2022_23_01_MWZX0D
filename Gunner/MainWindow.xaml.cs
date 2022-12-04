@@ -12,6 +12,7 @@ using Model.UI.Classes;
 using Model.UI.Interfaces;
 using Renderer;
 using Repository.Classes;
+using Repository.Interfaces;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -100,6 +101,8 @@ namespace Gunner
         private IGameUILogic gameUILogic;
         private IMenuUILogic menuUILogic;
 
+        private ISaveHandler saveHandler;
+
         private IGameUIModel gameUIModel;
         private IMenuUIModel menuUIModel;
         
@@ -127,6 +130,8 @@ namespace Gunner
             this.gameUIModel = new GameUIModel();
             this.menuUIModel = new MenuUIModel();
 
+            this.saveHandler = new SaveHandler();
+
             this.tilemapLogic = new TilemapLogic(gameModel);
             this.bulletLogic = new BulletLogic(gameModel, tilemapLogic);
             this.playerLogic = new PlayerLogic(gameModel, tilemapLogic);
@@ -145,7 +150,7 @@ namespace Gunner
             InitSystem();
             InitGameplay();
 
-            this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel);
+            this.gameController = new GameControl(gameModel, playerLogic, menuUILogic, menuUIModel, saveHandler);
         }
         
         private void InitGameplay()
@@ -271,7 +276,7 @@ namespace Gunner
                     isInWindow = true;
                 }
 
-                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false)
+                if (isInWindow && gameModel.Player.IsFocusedInGame && gameModel.Player.IsDead == false && gameModel.Player.IsGameWon == false)
                 {
                     gameUILogic.UpdateFPS(gameLogic.GetDeltaTime);
                     animationLogic.Update(gameLogic.GetDeltaTime);
@@ -296,10 +301,19 @@ namespace Gunner
 
                     gameLogic.UpdateEnemies(window);
                 }
-                else if (gameModel.Player.IsDead)
+
+
+                if (gameModel.Player.IsDead)
                 {
                     gameUILogic.UpdateGameOverText(window);
                 }
+
+                if (gameModel.Player.IsGameWon)
+                {
+                    gameUILogic.UpdateGameWonText(window);
+                }
+
+                saveHandler.Save(gameModel.Player.Name, gameModel);
             }
         }
 
@@ -327,6 +341,7 @@ namespace Gunner
         {
             gameController.HandleInventoryInput(e);
             gameController.HandlePauseMenuInput(e);
+            gameController.HandleGameWonInput(e);
             gameController.HandleMainMenuInput(e);
             gameController.HandleRespawnInput(e);
             gameController.HandleGateInput(e);

@@ -17,6 +17,16 @@
     <None Remove="Assets\Sounds\gun_reload.ogg" />
     <None Remove="Assets\Sounds\menuMusic.ogg" />
     <None Remove="Assets\Sounds\pistol.ogg" />
+    <None Remove="Assets\Sounds\pistol_empty.ogg" />
+    <None Remove="Assets\Sounds\pistol_emtpy.ogg" />
+    <None Remove="Assets\Sounds\pistol_reload.ogg" />
+    <None Remove="Assets\Sounds\pistol_shot.ogg" />
+    <None Remove="Assets\Sounds\rifle_empty.ogg" />
+    <None Remove="Assets\Sounds\rifle_reload.ogg" />
+    <None Remove="Assets\Sounds\rifle_shot.ogg" />
+    <None Remove="Assets\Sounds\shotgun_empty.ogg" />
+    <None Remove="Assets\Sounds\shotgun_reload.ogg" />
+    <None Remove="Assets\Sounds\shotgun_shot.ogg" />
     <None Remove="Assets\Textures\arrow_keys.png" />
     <None Remove="Assets\Textures\bossMap.tmx" />
     <None Remove="Assets\Textures\boss_move_left.png" />
@@ -74,16 +84,25 @@
     <Content Include="Assets\Sounds\coin.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sounds\gun_empty.ogg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Sounds\gun_reload.ogg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\Sounds\menuMusic.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Sounds\pistol.ogg">
+    <Content Include="Assets\Sounds\rifle_empty.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\rifle_reload.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\rifle_shot.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\shotgun_empty.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\shotgun_reload.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\shotgun_shot.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\arrow_keys.png">

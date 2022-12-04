@@ -378,9 +378,9 @@ namespace Logic.Game.Classes
                         PushbackByRecoil(25f);
                     }
                     
-                    if (gameModel.Player.Gun.GunType == GunType.Pistol)
+                    if (gameModel.Player.Gun.GunType == GunType.Rifle)
                     {
-                        CreateTemporaryPistolBullet();
+                        CreateTemporaryRifleBullet();
                         PushbackByRecoil(10f);
                     }
 
@@ -407,7 +407,6 @@ namespace Logic.Game.Classes
                     if (gameModel.Player.Gun.EmptySound.Status == SoundStatus.Stopped)
                     {
                         gameModel.Player.Gun.EmptySound.Play();
-
                     }
                 }
             }
@@ -465,7 +464,7 @@ namespace Logic.Game.Classes
             gameModel.Player.Gun.Bullets.Add(shotgunBullets[2]);
         }
 
-        private void CreateTemporaryPistolBullet()
+        private void CreateTemporaryRifleBullet()
         {
             BulletModel tempBullet = new BulletModel();
             tempBullet.Bullet = new Sprite();
@@ -476,7 +475,7 @@ namespace Logic.Game.Classes
             tempBullet.Bullet.Scale = new Vector2f(0.5f, 0.5f);
 
             tempBullet.Animations = new Dictionary<GunType, AnimationModel>();
-            tempBullet.Animations.Add(GunType.Pistol, new AnimationModel()
+            tempBullet.Animations.Add(GunType.Rifle, new AnimationModel()
             {
                 Row = 0,
                 ColumnsInRow = 8,
@@ -568,41 +567,45 @@ namespace Logic.Game.Classes
                             }
                         }
 
-                        if (gameModel.Gates[i].GateState == GateState.InBossArena)
-                        {
-                            gameModel.Player.PlayerState = GateState.InBossArena;
-
-                            gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
-                            gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
-                            gameModel.CurrentMap.Width = gameModel.BossMap.Width;
-                            gameModel.CurrentMap.Height = gameModel.BossMap.Height;
-                            gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
-                            gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
-                            gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
-                            gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
-                            gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
-                            gameModel.Player.Position = new Vector2f(300f, 500f);
-
-                            for (int j = 0; j < gameModel.Gates.Count; j++)
+                        if (gameModel.Player.CurrentXP >= 200)
+                        { 
+                            if (gameModel.Gates[i].GateState == GateState.InBossArena)
                             {
-                                gameModel.Gates[j].IsGateReady = false;
+                                gameModel.Player.PlayerState = GateState.InBossArena;
+
+                                gameModel.CurrentMap.Vertices = gameModel.BossMap.Vertices;
+                                gameModel.CurrentMap.MapLayers = gameModel.BossMap.MapLayers;
+                                gameModel.CurrentMap.Width = gameModel.BossMap.Width;
+                                gameModel.CurrentMap.Height = gameModel.BossMap.Height;
+                                gameModel.CurrentMap.TileWidth = gameModel.BossMap.TileWidth;
+                                gameModel.CurrentMap.TileHeight = gameModel.BossMap.TileHeight;
+                                gameModel.CurrentMap.Size = new Vector2u(gameModel.BossMap.Width, gameModel.BossMap.Height);
+                                gameModel.CurrentMap.TileSize = new Vector2u(gameModel.BossMap.TileWidth, gameModel.BossMap.TileHeight);
+                                gameModel.CurrentMap.GateState = Model.Game.Enums.GateState.InBossArena;
+                                gameModel.Player.Position = new Vector2f(300f, 500f);
+
+                                for (int j = 0; j < gameModel.Gates.Count; j++)
+                                {
+                                    gameModel.Gates[j].IsGateReady = false;
+                                }
+
+                                // Remove every enemy except boss type
+                                gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
+
+                                for (int j = 0; j < gameModel.Enemies.Count; j++)
+                                {
+                                    if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
+                                    {
+                                        gameModel.Enemies[j].CanSpawn = true;
+                                    }
+                                    else
+                                    {
+                                        gameModel.Enemies[j].CanSpawn = false;
+                                    }
+                                } 
                             }
-
-                            // Remove every enemy except boss type
-                            gameModel.Enemies.RemoveAll(x => x.EnemyType != EnemyType.Boss);
-
-                            for (int j = 0; j < gameModel.Enemies.Count; j++)
-                            {
-                                if (gameModel.Enemies[j].EnemyType == EnemyType.Boss)
-                                {
-                                    gameModel.Enemies[j].CanSpawn = true;
-                                }
-                                else
-                                {
-                                    gameModel.Enemies[j].CanSpawn = false;
-                                }
-                            } 
                         }
+
 
                         if (gameModel.Gates[i].GateState == GateState.InShop)
                         {

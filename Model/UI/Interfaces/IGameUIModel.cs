@@ -20,5 +20,6 @@ namespace Model.UI.Interfaces
         public Text PlayerSpeedTimerText { get; set; }
         public Sprite PlayerSpeedSprite { get; set; }
         public Text GameOverText { get; set; }
+        public Text GameWonText { get; set; }
     }
 }

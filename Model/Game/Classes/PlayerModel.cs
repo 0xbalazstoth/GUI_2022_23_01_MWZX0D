@@ -24,5 +24,6 @@ namespace Model.Game.Classes
         public bool IsDead { get; set; }
         public DateTime RespawnTimer { get; set; }
         public GateState PlayerState { get; set; }
+        public bool IsGameWon { get; set; }
     }
 }

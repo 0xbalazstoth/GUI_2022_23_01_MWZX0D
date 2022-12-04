@@ -66,8 +66,8 @@ namespace Logic.Game.Classes
             SetTilemap("Assets/Textures/map.tmx", "Assets/Textures/tilemap.png");
             
             CreateItems();
-            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40, 300f);
-            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f);
+            enemyLogic.CreateEnemies(EnemyType.Eye, 5, 5, 40, 300f, 100);
+            enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f, 1500);
 
             //gameModel.Musics = new List<Music>();
             //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
@@ -193,6 +193,21 @@ namespace Logic.Game.Classes
             playerLogic.UpdateSpeedPotionTimer();
             playerLogic.HandleEnemyBulletCollision();
             playerLogic.HandleGateCollision();
+
+            if (gameModel.Player.PlayerState == GateState.InBossArena)
+            {
+                // Check if enemy type boss is dead
+                var bossEnemy = gameModel.Enemies.Where(x => x.EnemyType == EnemyType.Boss).FirstOrDefault();
+
+                if (bossEnemy == null)
+                {
+                    gameModel.Player.IsGameWon = true;
+                }
+                else
+                {
+                    gameModel.Player.IsGameWon = false;
+                }
+            }
         }
         
         public void UpdateBullets(RenderWindow window)
@@ -582,7 +597,7 @@ namespace Logic.Game.Classes
             bossArenaGate.GateTexts.Add(bossArenaGateNameText);
 
             Text bossArenaGateMsgText = new Text();
-            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!";
+            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!\nRequired XP level: 200";
             bossArenaGateMsgText.CharacterSize = 28;
             bossArenaGateMsgText.OutlineColor = Color.Black;
             bossArenaGateMsgText.OutlineThickness = 2;

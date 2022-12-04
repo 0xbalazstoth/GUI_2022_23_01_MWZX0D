@@ -23,21 +23,21 @@ namespace Logic.Game.Classes
             this.gameModel = gameModel;
             this.tilemapLogic = tilemapLogic;
 
-            GunModel pistol = new GunModel();
-            pistol.GunType = GunType.Pistol;
-            pistol.Damage = 10;
-            pistol.MaxAmmo = 15;
-            pistol.Recoil = 5f;
-            pistol.Scale = new Vector2f(2, 2);
-            pistol.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
-            pistol.ShootSound = new Sound(pistol.ShootSoundBuffer);
-            pistol.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
-            pistol.EmptySound = new Sound(pistol.EmptySoundBuffer);
-            pistol.FiringInterval = TimeSpan.FromMilliseconds(300);
-            pistol.CurrentAmmo = pistol.MaxAmmo;
-            pistol.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
-            pistol.ReloadSound = new(pistol.ReloadSoundBuffer);
-            pistol.ShootSounds = new List<Sound>();
+            GunModel rifle = new GunModel();
+            rifle.GunType = GunType.Rifle;
+            rifle.Damage = 10;
+            rifle.MaxAmmo = 15;
+            rifle.Recoil = 5f;
+            rifle.Scale = new Vector2f(2, 2);
+            rifle.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/rifle_shot.ogg");
+            rifle.ShootSound = new Sound(rifle.ShootSoundBuffer);
+            rifle.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/rifle_empty.ogg");
+            rifle.EmptySound = new Sound(rifle.EmptySoundBuffer);
+            rifle.FiringInterval = TimeSpan.FromMilliseconds(300);
+            rifle.CurrentAmmo = rifle.MaxAmmo;
+            rifle.ReloadSoundBuffer = new("Assets/Sounds/rifle_reload.ogg");
+            rifle.ReloadSound = new(rifle.ReloadSoundBuffer);
+            rifle.ShootSounds = new List<Sound>();
 
             GunModel shotgun = new GunModel();
             shotgun.GunType = GunType.Shotgun;
@@ -45,18 +45,18 @@ namespace Logic.Game.Classes
             shotgun.MaxAmmo = 5;
             shotgun.Recoil = 10f;
             shotgun.Scale = new Vector2f(2, 2);
-            shotgun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/pistol.ogg");
+            shotgun.ShootSoundBuffer = new SoundBuffer("Assets/Sounds/shotgun_shot.ogg");
             shotgun.ShootSound = new Sound(shotgun.ShootSoundBuffer);
-            shotgun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/gun_empty.ogg");
+            shotgun.EmptySoundBuffer = new SoundBuffer("Assets/Sounds/shotgun_empty.ogg");
             shotgun.EmptySound = new Sound(shotgun.EmptySoundBuffer);
             shotgun.FiringInterval = TimeSpan.FromMilliseconds(750);
             shotgun.CurrentAmmo = shotgun.MaxAmmo;
-            shotgun.ReloadSoundBuffer = new("Assets/Sounds/gun_reload.ogg");
+            shotgun.ReloadSoundBuffer = new("Assets/Sounds/shotgun_reload.ogg");
             shotgun.ReloadSound = new(shotgun.ReloadSoundBuffer);
             shotgun.ShootSounds = new List<Sound>();
 
             gameModel.Guns = new List<GunModel>();
-            gameModel.Guns.Add(pistol);
+            gameModel.Guns.Add(rifle);
             gameModel.Guns.Add(shotgun);
         }
 
