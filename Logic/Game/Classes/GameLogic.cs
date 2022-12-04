@@ -458,52 +458,6 @@ namespace Logic.Game.Classes
             }
         }
 
-        public void Music()
-        {
-            //Music music = new Music("Assets/Sounds/music1.ogg");
-            //music.Loop = true;
-            //music.Volume = 50;
-            //music.Play();
-
-            //if (gameModel.Musics == null)
-            //{
-            //    //gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
-            //    //gameModel.Music.Loop = true;
-            //    //gameModel.Music.Volume = 50;
-            //    //gameModel.Music.Play();
-
-            //    Music music = new Music("Resources/Music/music1.ogg");
-            //    music.Loop = true;
-            //    music.Volume = 50;
-            //    music.Play();
-
-            //}
-            //foreach (var music in gameModel.Musics)
-            //{
-            //    //if (k > 1)
-            //    //{
-            //    //    music.Stop();
-            //    //    gameModel.Musics[k - 1].Play();
-            //    //}
-            //    //else
-            //    //{
-            //    //    music.Play();
-            //    //}
-
-            //    //if (music.Status == SFML.Audio.SoundStatus.Stopped)
-            //    //{
-            //    //    music.Volume = 30;
-            //    //    music.Play();
-            //    //}
-            //}
-
-            //if (gameModel.Musics[1].Status == SoundStatus.Stopped)
-            //{ 
-            //    gameModel.Musics[1].Volume = 30;
-            //    gameModel.Musics[1].Play();
-            //}
-        }
-
         public void CameraEdges()
         {
             if (gameModel.CameraView.Center.X < gameModel.CameraView.Size.X / 2f)
