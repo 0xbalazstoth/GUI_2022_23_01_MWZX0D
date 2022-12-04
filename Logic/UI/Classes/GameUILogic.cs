@@ -60,24 +60,24 @@ namespace Model.Tools
             uiModel.PlayerCoinText.Position = new Vector2f(uiModel.PlayerCoinSprite.Position.X + 32, uiModel.PlayerCoinSprite.Position.Y - 4);
             uiModel.PlayerCoinText.CharacterSize = 28;
 
-            uiModel.PlayerSpeedSprite.Position = new Vector2f(6, 120);
-            uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
-            uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y + 4);
-            uiModel.PlayerSpeedTimerText.CharacterSize = 28;
-
             uiModel.PlayerKillCountText.FillColor = Color.Red;
-            uiModel.PlayerKillCountText.Position = new Vector2f(10, 150);
+            uiModel.PlayerKillCountText.Position = new Vector2f(10, 130);
             uiModel.PlayerKillCountText.CharacterSize = 28;
 
             uiModel.GameOverText.FillColor = Color.White;
             uiModel.GameOverText.CharacterSize = 90;
 
             uiModel.PlayerDeathCountText.FillColor = Color.Red;
-            uiModel.PlayerDeathCountText.Position = new Vector2f(10, 180);
+            uiModel.PlayerDeathCountText.Position = new Vector2f(10, 160);
             uiModel.PlayerDeathCountText.CharacterSize = 28;
 
             uiModel.GameWonText.FillColor = Color.White;
             uiModel.GameWonText.CharacterSize = 90;
+
+            uiModel.PlayerSpeedSprite.Position = new Vector2f(6, 195);
+            uiModel.PlayerSpeedTimerText.FillColor = new Color(3, 240, 252);
+            uiModel.PlayerSpeedTimerText.Position = new Vector2f(uiModel.PlayerSpeedSprite.Position.X + 32, uiModel.PlayerSpeedSprite.Position.Y - 4);
+            uiModel.PlayerSpeedTimerText.CharacterSize = 28;
         }
 
         public void UpdateFPS(float dt)
