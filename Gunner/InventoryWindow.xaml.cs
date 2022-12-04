@@ -1,5 +1,6 @@
 ﻿using Logic.Game.Interfaces;
 using Model.Game.Classes;
+using Model.Game.Enums;
 using Model.Game.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,15 @@ namespace Gunner
 
             foreach (var item in gameModel.Player.Inventory.Items)
             {
+                if (item.Value.ItemType == ItemType.Health_Potion)
+                {
+                    item.Value.IconFileName = "health_potion.png";
+                }
+                else if (item.Value.ItemType == ItemType.Speed_Potion)
+                {
+                    item.Value.IconFileName = "speed_potion.png";
+                }
+                
                 items.Add(item.Value);
             }
 

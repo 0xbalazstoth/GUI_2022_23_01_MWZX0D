@@ -33,6 +33,7 @@ namespace Logic.Game.Classes
 
         private Clock deltaTimeClock;
         private float deltaTime;
+        private Music music;
 
         public Clock GetDeltaTimeClock { get => deltaTimeClock; }
         public float GetDeltaTime { get => deltaTime; }
@@ -70,10 +71,8 @@ namespace Logic.Game.Classes
             enemyLogic.CreateEnemies(EnemyType.Boss, 5, 10, 1, 900f, 1500);
 
             //gameModel.Musics = new List<Music>();
-            //gameModel.Musics.Add(new Music("Assets/Sounds/motionless.ogg"));
-            //gameModel.Musics.Add(new Music("Assets/Sounds/bullet.ogg"));
-
-            Music();
+            //gameModel.Musics.Add(new Music("Assets/Sounds/music1.ogg"));
+            //Music();
 
             var spawnPoints = GetSafeSpawnPoints();
             Random rnd = new Random();
@@ -84,6 +83,10 @@ namespace Logic.Game.Classes
             gameModel.Player.PlayerState = GateState.InLobby;
 
             CreateMaps();
+
+            music = new Music("Assets/Sounds/music1.ogg");
+            music.Volume = 50;
+            music.Play();
         }
 
         public void SetTilemap(string tmxFile, string tilesetFile)
@@ -298,6 +301,8 @@ namespace Logic.Game.Classes
         {
             deltaTime = deltaTimeClock.ElapsedTime.AsSeconds();
             deltaTimeClock.Restart();
+
+            music.Loop = true;
         }
 
         public void UpdateCamera(View cameraView)
@@ -341,6 +346,8 @@ namespace Logic.Game.Classes
                 CollectibleItemModel coinItem = new CollectibleItemModel();
                 coinItem.Item = new Sprite();
                 // Set random position for item
+                // Spawn items at random position with random distance each other
+
                 coinItem.Item.Position = new Vector2f(new Random().Next(0, (int)gameModel.KillArenaMap.GetMapWidth), new Random().Next(0, (int)gameModel.KillArenaMap.GetMapHeight));
                 //coinItem.Item.Position = new Vector2f(new Random().Next(400, (int)gameModel.KillArenaMap.GetMapWidth) % gameModel.KillArenaMap.GetMapWidth, new Random().Next(400, (int)gameModel.CurrentMap.GetMapHeight) % gameModel.CurrentMap.GetMapHeight);
                 coinItem.ItemType = Model.Game.Enums.ItemType.Coin;
@@ -445,12 +452,23 @@ namespace Logic.Game.Classes
 
         public void Music()
         {
-            //if (gameModel.Music == null)
+            //Music music = new Music("Assets/Sounds/music1.ogg");
+            //music.Loop = true;
+            //music.Volume = 50;
+            //music.Play();
+
+            //if (gameModel.Musics == null)
             //{
-            //    gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
-            //    gameModel.Music.Loop = true;
-            //    gameModel.Music.Volume = 50;
-            //    gameModel.Music.Play();
+            //    //gameModel.Music = new Music("Resources/Music/BackgroundMusic.ogg");
+            //    //gameModel.Music.Loop = true;
+            //    //gameModel.Music.Volume = 50;
+            //    //gameModel.Music.Play();
+
+            //    Music music = new Music("Resources/Music/music1.ogg");
+            //    music.Loop = true;
+            //    music.Volume = 50;
+            //    music.Play();
+
             //}
             //foreach (var music in gameModel.Musics)
             //{

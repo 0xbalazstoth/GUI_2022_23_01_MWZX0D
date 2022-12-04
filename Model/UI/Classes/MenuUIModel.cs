@@ -1,5 +1,6 @@
 ﻿using Model.Game.Enums;
 using Model.UI.Interfaces;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -18,5 +19,7 @@ namespace Model.UI.Classes
         public MenuOptionsState SelectedMenuOptionState { get; set; }
         public Sprite ArrowKeysSprite { get; set; }
         public Text GameNameText { get; set; }
+        public SoundBuffer SelectSoundBuffer { get; set; }
+        public Sound SelectSound { get; set; }
     }
 }

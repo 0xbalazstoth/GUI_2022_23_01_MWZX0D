@@ -35,8 +35,8 @@ namespace Gunner
             this.gameModel = gameModel;
             this.playerLogic = playerLogic;
 
-            items.Add(new CollectibleItemModel() { ItemType = ItemType.Health_Potion, Price = 5, Id = (int)ItemType.Health_Potion });
-            items.Add(new CollectibleItemModel() { ItemType = ItemType.Speed_Potion, Price = 10, Id = (int)ItemType.Speed_Potion });
+            items.Add(new CollectibleItemModel() { ItemType = ItemType.Health_Potion, Price = 5, Id = (int)ItemType.Health_Potion, IconFileName = "health_potion.png" });
+            items.Add(new CollectibleItemModel() { ItemType = ItemType.Speed_Potion, Price = 10, Id = (int)ItemType.Speed_Potion, IconFileName = "speed_potion.png" });
 
             lstBoxItems.ItemsSource = items;
             gameModel.Player.IsFocusedInGame = false;

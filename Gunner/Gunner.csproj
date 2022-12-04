@@ -16,6 +16,10 @@
     <None Remove="Assets\Sounds\gun_empty.ogg" />
     <None Remove="Assets\Sounds\gun_reload.ogg" />
     <None Remove="Assets\Sounds\menuMusic.ogg" />
+    <None Remove="Assets\Sounds\menu_cancel.ogg" />
+    <None Remove="Assets\Sounds\menu_pause.ogg" />
+    <None Remove="Assets\Sounds\menu_select.ogg" />
+    <None Remove="Assets\Sounds\music1.ogg" />
     <None Remove="Assets\Sounds\pistol.ogg" />
     <None Remove="Assets\Sounds\pistol_empty.ogg" />
     <None Remove="Assets\Sounds\pistol_emtpy.ogg" />
@@ -85,6 +89,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\menuMusic.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\menu_cancel.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\menu_pause.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\menu_select.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\music1.ogg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Sounds\rifle_empty.ogg">

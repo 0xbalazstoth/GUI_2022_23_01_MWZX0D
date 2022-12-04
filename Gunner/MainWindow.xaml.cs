@@ -253,7 +253,7 @@ namespace Gunner
         {
             if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InMainMenu)
             {
-                menuUILogic.UpdateMainMenu(window.Size);
+                menuUILogic.UpdateMainMenu(window);
             }
             else if (menuUIModel.SelectedMenuOptionState == MenuOptionsState.InPauseMenu)
             {
