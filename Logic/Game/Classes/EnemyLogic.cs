@@ -1,4 +1,5 @@
 ﻿using Logic.Game.Interfaces;
+using Model.Game;
 using Model.Game.Classes;
 using Model.Game.Enums;
 using SFML.Audio;
@@ -161,7 +162,7 @@ namespace Logic.Game.Classes
         {
             foreach (var bullet in gameModel.Player.Gun.Bullets.ToList())
             {
-                foreach (var enemy in gameModel.Enemies)
+                foreach (var enemy in gameModel.Enemies.Where(x => x.CanSpawn).ToList())
                 {
                     if (bullet.Bullet.GetGlobalBounds().Intersects(enemy.GetGlobalBounds()))
                     {
@@ -202,7 +203,6 @@ namespace Logic.Game.Classes
             {
                 gameModel.Enemies[i].HPSprite.Position = new Vector2f(gameModel.Enemies[i].Position.X + gameModel.Enemies[i].TextureRect.Width / 2 - gameModel.Enemies[i].HPSprite.TextureRect.Width, gameModel.Enemies[i].Position.Y - gameModel.Enemies[i].HPSprite.TextureRect.Height);
                 gameModel.Enemies[i].HPText.Position = new Vector2f(gameModel.Enemies[i].HPSprite.Position.X + 18f, gameModel.Enemies[i].HPSprite.Position.Y - (gameModel.Enemies[i].HPSprite.GetGlobalBounds().Height / 2f) + 4f);
-
                 gameModel.Enemies[i].HPText.DisplayedString = $"{gameModel.Enemies[i].CurrentHP}";
             }
         }
@@ -342,6 +342,25 @@ namespace Logic.Game.Classes
                 enemy.Gun.Bullets = new List<BulletModel>();
                 enemy.RewardXP = new Random().Next(2, 11);
                 enemy.EnemyType = enemyType;
+
+                enemy.Animations = new Dictionary<Model.Game.MovementDirection, AnimationModel>();
+                enemy.Animations.Add(MovementDirection.Left, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
+
+                enemy.Animations.Add(MovementDirection.Right, new AnimationModel()
+                {
+                    Row = 0,
+                    ColumnsInRow = 8,
+                    TotalRows = 1,
+                    TotalColumns = 8,
+                    Speed = 10f,
+                });
 
                 gameModel.Enemies.Add(enemy);
                 for (int j = 0; j < i - 1; j++)

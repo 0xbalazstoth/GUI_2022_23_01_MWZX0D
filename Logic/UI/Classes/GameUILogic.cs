@@ -92,6 +92,11 @@ namespace Model.Tools
             }
 
             uiModel.FPSText.DisplayedString = "FPS: " + fps.ToString();
+
+            for (int i = 0; i < gameModel.Enemies.Count; i++)
+            {
+                gameModel.Enemies[i].HPText.Font = uiModel.Font;
+            }
         }
 
         public void UpdateAmmoText()
