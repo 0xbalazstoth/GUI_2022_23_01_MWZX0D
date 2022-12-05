@@ -79,7 +79,7 @@ namespace Logic.Game.Classes
             CreateMaps();
 
             music = new Music("Assets/Sounds/music1.ogg");
-            music.Volume = 50;
+            music.Volume = 5;
             music.Play();
 
             gameModel.TeleportSoundBuffer = new SoundBuffer("Assets/Sounds/teleport.ogg");
@@ -632,7 +632,7 @@ namespace Logic.Game.Classes
             bossArenaGate.GateTexts.Add(bossArenaGateNameText);
 
             Text bossArenaGateMsgText = new Text();
-            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!\nRequired XP level: 200";
+            bossArenaGateMsgText.DisplayedString = "Come in to fight against the \nboss, you can't come back!\nRequired XP level: 50";
             bossArenaGateMsgText.CharacterSize = 28;
             bossArenaGateMsgText.OutlineColor = Color.Black;
             bossArenaGateMsgText.OutlineThickness = 2;

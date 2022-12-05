@@ -585,7 +585,7 @@ namespace Logic.Game.Classes
                             }
                         }
 
-                        if (gameModel.Player.CurrentXP >= 200)
+                        if (gameModel.Player.CurrentXP >= 50)
                         { 
                             if (gameModel.Gates[i].GateState == GateState.InBossArena)
                             {

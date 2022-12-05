@@ -56,7 +56,7 @@ namespace Logic.Game.Classes
             //float scale = 0.10f;
             float[,] noiseValues = SimplexNoise.Noise.Calc2D((int)width, (int)height, scale);
 
-            int[] grassTerrainSets = new int[] { 169, 168, 170, 171};
+            int[] grassTerrainSets = new int[] { 165, 164 };
 
             int grassType1 = 169;
             int grassType2 = 170;
