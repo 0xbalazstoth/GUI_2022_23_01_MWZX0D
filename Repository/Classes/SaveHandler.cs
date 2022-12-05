@@ -131,8 +131,8 @@ namespace Repository.Classes
             }
             else
             {
-                throw new NoSaveException("Save folder not exists!");
-            } 
+                return new string[0];
+            }
         }
 
         public void NewGame(string saveName)
